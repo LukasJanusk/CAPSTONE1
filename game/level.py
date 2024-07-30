@@ -1,6 +1,4 @@
-import pygame
 from dataclasses import dataclass
-import player
 import enemies
 import layer
 import random
@@ -11,7 +9,6 @@ class Level:
     name: str
     x: int
     y: int
-    player = player.char
     layer0: layer.Layer = None
     layer1: layer.Layer = None
     layer2: layer.Layer = None
@@ -27,7 +24,5 @@ class Level:
     def generate_wave(self):
         pass
 
-    def get_layers(self):
-        layers = [self.layer0, self.layer1, self.layer2, self.layer3, self.layer4, self.layer5]
-        + self.current_wave_enemies + [self.player] + [self.layer6, self.layer7]
-        return layers
+    def get_layers_list(self):
+        return [self.layer0, self.layer1, self.layer2, self.layer3, self.layer4, self.layer5, self.layer6, self.layer7]
