@@ -1,41 +1,43 @@
 import pygame
+import enemies
+import player
+import animations
+import layer
+import math
+from typing import Union, List
+
 
 class View:
-    def __init__(self):
-        self.player = Player: player
-        self.layers: list = []
-        self.level = Level: level
-
-
-    def draw(self):
-        for layer in self.layers:
-            if layer != None:
-                self.draw_layer()
-    
-    def draw_layer(self, screen):
-        screen.blit()
-        
-    def print_layers(self, bg_images, game_screen, screen_width, bg_width):
-
-        # scroll_for_layers = [{"layer": 0, "scroll": -2, "current_scroll": 0, "distance": 0},
-        #                      {"layer": 1, "scroll": 0, "current_scroll": 0, "distance": 0}]
-
-
-        tiles = math.ceil(screen_width / bg_width) + 1
-
-        for image in bg_images:
-            if bg_images.index(image) == 0:            
-                tiles = math.ceil(screen_width/ bg_width) +1
-                for i in range(tiles):
-                    game_screen.blit(image, (i * bg_width + self.current_distance_layer0, 0))
-                    game_screen.blit(image, (-i * bg_width + self.current_distance_layer0, 0)) 
-                    #here print objects of level(enemies, player, objects, particles )
+    @classmethod
+    def render(cls, screen: pygame.Surface, layers: List[Union[animations.Animation, enemies.Enemy, layer.Layer]] = []):
+        for object in layers:
+            if object is None:
+                continue
+            elif type(object) is layer.Layer:
+                View.render_layer(screen, object)
+            elif type(object) is enemies.Enemy:
+                View.render_enemy(screen, object)
+            elif type(object) is player.Player:
+                View.render_player(screen, object)
             else:
-                tiles = math.ceil(screen_width/ bg_width) +1
-                for i in range(tiles):
-                    game_screen.blit(image, (i * bg_width + self.current_distance_layer1, 0))
-                    game_screen.blit(image, (-i * bg_width + self.current_distance_layer1, 0)) 
-        if abs(self.current_distance_layer0) > bg_width:
-            self.current_distance_layer0 = 0
-        if abs(self.current_distance_layer1) > bg_width:
-            self.current_distance_layer1 = 0
+                print("no object to render")
+            # elif layer_object is effects.Particle:
+            #   pass
+
+    @classmethod
+    def render_layer(cls, screen: pygame.Surface, layer: layer.Layer):
+        screen_width = screen.get_width()
+        tiles = math.ceil(screen_width/layer.width) + 1
+        for i in range(tiles):
+            screen.blit(layer._IMAGE, (i * layer.width + layer.distance, 0))
+            screen.blit(layer._IMAGE, (-i * layer.width + layer.distance, 0))
+
+    @classmethod
+    def render_enemy(cls, screen: pygame.Surface, enemy: enemies.Enemy):
+        animation: animations.Animation = enemy.current_animation
+        animation.animate(screen, enemy.frame, enemy.facing_right)
+
+    @classmethod
+    def render_player(cls, screen: pygame.Surface, player: player.Player):
+        animation: animations.Animation = player.current_animation
+        animation.animate(screen, player.frame, player.facing_right)

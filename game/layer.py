@@ -15,8 +15,8 @@ class Layer:
 
 
 # bamboo level layers
-bamboo_0 = Layer()
-bamboo_1 = None
+# bamboo_0 = Layer()
+# bamboo_1 = None
 
 
 # church level layers

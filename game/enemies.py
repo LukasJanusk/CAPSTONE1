@@ -20,14 +20,14 @@ class Enemy(BaseEnemy):
     NAME: str
     x: int
     y: int
+    hitbox_width: float
+    hitbox_height: float
     scale: float = 1
     frame: int = 0
     frame_rate: int = 160
     last_update: float = field(default_factory=lambda: pygame.time.get_ticks())
     stun_duration: int = 200
     speed: float = 1.5
-    hitbox_width: float
-    hitbox_height: float
     facing_right: bool = False
     running: bool = False
     attacking: bool = True
@@ -38,6 +38,7 @@ class Enemy(BaseEnemy):
     dead: bool = False
     exist: bool = True
     hitbox = None
+    current_animation = None
 
     def __post_init__(self):
         self.hitbox = pygame.Rect(self.x, self.y, self.hitbox_width, self.hitbox_height)
@@ -54,7 +55,6 @@ class Demon(Enemy):
     death_animation = None
     running_animation = None
     idle_animation = None
-    current_animation: None
 
     def __post_init__(self):
         super().__post_init__()

@@ -1,8 +1,8 @@
 import pygame
 import player
 import level
-import enemies
-import AI
+# import enemies
+# import AI
 
 
 class Model:
@@ -106,12 +106,12 @@ class Model:
                 self.character.x -= 0.5
                 for layer_item in layers_list:
                     layer_item.distance -= 0.5
-                for enemy in self.enemies:
+                for enemy in self.current_level.current_wave_enemies:
                     enemy.x -= 0.5
         if not self.character.facing_right:
             if self.character.x < 390:
                 self.character.x += 0.5
                 for layer_item in layers_list:
                     layer_item.distance += 0.5
-                for enemy in self.enemies:
+                for enemy in self.current_level.current_wave_enemies:
                     enemy.x += 0.5

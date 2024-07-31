@@ -1,4 +1,5 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import List
 import enemies
 import layer
 import random
@@ -19,7 +20,7 @@ class Level:
     layer7: layer.Layer = None
     waves: int = 10
     current_wave: int = 0
-    current_wave_enemies = []
+    current_wave_enemies: List[enemies.Enemy] = field(default_factory=list)
 
     def generate_wave(self):
         pass

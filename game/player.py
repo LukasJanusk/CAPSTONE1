@@ -48,14 +48,15 @@ class Player:
     JUMPING_ANIMATION = None
     ATTACK_UPPER_ANIMATION = None
     ATTACK_NORMAL_ANIMATION = None
+    current_animation = None
 
     def __post_init__(self):
-        self.IDLE_ANIMATION = animations.Animation(self.x, self.y, spritesheets.idle_animation_list, -24, 0, (150, 150, 150))
-        self.WALKING_ANIMATION = animations.Animation(self.x, self.y - 15, spritesheets.walking_animation_list, -15, 0, (150, 150, 150))
-        self.GUARD_ANIMATION = animations.Animation(self.x, self.y, spritesheets.guard_animation_list, -20, 0, (150, 150, 150))
-        self.JUMPING_ANIMATION = animations.Animation(self.x, self.y, spritesheets.jumping_animation_list, -15, 0, (150, 150, 150))
-        self.ATTACK_UPPER_ANIMATION = animations.Animation(self.x - 90, self.y - 40, spritesheets.attack_upper_list, 0, 0, (150, 150, 150))
-        self.ATTACK_NORMAL_ANIMATION = animations.Animation(self.x - 10, self.y - 8, spritesheets.attack_normal_list, -55, 0, (150, 150, 150))
+        self.IDLE_ANIMATION = animations.Animation(spritesheets.idle_animation_list, self.x, self.y, -24)
+        self.WALKING_ANIMATION = animations.Animation(spritesheets.walking_animation_list, self.x, self.y - 15, -15)
+        self.GUARD_ANIMATION = animations.Animation(spritesheets.guard_animation_list, self.x, self.y, -20)
+        self.JUMPING_ANIMATION = animations.Animation(spritesheets.jumping_animation_list, self.x, self.y, -15)
+        self.ATTACK_UPPER_ANIMATION = animations.Animation(spritesheets.attack_upper_list, self.x - 90, self.y - 40)
+        self.ATTACK_NORMAL_ANIMATION = animations.Animation(spritesheets.attack_normal_list, self.x - 10, self.y - 8, -55)
 
 
 char = Player(100, 300, 1)
