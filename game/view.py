@@ -40,4 +40,6 @@ class View:
     @classmethod
     def render_player(cls, screen: pygame.Surface, player: player.Player):
         animation: animations.Animation = player.current_animation
+        animation.x = player.x
+        animation.y = player.y
         animation.animate(screen, player.frame, player.facing_right)

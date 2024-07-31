@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from typing import List
 import enemies
 import layer
-import random
+# import random
 
 
 @dataclass

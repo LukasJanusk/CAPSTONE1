@@ -3,7 +3,7 @@ import animations
 import spritesheets
 from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
-from typing import Optional
+# from typing import Optional
 
 
 class BaseEnemy(ABC):
@@ -22,6 +22,8 @@ class Enemy(BaseEnemy):
     y: int
     hitbox_width: float
     hitbox_height: float
+    health: float = 100
+    damage: int = 0
     scale: float = 1
     frame: int = 0
     frame_rate: int = 160
@@ -46,7 +48,7 @@ class Enemy(BaseEnemy):
 
 @dataclass
 class Demon(Enemy):
-    AI = Optional
+    AI = None
     health: float = 10000
     damage: int = 50
     sprite_sheet_list = spritesheets.demon_animations

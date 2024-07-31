@@ -1,19 +1,41 @@
 import pygame
 import player
 import level
+import controller
 # import enemies
 # import AI
 
 
 class Model:
     def __init__(self):
-        self.character = player.char
+        self.character: player.Player = player.char
         self.current_level: level.Level = None
+        self.controller: controller.Controller = controller.player_input_manager
 
     # behaviour setters input and AI
     # interaction between objects
 
     # updates based on interactions
+    def update_enemies(self):
+        self.update_enemies_existance()
+        self.update_enemies_states()
+        self.update_enemies_frame()
+
+    def update_scroll(self):
+        self.update_layer_scroll()
+        self.update_camera()
+
+    def get_player_input(self, event: pygame.event.Event):
+        self.controller.set_player_states(event)
+
+    def update_player(self):
+        # interaction between objects and enemies update
+        self.character.reset_frames()
+        self.character.update_speed()
+        self.character.update_jumping()
+        self.character.get_current_animation()
+        self.update_player_frame()
+
     def get_layers_for_blit(self):
         layers = [self.current_level.layer0,
                   self.current_level.layer1,
@@ -53,11 +75,11 @@ class Model:
                 enemy.update_frames()
 
     def update_enemies_states(self):
-        for enemy in self.enemies:
+        for enemy in self.current_level.current_wave_enemies:
             enemy.update_states()
 
     def update_enemies_existance(self):
-        for enemy in self.enemies:
+        for enemy in self.current_level.current_wave_enemies:
             if enemy.health <= 0:
                 enemy.dead = True
                 enemy.idle = False
@@ -67,37 +89,28 @@ class Model:
                 enemy.stunned = False
                 self.current_level.current_wave_enemies.remove(enemy)
 
-    def update_enemies(self):
-        self.update_enemies_existance()
-        self.update_enemies_states()
-        self.update_enemies_frame()
-
-    def update_scroll(self):
-        self.update_layer_scroll()
-        self.update_camera()
-
-    def update_player_speed(self):
-        if not self.character.jumping:
-            self.character.aerial_movement = False
-        self.character.speed = 0
-        if self.character.running is True:
-            self.character.speed += 2.5
-        if self.character.walking is True:
-            self.character.speed += 1.5
-        if self.character.dashing:
-            self.character.speed += 4
-        if self.character.attack_moving is True:
-            self.character.speed += 0.4
-        if self.character.aerial_movement is True:
-            self.character.speed += 2
-        if self.character.ducking is True:
-            self.character.speed = 0
-        if self.character.guarding is True:
-            self.character.speed = 0
-        if self.character.idle is True:
-            self.character.speed = 0
-        if self.character.facing_right:
-            self.character.speed = self.character.speed * -1
+    # def update_player_speed(self):
+    #     if not self.character.jumping:
+    #         self.character.aerial_movement = False
+    #     self.character.speed = 0
+    #     if self.character.running is True:
+    #         self.character.speed += 2.5
+    #     if self.character.walking is True:
+    #         self.character.speed += 1.5
+    #     if self.character.dashing:
+    #         self.character.speed += 4
+    #     if self.character.attack_moving is True:
+    #         self.character.speed += 0.4
+    #     if self.character.aerial_movement is True:
+    #         self.character.speed += 2
+    #     if self.character.ducking is True:
+    #         self.character.speed = 0
+    #     if self.character.guarding is True:
+    #         self.character.speed = 0
+    #     if self.character.idle is True:
+    #         self.character.speed = 0
+    #     if self.character.facing_right:
+    #         self.character.speed = self.character.speed * -1
 
     def update_camera(self):
         layers_list = self.current_level.get_layers_list()
