@@ -9,7 +9,7 @@ import controller
 class Model:
     def __init__(self):
         self.character: player.Player = player.char
-        self.current_level: level.Level = None
+        self.current_level: level.Level = level.level3
         self.controller: controller.Controller = controller.player_input_manager
 
     # behaviour setters input and AI
@@ -26,7 +26,7 @@ class Model:
         self.update_camera()
 
     def get_player_input(self, event: pygame.event.Event):
-        self.controller.set_player_states(event)
+        self.controller.get_player_key_events(event)
 
     def update_player(self):
         # interaction between objects and enemies update
@@ -48,16 +48,6 @@ class Model:
                  [self.current_level.layer6,
                   self.current_level.layer7])
         return layers
-
-    def update_layer_scroll(self):
-        layers_list = self.current_level.get_layers_list
-        for layer_item in layers_list:
-            if layer_item is not None:
-                layer_current_scroll = layer_item.scroll + self.character.speed
-                layer_item.distance += layer_current_scroll
-        for enemy_obj in self.current_level.current_wave_enemies:
-            if len(self.current_level.current_wave_enemies) > 0:
-                enemy_obj.x += self.character.speed
 
     def update_player_frame(self):
         self.character.current_time = pygame.time.get_ticks()
@@ -111,6 +101,17 @@ class Model:
     #         self.character.speed = 0
     #     if self.character.facing_right:
     #         self.character.speed = self.character.speed * -1
+    def update_layer_scroll(self):
+        layers_list = self.current_level.get_layers_list()
+        for layer_item in layers_list:
+            if layer_item is not None:
+                layer_current_scroll = (layer_item.scroll + self.character.speed) * layer_item.scroll_multiplier
+                layer_item.distance += layer_current_scroll
+                if abs(layer_item.distance) > layer_item.width:
+                    layer_item.distance = 0
+        for enemy_obj in self.current_level.current_wave_enemies:
+            if len(self.current_level.current_wave_enemies) > 0:
+                enemy_obj.x += self.character.speed
 
     def update_camera(self):
         layers_list = self.current_level.get_layers_list()
@@ -118,13 +119,15 @@ class Model:
             if self.character.x > 220:
                 self.character.x -= 0.5
                 for layer_item in layers_list:
-                    layer_item.distance -= 0.5
+                    if layer_item is not None:
+                        layer_item.distance -= (0.5 * layer_item.scroll_multiplier)
                 for enemy in self.current_level.current_wave_enemies:
                     enemy.x -= 0.5
         if not self.character.facing_right:
             if self.character.x < 390:
                 self.character.x += 0.5
                 for layer_item in layers_list:
-                    layer_item.distance += 0.5
+                    if layer_item is not None:
+                        layer_item.distance += (0.5 * layer_item.scroll_multiplier)
                 for enemy in self.current_level.current_wave_enemies:
                     enemy.x += 0.5

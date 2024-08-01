@@ -6,10 +6,9 @@ class Controller:
     def __init__(self):
         self.player: Player = char
 
-    def set_player_states(self, event: pygame.event.Event):
+    def get_player_key_events(self, event: pygame.event.Event):
         self.set_key_up_events(event)
         self.set_keydown_events(event)
-        self.set_player_state()
 
     def set_key_up_events(self, event: pygame.event.Event):
         frame_reset_list = [pygame.K_a, pygame.K_d, pygame.K_w, pygame.K_s, pygame.K_w, pygame.K_y, pygame.K_u, pygame.K_h]
@@ -35,6 +34,8 @@ class Controller:
                 self.player.attacking_normal = False
             if event.key == pygame.K_LSHIFT:
                 self.player.running = False
+            if event.key == pygame.K_s:
+                self.player.ducking = False
 
     def set_keydown_events(self, event):
         if not self.player.attacking_upper:
@@ -99,7 +100,7 @@ class Controller:
                 self.player.facing_right = True
                 if self.player.attacking_normal is True:
                     self.player.attack_moving = True
-            if key[pygame.K_a] is True:
+            elif key[pygame.K_a] is True:
                 self.player.facing_right = False
                 if self.player.attacking_normal is True:
                     self.player.attack_moving = True

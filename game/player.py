@@ -89,7 +89,7 @@ class Player:
         if self.jumping:
             self.y = self.y - self.jump_strength + self.vertical_position
             self.vertical_position += 0.5
-            if self.y >= 300:
+            if self.y >= 400:
                 self.jumping = False
                 self.vertical_position = 0
                 # self.idle = True
@@ -139,4 +139,4 @@ class Player:
             self.current_animation = self.IDLE_ANIMATION
 
 
-char = Player(100, 300, 1)
+char = Player(100, 400, 1)
