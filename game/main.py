@@ -29,11 +29,11 @@ def main():
             engine.get_player_input(event)
         engine.controller.set_player_state()
         engine.update_scroll()
-        screen.fill((110, 110, 110))
+        # screen.fill((110, 110, 110))
         engine.update_player()
         View.render(screen, engine.get_layers_for_blit())
         pygame.display.flip()
-        clock.tick(60)
+        clock.tick(90)
         if char.frame == 0:
             print(f"FPS: {int(clock.get_fps())}")
 

@@ -36,9 +36,9 @@ level0_layer1 = Layer(pygame.image.load(os.path.join("..", "assets", "graphics",
 
 # level1
 level1_layer0 = Layer(pygame.image.load(os.path.join("..", "assets", "graphics", "levels", "level1_layer0.png")), scroll_multiplier=0.1)
-level1_layer1 = Layer(pygame.image.load(os.path.join("..", "assets", "graphics", "levels", "level1_layer1.png")), scroll=1, scroll_multiplier=0.2)
+level1_layer1 = Layer(pygame.image.load(os.path.join("..", "assets", "graphics", "levels", "level1_layer1.png")), scroll=-1, scroll_multiplier=0.2)
 level1_layer2 = Layer(pygame.image.load(os.path.join("..", "assets", "graphics", "levels", "level1_layer2.png")), scroll_multiplier=0.4)
-level1_layer3 = Layer(pygame.image.load(os.path.join("..", "assets", "graphics", "levels", "level1_layer3.png")), scroll=1, scroll_multiplier=0.5)
+level1_layer3 = Layer(pygame.image.load(os.path.join("..", "assets", "graphics", "levels", "level1_layer3.png")), scroll=-1.5, scroll_multiplier=0.5)
 level1_layer4 = Layer(pygame.image.load(os.path.join("..", "assets", "graphics", "levels", "level1_layer4.png")), scroll_multiplier=0.7)
 level1_layer5 = Layer(pygame.image.load(os.path.join("..", "assets", "graphics", "levels", "level1_layer5.png")))
 level1_layer6 = Layer(pygame.image.load(os.path.join("..", "assets", "graphics", "levels", "level1_layer6.png")))
