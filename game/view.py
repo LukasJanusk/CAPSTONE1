@@ -19,6 +19,8 @@ class View:
                 View.render_enemy(screen, object)
             elif type(object) is player.Player:
                 View.render_player(screen, object)
+            elif type(object) is pygame.Surface:
+                screen.blit(object, (0, 0))
             else:
                 print("no object to render")
             # elif layer_object is effects.Particle:

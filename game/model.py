@@ -2,6 +2,7 @@ import pygame
 import player
 import level
 import controller
+import ui
 # import enemies
 # import AI
 
@@ -46,8 +47,14 @@ class Model:
                   self.current_level.current_wave_enemies +
                  [self.character] +
                  [self.current_level.layer6,
-                  self.current_level.layer7])
+                  self.current_level.layer7] +
+                 [ui.health_bar.draw_health_bar()]
+                  )
         return layers
+
+    def get_objects_for_render(self):
+        objects = []
+        return objects
 
     def update_player_frame(self):
         self.character.current_time = pygame.time.get_ticks()
@@ -79,28 +86,6 @@ class Model:
                 enemy.stunned = False
                 self.current_level.current_wave_enemies.remove(enemy)
 
-    # def update_player_speed(self):
-    #     if not self.character.jumping:
-    #         self.character.aerial_movement = False
-    #     self.character.speed = 0
-    #     if self.character.running is True:
-    #         self.character.speed += 2.5
-    #     if self.character.walking is True:
-    #         self.character.speed += 1.5
-    #     if self.character.dashing:
-    #         self.character.speed += 4
-    #     if self.character.attack_moving is True:
-    #         self.character.speed += 0.4
-    #     if self.character.aerial_movement is True:
-    #         self.character.speed += 2
-    #     if self.character.ducking is True:
-    #         self.character.speed = 0
-    #     if self.character.guarding is True:
-    #         self.character.speed = 0
-    #     if self.character.idle is True:
-    #         self.character.speed = 0
-    #     if self.character.facing_right:
-    #         self.character.speed = self.character.speed * -1
     def update_layer_scroll(self):
         layers_list = self.current_level.get_layers_list()
         for layer_item in layers_list:

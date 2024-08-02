@@ -30,12 +30,16 @@ def main():
         engine.controller.set_player_state()
         engine.update_scroll()
         # screen.fill((110, 110, 110))
+        if char.frame == 3:
+            char.health -= 1
         engine.update_player()
         View.render(screen, engine.get_layers_for_blit())
         pygame.display.flip()
-        clock.tick(90)
         if char.frame == 0:
-            print(f"FPS: {int(clock.get_fps())}")
+            print(char.health)
+        clock.tick(120)
+        # if char.frame == 0:
+        #     print(f"FPS: {int(clock.get_fps())}")
 
 
 if __name__ == "__main__":

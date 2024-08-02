@@ -9,7 +9,7 @@ screen = pygame.display.set_mode((width, height))
 class SpriteSheets:
     def __init__(self, image):
         pygame.sprite.Sprite.__init__(self)
-        self.sheet = image
+        self.sheet: pygame.Surface = image
 
     def get_image(self, frame: int, width: int, height: int, scale:  int, colour: tuple):
         image = pygame.Surface((width, height)).convert()
