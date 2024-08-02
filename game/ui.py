@@ -5,6 +5,7 @@ from dataclasses import dataclass
 import player
 from math import ceil
 
+
 pygame.init()
 screen = pygame.display.set_mode((800, 640))
 font = pygame.font.Font(os.path.join("..", "assets", "fonts", "font.otf"), 18)
@@ -31,7 +32,7 @@ class Healthbar:
 
     def __post_init__(self):
         self.health_bar_surface = self.draw_health_bar()
-        self.health = self.character.health 
+        self.health = self.character.health
 
     @property
     def get_health_bar_surface(self):
@@ -59,9 +60,10 @@ class Healthbar:
         health_bar_bg.fill((0, 0, 0))
         health_bar.fill(colour)
         health_bar_bg.blit(health_bar, (1, 1))
-        health_bar_bg.blit(text, (115, 3))
+        health_bar_bg.blit(text, (115, 1))
         self.health_bar_surface = health_bar_bg
         self.health = self.character.health
         return self.health_bar_surface
+
 
 health_bar = Healthbar()

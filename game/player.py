@@ -1,7 +1,8 @@
 import pygame
-import animations
+from animations import Animation
 import spritesheets
 from dataclasses import dataclass
+from attacks import Attack
 
 
 @dataclass
@@ -37,7 +38,7 @@ class Player:
     falling: bool = False
     fire1: bool = False
     fire2: bool = False
-    fire3: bool = True
+    fire3: bool = False
     lightning1: bool = False
     lightning2: bool = False
     lightning3: bool = False
@@ -51,14 +52,21 @@ class Player:
     ATTACK_UPPER_ANIMATION = None
     ATTACK_NORMAL_ANIMATION = None
     current_animation = None
+    attack_normal = None
+    attack_upper = None
+    current_attack = None
+    hitbox = None
 
     def __post_init__(self):
-        self.IDLE_ANIMATION = animations.Animation(spritesheets.idle_animation_list, self.x, self.y, -24)
-        self.WALKING_ANIMATION = animations.Animation(spritesheets.walking_animation_list, self.x, self.y - 15, -15)
-        self.GUARD_ANIMATION = animations.Animation(spritesheets.guard_animation_list, self.x, self.y, -20)
-        self.JUMPING_ANIMATION = animations.Animation(spritesheets.jumping_animation_list, self.x, self.y, -15)
-        self.ATTACK_UPPER_ANIMATION = animations.Animation(spritesheets.attack_upper_list, self.x - 90, self.y - 40)
-        self.ATTACK_NORMAL_ANIMATION = animations.Animation(spritesheets.attack_normal_list, self.x - 10, self.y - 8, -55)
+        self.IDLE_ANIMATION = Animation(spritesheets.idle_animation_list, self.x, self.y, -24)
+        self.WALKING_ANIMATION = Animation(spritesheets.walking_animation_list, self.x, self.y - 15)
+        self.GUARD_ANIMATION = Animation(spritesheets.guard_animation_list, self.x, self.y, -20)
+        self.JUMPING_ANIMATION = Animation(spritesheets.jumping_animation_list, self.x, self.y, -15)
+        self.ATTACK_UPPER_ANIMATION = Animation(spritesheets.attack_upper_list, self.x - 90, self.y - 40)
+        self.ATTACK_NORMAL_ANIMATION = Animation(spritesheets.attack_normal_list, self.x - 10, self.y - 8, -55)
+        self.attack_normal = Attack(50, [1, 3], 170, 80, 0, 40, -70, 0)
+        self.attack_upper = Attack(200, [7, 8], 190, 170, 0, -40, -90, 0)
+        self.hitbox = pygame.Rect(self.x, self.y, 80, 150)
         if self.current_animation is None:
             self.current_animation is self.IDLE_ANIMATION
 
@@ -92,12 +100,6 @@ class Player:
             if self.y >= 400:
                 self.jumping = False
                 self.vertical_position = 0
-                # self.idle = True
-            # if self.vertical_position == 0:
-            #     self.y = 400
-            # if self.y > 400:
-            #     self.vertical_position = 0
-            #     self.jumping = False
 
     def update_speed(self):
         if not self.jumping:
@@ -129,6 +131,7 @@ class Player:
             self.current_animation = self.ATTACK_UPPER_ANIMATION
         elif self.running:
             self.current_animation = self.WALKING_ANIMATION
+            self.current_animation.x
         elif self.walking:
             self.current_animation = self.WALKING_ANIMATION
         elif self.jumping:
@@ -137,6 +140,27 @@ class Player:
             self.current_animation = self.GUARD_ANIMATION
         else:
             self.current_animation = self.IDLE_ANIMATION
+
+    def get_current_attack(self):
+        if self.attacking_normal:
+            self.current_attack = self.attack_normal
+        elif self.attacking_upper:
+            self.current_attack = self.attack_upper
+        else:
+            self.current_attack = None
+        return self.current_attack
+
+    def update_hitbox(self):
+        if self.facing_right:
+            self.hitbox = pygame.Rect(self.x + 20, self.y + 15, 70, 120)
+        else:
+            self.hitbox = pygame.Rect(self.x + 20, self.y + 15, 70, 120)
+
+    def draw_hitbox(self, screen: pygame.Surface):
+        if self.hit:
+            pygame.draw.rect(screen, (255, 0, 0), self.hitbox, 2)
+        else:
+            pygame.draw.rect(screen, (0, 255, 0), self.hitbox, 2)
 
 
 char = Player(100, 400, 1)

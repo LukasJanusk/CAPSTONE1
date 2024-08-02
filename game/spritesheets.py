@@ -50,7 +50,7 @@ sprite_jumping_sheet = SpriteSheets(sprite_jumping_image)
 
 # sprite images as a list
 idle_animation_list = sprite_idle_sheet.get_animation_list(50, 50, 2.5, (150, 150, 150), 9)
-walking_animation_list = sprite_walk_sheet.get_animation_list(50, 60, 2.5, (150, 150, 150), 6)
+walking_animation_list = sprite_walk_sheet.get_animation_list(50, 60, 2.4, (150, 150, 150), 6)
 guard_animation_list = sprite_guard_sheet.get_animation_list(50, 50, 2.5, (150, 150, 150), 4)
 jump_animation_list = sprite_jump_sheet.get_animation_list(50, 50, 2.5, (150, 150, 150), 5)
 jumping_animation_list = sprite_jumping_sheet.get_animation_list(50, 50, 2.5, (150, 150, 150), 5)

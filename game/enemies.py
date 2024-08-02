@@ -3,6 +3,7 @@ import animations
 import spritesheets
 from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
+import attacks
 # from typing import Optional
 
 
@@ -17,12 +18,12 @@ class BaseEnemy(ABC):
 
 @dataclass
 class Enemy(BaseEnemy):
-    NAME: str
     x: int
     y: int
-    hitbox_width: float
-    hitbox_height: float
+    hitbox_width: int
+    hitbox_height: int
     health: float = 100
+    max_health: float = 100
     damage: int = 0
     scale: float = 1
     frame: int = 0
@@ -41,6 +42,7 @@ class Enemy(BaseEnemy):
     exist: bool = True
     hitbox = None
     current_animation = None
+    attack = None
 
     def __post_init__(self):
         self.hitbox = pygame.Rect(self.x, self.y, self.hitbox_width, self.hitbox_height)
@@ -50,6 +52,7 @@ class Enemy(BaseEnemy):
 class Demon(Enemy):
     AI = None
     health: float = 10000
+    max_health: float = 10000
     damage: int = 50
     sprite_sheet_list = spritesheets.demon_animations
     attack_animation = None
@@ -57,6 +60,8 @@ class Demon(Enemy):
     death_animation = None
     running_animation = None
     idle_animation = None
+    hitbox_height = 420
+    hitbox_width = 300
 
     def __post_init__(self):
         super().__post_init__()
@@ -65,6 +70,7 @@ class Demon(Enemy):
         self.death_animation = animations.Animation(self.x, self.y, self.sprite_sheet_lsit[2], 0, 0, (150, 150, 150))
         self.running_animation = animations.Animation(self.x, self.y, self.sprite_sheet_lsit[4], 0, 0, (150, 150, 150))
         self.idle_animation = animations.Animation(self.x, self.y, self.sprite_sheet_lsit[0], 0, 0, (150, 150, 150))
+        self.attack = attacks.Attack(self.damage, [6], 300, 180, 120, 270, -40, 0)
         if self.current_animation is None:
             self.current_animation = self.idle_animation
 

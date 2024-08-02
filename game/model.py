@@ -29,12 +29,32 @@ class Model:
     def get_player_input(self, event: pygame.event.Event):
         self.controller.get_player_key_events(event)
 
+    def calculate_attacks(self):
+        self.player_attack()
+        self.enemies_attack()
+
+    def player_attack(self):
+        if self.character.current_attack is not None:
+            for enemy in self.current_level.current_wave_enemies:
+                damage = self.character.current_attack.hit(self.character.frame, enemy.hitbox)
+                enemy.health -= damage
+
+    def enemies_attack(self):
+        for enemy in self.current_level.current_wave_enemies:
+            if enemy.attacking:
+                damage = enemy.attack.hit(enemy.frame, self.character.hitbox)
+                self.character.health -= damage
+
     def update_player(self):
         # interaction between objects and enemies update
         self.character.reset_frames()
         self.character.update_speed()
+        self.character.update_hitbox()
         self.character.update_jumping()
         self.character.get_current_animation()
+        self.character.get_current_attack()
+        if self.character.current_attack is not None:
+            self.character.current_attack.update_hitbox(self.character.x, self.character.y, self.character.facing_right)
         self.update_player_frame()
 
     def get_layers_for_blit(self):
