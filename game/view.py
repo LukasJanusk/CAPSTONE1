@@ -1,10 +1,11 @@
 import pygame
-import enemies
-import player
-import animations
-import layer
 import math
 from typing import Union, List
+from . import enemies
+from . import player
+from . import animations
+from . import layer
+from . import menu
 
 
 class View:
@@ -99,6 +100,7 @@ class View:
         elif player.current_animation == player.WALKING_ANIMATION:
             player.WALKING_ANIMATION.x = player.x
             player.WALKING_ANIMATION.y = player.y - 15
+            player.WALKING_ANIMATION.buffer_facing_left_x = -15
             return player.WALKING_ANIMATION
         elif player.current_animation == player.ATTACK_NORMAL_ANIMATION:
             player.ATTACK_NORMAL_ANIMATION.x = player.x - 10
@@ -119,3 +121,12 @@ class View:
             player.GUARD_ANIMATION.y = player.y
             player.GUARD_ANIMATION.buffer_facing_left_x = -20
             return player.GUARD_ANIMATION
+
+    @classmethod
+    def draw_menus(cls, screen: pygame.Surface, current_menu: menu.Menu):
+        screen.fill(current_menu.colour)
+        current_menu.center_text(screen)
+        screen.blit(current_menu.text_surface, (current_menu.text_x, 30))
+        for index, button in enumerate(current_menu.buttons):
+            button.center_button(screen)
+            screen.blit(button.surface, (button.x, 150 + index * 60))

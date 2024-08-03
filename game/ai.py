@@ -1,5 +1,5 @@
-import enemies
-from player import char
+from . import enemies
+from .player import char
 
 
 class AI:

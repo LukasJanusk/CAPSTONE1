@@ -1,7 +1,7 @@
 import pygame
 from dataclasses import dataclass
 from typing import List
-import enemies
+from . import enemies
 
 
 @dataclass

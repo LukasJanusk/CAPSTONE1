@@ -1,8 +1,8 @@
 import pygame
-from animations import Animation
-import spritesheets
 from dataclasses import dataclass
-from attacks import Attack
+from .animations import Animation
+from . import spritesheets
+from .attacks import Attack
 
 
 @dataclass

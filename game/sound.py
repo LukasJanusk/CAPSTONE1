@@ -1,9 +1,9 @@
 import pygame
 from dataclasses import dataclass
 from typing import List, Union
-import animations
-import enemies
-import layer
+from . import animations
+from . import enemies
+from . import layer
 
 class Sound_controller:
     @classmethod

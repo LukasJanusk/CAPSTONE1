@@ -1,4 +1,5 @@
 import pygame
+from dataclasses import dataclass
 import os
 
 height = 640
@@ -6,10 +7,9 @@ width = 800
 screen = pygame.display.set_mode((width, height))
 
 
-class SpriteSheets:
-    def __init__(self, image):
-        pygame.sprite.Sprite.__init__(self)
-        self.sheet: pygame.Surface = image
+@dataclass
+class SpriteSheets(pygame.sprite.Sprite):
+    sheet: pygame.Surface
 
     def get_image(self, frame: int, width: int, height: int, scale:  int, colour: tuple):
         image = pygame.Surface((width, height)).convert()
@@ -28,14 +28,14 @@ class SpriteSheets:
 """ PLAYER ANIMATION EXTRACTION """
 
 # Loading Spritesheet images
-sprite_sheet_image = pygame.image.load(os.path.join("..", "assets", "graphics", "sprites", "stick_idle.png"))
-sprite_walk_image = pygame.image.load(os.path.join("..", "assets", "graphics", "sprites", "stick_walk.png"))
-sprite_guard_image = pygame.image.load(os.path.join("..", "assets", "graphics", "sprites", "stick_guard.png"))
-sprite_jump_image = pygame.image.load(os.path.join("..", "assets", "graphics", "sprites", "stick_jump.png"))
-sprite_jumping_image = pygame.image.load(os.path.join("..", "assets", "graphics", "sprites", "stick_jumping.png"))
-sprite_attack_upper_image = pygame.image.load(os.path.join("..", "assets", "graphics", "sprites", "upper_attack.png"))
-sprite_attack_normal_image = pygame.image.load(os.path.join("..", "assets", "graphics", "sprites", "stick_attack_normal.png"))
-sprite_attack_upper_phoenix_image = pygame.image.load(os.path.join("..", "assets", "graphics", "sprites", "upper_attack_phoenix.png"))
+sprite_sheet_image = pygame.image.load(os.path.join(".", "assets", "graphics", "sprites", "stick_idle.png"))
+sprite_walk_image = pygame.image.load(os.path.join(".", "assets", "graphics", "sprites", "stick_walk.png"))
+sprite_guard_image = pygame.image.load(os.path.join(".", "assets", "graphics", "sprites", "stick_guard.png"))
+sprite_jump_image = pygame.image.load(os.path.join(".", "assets", "graphics", "sprites", "stick_jump.png"))
+sprite_jumping_image = pygame.image.load(os.path.join(".", "assets", "graphics", "sprites", "stick_jumping.png"))
+sprite_attack_upper_image = pygame.image.load(os.path.join(".", "assets", "graphics", "sprites", "upper_attack.png"))
+sprite_attack_normal_image = pygame.image.load(os.path.join(".", "assets", "graphics", "sprites", "stick_attack_normal.png"))
+sprite_attack_upper_phoenix_image = pygame.image.load(os.path.join(".", "assets", "graphics", "sprites", "upper_attack_phoenix.png"))
 
 
 # Creating Spritesheet object
@@ -64,24 +64,24 @@ attack_upper_phoenix_list = []
 # ===== demon =====
 
 # idle
-demon_idle_image = pygame.image.load(os.path.join("..", "assets", "graphics", "sprites", "demon_idle.png"))
+demon_idle_image = pygame.image.load(os.path.join(".", "assets", "graphics", "sprites", "demon_idle.png"))
 demon_idle_sheet = SpriteSheets(demon_idle_image)
 demon_idle_animation_list = demon_idle_sheet.get_animation_list(500, 500, 1, (150, 150, 150), 4)
 # running
-demon_running_image = pygame.image.load(os.path.join("..", "assets", "graphics", "sprites", "demon_running.png"))
+demon_running_image = pygame.image.load(os.path.join(".", "assets", "graphics", "sprites", "demon_running.png"))
 demon_running_sheet = SpriteSheets(demon_running_image)
 demon_running_animation_list = demon_running_sheet.get_animation_list(500, 500, 1, (150, 150, 150), 4)
 # attack
-demon_attack_image = pygame.image.load(os.path.join("..", "assets", "graphics", "sprites", "demon_attack.png"))
+demon_attack_image = pygame.image.load(os.path.join(".", "assets", "graphics", "sprites", "demon_attack.png"))
 demon_attack_sheet = SpriteSheets(demon_attack_image)
 demon_attack_animation_list = demon_attack_sheet.get_animation_list(500, 500, 1, (150, 150, 150), 9)
 # hit
-demon_hit_image = pygame.image.load(os.path.join("..", "assets", "graphics", "sprites", "demon_hit.png"))
+demon_hit_image = pygame.image.load(os.path.join(".", "assets", "graphics", "sprites", "demon_hit.png"))
 demon_hit_sheet = SpriteSheets(demon_hit_image)
 demon_hit_animation_list = demon_hit_sheet.get_animation_list(500, 500, 1, (150, 150, 150), 5)
 # stunned
 # death
-demon_death_image = pygame.image.load(os.path.join("..", "assets", "graphics", "sprites", "demon_death.png"))
+demon_death_image = pygame.image.load(os.path.join(".", "assets", "graphics", "sprites", "demon_death.png"))
 demon_death_sheet = SpriteSheets(demon_death_image)
 demon_death_animation_list = demon_death_sheet.get_animation_list(500, 500, 1, (150, 150, 150), 7)
 # guarding

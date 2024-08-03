@@ -1,14 +1,13 @@
 import os
 import pygame
-from spritesheets import SpriteSheets
 from dataclasses import dataclass
-import player
 from math import ceil
-
+from . import player
+from .spritesheets import SpriteSheets
 
 pygame.init()
 screen = pygame.display.set_mode((800, 640))
-font = pygame.font.Font(os.path.join("..", "assets", "fonts", "font.otf"), 18)
+font = pygame.font.Font(os.path.join(".", "assets", "fonts", "font.otf"), 18)
 
 
 @dataclass

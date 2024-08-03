@@ -1,0 +1,9 @@
+1. Score tracking and drawing on screen
+2. enemy AI
+3. enemy wave random spawning and selection 
+4. menus
+5. game end condition 
+6. highscore printing and saving
+7. sounds
+8. 2 more enemies for testing
+9. tests for View

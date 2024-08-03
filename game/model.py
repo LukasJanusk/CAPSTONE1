@@ -1,22 +1,35 @@
 import pygame
-import player
-import level
-import controller
-import ui
-# import enemies
-# import AI
+import sys
+from . import player
+from . import level
+from . import controller
+from . import ui
+from . import user
+from . import menu
 
 
 class Model:
     def __init__(self):
+        self.user: user.User = user.User("test")
+        self.menu_manager: menu.Menu_Controller = menu.menu_controller
         self.character: player.Player = player.char
-        self.current_level: level.Level = level.level3
+        self.current_level: level.Level = None
         self.controller: controller.Controller = controller.player_input_manager
+        self.in_menu: bool = True
+        self.pause: bool = False
+        self.in_game: bool = False
 
-    # behaviour setters input and AI
-    # interaction between objects
+    def run_menus(self, event: pygame.event.Event):
+        self.menu_manager.get_active_button(event)
+        messege = self.menu_manager.set_active_menu(event)
+        if messege == "quit":
+            pygame.quit()
+            sys.exit()
+        if messege == "level3":
+            self.in_menu = False
+            self.in_game = True
+            self.current_level = level.level3
 
-    # updates based on interactions
     def update_enemies(self):
         self.update_enemies_existance()
         self.update_enemies_states()

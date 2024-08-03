@@ -1,0 +1,21 @@
+# Ignore virtual environment folder
+venv/
+
+# Ignore Python bytecode files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore IDE-specific files
+.vscode/
+.idea/
+
+# Ignore system-specific files
+.DS_Store
+*.log
+
+# Ignore specific executable files
+game.exe
+game.spec
+dist/

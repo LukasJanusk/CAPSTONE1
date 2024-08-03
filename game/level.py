@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import List
-import enemies
-import layer
+from . import enemies
+from . import layer
 # import random
 
 

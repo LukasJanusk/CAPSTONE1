@@ -1,9 +1,9 @@
 import pygame
-import animations
-import spritesheets
 from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
-import attacks
+from . import attacks
+from . import animations
+from . import spritesheets
 # from typing import Optional
 
 
