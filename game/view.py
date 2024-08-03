@@ -130,3 +130,11 @@ class View:
         for index, button in enumerate(current_menu.buttons):
             button.center_button(screen)
             screen.blit(button.surface, (button.x, 150 + index * 60))
+
+    @classmethod
+    def draw_fps(cls, screen: pygame.Surface, font: pygame.font.Font, fps: int):
+        screen_rect = screen.get_rect()
+        fps_surface = font. render(f"FPS: {fps}", True, (255, 255, 255))
+        fps_surface.get_width()
+        x = screen_rect.width - (fps_surface.get_width() + 10)
+        screen.blit(fps_surface, (x, 10))
