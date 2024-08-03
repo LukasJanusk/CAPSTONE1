@@ -2,6 +2,9 @@
 venv/
 
 # Ignore Python bytecode files
+**__pycache__/
+__pycache__/
+*__pycache__/
 **/__pycache__/
 *.pyc
 *.pyo
@@ -12,6 +15,9 @@ venv/
 .idea/
 
 # Ignore system-specific files
+**DS_Store
+*DS_Store
+assets/.DS_Store
 .DS_Store
 *.log
 
