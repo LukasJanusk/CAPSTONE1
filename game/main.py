@@ -1,5 +1,4 @@
 import pygame
-import sys
 import cProfile
 from . import model
 from .view import View
@@ -13,6 +12,7 @@ def main():
     screen = pygame.display.set_mode((width, height), pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.RESIZABLE)
     clock = pygame.time.Clock()
     engine = model.Model()
+    engine.load_user()
     profile = cProfile.Profile()
     profile.enable()
     while True:
@@ -20,8 +20,7 @@ def main():
             if event.type == pygame.QUIT:
                 profile.disable()
                 profile.print_stats(sort="time")
-                pygame.quit()
-                sys.exit()
+                engine.save_and_quit()
             if engine.in_menu:
                 engine.run_menus(event)
             if engine.in_game:

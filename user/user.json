@@ -1,0 +1,43 @@
+{
+    "user": [
+        {
+            "NAME": "test"
+        },
+        {
+            "level0": true
+        },
+        {
+            "level1": true
+        },
+        {
+            "level2": true
+        },
+        {
+            "level3": true
+        },
+        {
+            "level4": true
+        },
+        {
+            "level5": true
+        },
+        {
+            "level0_highscore": 100000
+        },
+        {
+            "level1_highscore": 0
+        },
+        {
+            "level2_highscore": 0
+        },
+        {
+            "level3_highscore": 0
+        },
+        {
+            "level4_highscore": 0
+        },
+        {
+            "level5_highscore": 0
+        }
+    ]
+}

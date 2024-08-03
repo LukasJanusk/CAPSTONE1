@@ -150,4 +150,3 @@ class Menu_Controller:
 
 
 menu_controller = Menu_Controller([user_select_menu, main_menu, settings_menu, high_scores_menu, new_game_menu, pause_menu])
-

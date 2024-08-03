@@ -6,7 +6,7 @@ import os
 
 
 @dataclass
-class Input_controller():
+class Typing_Controller():
     user_text: str = ""
     typing: bool = True
 
@@ -37,7 +37,7 @@ class User:
     level3_highscore: int = 0
     level4_highscore: int = 0
     level5_highscore: int = 0
-    input_manager = Input_controller()
+    input_manager = Typing_Controller()
 
     def __init__(self, name: str):
         self.NAME = name
@@ -55,7 +55,7 @@ class User:
             self._NAME = name
 
     def to_dict(self):
-        return {"user:" [{"NAME": self.NAME},
+        return {"user": [{"NAME": self.NAME},
                          {"level0": self.level0},
                          {"level1": self.level1},
                          {"level2": self.level2},
@@ -71,6 +71,7 @@ class User:
 
     def save_user(self):
         data = self.to_dict()
+        print(data)
         try:
             with open(os.path.join(".", "user", "user.json"), mode="w") as file:
                 json.dump(data, file, indent=4)
@@ -81,29 +82,29 @@ class User:
     def load_user(self):
         file_path = os.path.join(".", "user", "user.json")
         if not os.path.isfile(file_path):
-            with open(os.path.join(".", "user", "user.json"), mode="w") as file:
-                data = {"user": []}
-            json.dump(os.path.join(".", "user", "user.json"), data)
-        try:
-            with open(os.path.join(".", "user", "user.json"), mode="r") as file:
-                data = json.load(file)
-                self.NAME = data["user"][0]["NAME"]
-                self.level0 = data["user"][1]["level0"]
-                self.level1 = data["user"][2]["level1"]
-                self.level2 = data["user"][3]["level2"]
-                self.level3 = data["user"][4]["level3"]
-                self.level4 = data["user"][5]["level4"]
-                self.level5 = data["user"][6]["level5"]
-                self.level0_highscore = data["user"][7]["level0_highscore"]
-                self.level1_highscore = data["user"][8]["level1_highscore"]
-                self.level2_highscore = data["user"][9]["level2_highscore"]
-                self.level3_highscore = data["user"][10]["level3_highscore"]
-                self.level4_highscore = data["user"][11]["level4_highscore"]
-                self.level5_highscore = data["user"][12]["level5_highscore"]
-                self.input_manager = Input_controller()
-                print("User data loaded")
-        except Exception as e:
-            print(f"Failed to load user data: {e}")
+            self.save_user()
+        else:
+            try:
+                path = os.path.join(".", "user", "user.json")
+                with open(path, mode="r") as file:
+                    data = json.load(file)
+                    self.NAME = data["user"][0]["NAME"]
+                    self.level0 = data["user"][1]["level0"]
+                    self.level1 = data["user"][2]["level1"]
+                    self.level2 = data["user"][3]["level2"]
+                    self.level3 = data["user"][4]["level3"]
+                    self.level4 = data["user"][5]["level4"]
+                    self.level5 = data["user"][6]["level5"]
+                    self.level0_highscore = data["user"][7]["level0_highscore"]
+                    self.level1_highscore = data["user"][8]["level1_highscore"]
+                    self.level2_highscore = data["user"][9]["level2_highscore"]
+                    self.level3_highscore = data["user"][10]["level3_highscore"]
+                    self.level4_highscore = data["user"][11]["level4_highscore"]
+                    self.level5_highscore = data["user"][12]["level5_highscore"]
+                    self.input_manager = Typing_Controller()
+                    print("User data loaded")
+            except Exception as e:
+                print(f"Failed to load user data: {e}")
 
     def reset_user_data(self):
         pass

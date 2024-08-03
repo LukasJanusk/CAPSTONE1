@@ -19,12 +19,19 @@ class Model:
         self.pause: bool = False
         self.in_game: bool = False
 
+    def save_and_quit(self):
+        self.user.save_user()
+        pygame.quit()
+        sys.exit()
+
+    def load_user(self):
+        self.user.load_user()
+
     def run_menus(self, event: pygame.event.Event):
         self.menu_manager.get_active_button(event)
         messege = self.menu_manager.set_active_menu(event)
         if messege == "quit":
-            pygame.quit()
-            sys.exit()
+            self.save_and_quit()
         if messege == "level3":
             self.in_menu = False
             self.in_game = True
