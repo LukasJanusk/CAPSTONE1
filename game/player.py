@@ -10,7 +10,7 @@ class Player:
     x: int
     y: int
     scale: float = 1
-    frame: int = 0
+    _frame: int = 0
     frame_rate: int = 80
     last_update = pygame.time.get_ticks()
     current_time = None
@@ -69,6 +69,19 @@ class Player:
         self.hitbox = pygame.Rect(self.x, self.y, 80, 150)
         if self.current_animation is None:
             self.current_animation is self.IDLE_ANIMATION
+
+    @property
+    def frame(self):
+        return self._frame
+
+    @frame.setter
+    def frame(self, value):
+        if type(value) is not int:
+            raise TypeError("Wrong type for value frame")
+        if value not in range(0, 14):
+            self._frame = 0
+        else:
+            self._frame = value
 
     def reset_frames(self):
         if self.attacking_upper:
