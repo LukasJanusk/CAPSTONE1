@@ -1,5 +1,5 @@
 import pygame
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from abc import ABC, abstractmethod
 from . import attacks
 from . import animations
@@ -26,9 +26,9 @@ class Enemy(BaseEnemy):
     max_health: float = 100
     damage: int = 0
     scale: float = 1
-    frame: int = 0
-    frame_rate: int = 160
-    last_update: float = field(default_factory=lambda: pygame.time.get_ticks())
+    _frame: int = 0
+    _frame_rate: int = 160
+    last_update = pygame.time.get_ticks()
     stun_duration: int = 200
     speed: float = 1.5
     facing_right: bool = False
@@ -46,6 +46,25 @@ class Enemy(BaseEnemy):
 
     def __post_init__(self):
         self.hitbox = pygame.Rect(self.x, self.y, self.hitbox_width, self.hitbox_height)
+
+    @property
+    def frame(self):
+        return self._frame
+
+    @frame.setter
+    def frame(self, value):
+        if type(value) is not int:
+            raise TypeError("Wrong type for value: frame")
+        if value < 0:
+            self._frame = 0
+        if len(self.current_animation.animation_list) - 1 < value:
+            self._frame = 0
+        else:
+            self._frame = value
+
+    @property
+    def frame_rate(self):
+        return self._frame_rate
 
 
 @dataclass
