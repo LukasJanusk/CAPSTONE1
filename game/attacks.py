@@ -1,7 +1,6 @@
 import pygame
 from dataclasses import dataclass
 from typing import List
-from . import enemies
 
 
 @dataclass
@@ -26,7 +25,7 @@ class Attack:
                                       (self.hitbox_width),
                                       (self.hitbox_height))
 
-    def hit(self, attack_frame: int, enemy_hitbox: enemies.Enemy.hitbox):
+    def hit(self, attack_frame: int, enemy_hitbox: pygame.Rect):
         if attack_frame in self.damage_frames:
             if self.hitbox.colliderect(enemy_hitbox):
                 self.collision = True

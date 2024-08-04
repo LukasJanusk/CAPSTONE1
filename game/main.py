@@ -39,10 +39,14 @@ def main():
             View.render(screen, engine.get_layers_for_blit())
             View.draw_player_hitbox(screen, engine.character)
             View.draw_player_attack_hitbox(screen, engine.character)
-            View.draw_enemies_hitboxes(screen, engine.current_level.current_wave_enemies)
+            View.draw_enemies_hitboxes(screen,
+                                       engine.current_level.current_wave_enemies)
             View.draw_fps(screen, font, int(clock.get_fps()))
-            if engine.character.frame == 3:
-                print(f"Currently there are: {len(engine.current_level.current_wave_enemies)} active enemies")
+            View.draw_wave_number(screen,
+                                  pygame.font.Font(os.path.join(".", "assets", "fonts", "font.otf"), 25),
+                                  engine.current_level.waves,
+                                  engine.current_level.current_wave
+                                  )
         pygame.display.flip()
         clock.tick(120)
 

@@ -3,8 +3,8 @@ from typing import List
 from . import enemies
 from . import layer
 import random
-available_enemies = [enemies.Demon(0, 50), enemies.Imp(0, 350)]
-available_enemies_weights = [enemies.Demon.weight, enemies.Imp.weight]
+available_enemies = ["demon", "imp"]
+available_enemies_weights = [10, 100]
 
 
 @dataclass
@@ -23,14 +23,31 @@ class Level:
     waves: int = 10
     current_wave: int = 0
     current_wave_enemies: List[enemies.Enemy] = field(default_factory=list)
+    score: int = 0
+
+    def is_colliding(self, new_enemy, wave: list):
+        return any(new_enemy.hitbox.colliderect(enemy_obj.hitbox) for enemy_obj in wave)
 
     def generate_wave(self, player_x: int):
         wave = []
-        for enemy in range(random.randint(7, 13)):
-            enemy: enemies.Enemy = random.choices(available_enemies, weights=available_enemies_weights, k=1)[0]
-            enemy.x = random.randint(int(player_x - 300), int(player_x + 1000))
-            wave.append(enemy)
-            print(f"Enemy {enemy} generated")
+        for i in range(random.randint(7, 13)):
+            choice = random.choices(available_enemies, weights=available_enemies_weights, k=1)[0]
+            x = random.randint(int(player_x - 300), int(player_x + 1000))
+            if choice == "demon":
+                enemy = enemies.Demon(x, 50, name=str(i))
+                while self.is_colliding(enemy, wave):
+                    enemy.x += 50
+                    enemy.update_hitbox()
+                wave.append(enemy)
+            elif choice == "imp":
+                enemy = enemies.Imp(x, random.randint(300, 360), name=str(i))
+                while self.is_colliding(enemy, wave):
+                    enemy.x += 1
+                    enemy.update_hitbox()
+                wave.append(enemy)
+            else:
+                print("Failed to create enemy")
+        self.current_wave += 1
         return wave
 
     def get_layers_list(self):

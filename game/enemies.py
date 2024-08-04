@@ -23,8 +23,7 @@ class BaseEnemy(ABC):
 class Enemy(BaseEnemy):
     x: int
     y: int
-    hitbox_width: int = 50
-    hitbox_height: int = 50
+    name: str = None
     health: float = 100
     max_health: float = 100
     damage: int = 0
@@ -43,7 +42,6 @@ class Enemy(BaseEnemy):
     idle: bool = True
     dead: bool = False
     exist: bool = True
-    hitbox = None
     current_animation = None
     attack = None
 
@@ -100,7 +98,6 @@ class Demon(Enemy):
             if self.dead:
                 if self.frame >= 6:
                     self.exist = False
-                    self.y = -500
             elif self.hit is True:
                 if self.frame >= 5:
                     self.frame = 0
@@ -118,6 +115,8 @@ class Demon(Enemy):
 
     def update_states(self):
         if self.exist:
+            self.current_animation.x = self.x
+            self.current_animation.y = self.y
             if self.dead:
                 self.idle = False
                 self.attacking = False
@@ -146,7 +145,7 @@ class Demon(Enemy):
                 self.current_animation = self.idle_animation
 
     def update_hitbox(self):
-        self.hitbox = pygame.Rect(self.x, self.y, self.hitbox_width, self.hitbox_height)
+        self.hitbox = pygame.Rect(self.x + 110, self.y + 80, self.hitbox_width, self.hitbox_height)
 
 
 @dataclass
@@ -182,7 +181,6 @@ class Imp(Enemy):
             if self.dead:
                 if self.frame >= 6:
                     self.exist = False
-                    self.y = -500
             elif self.hit is True:
                 if self.frame > 6:
                     self.frame = 0
@@ -200,6 +198,8 @@ class Imp(Enemy):
 
     def update_states(self):
         if self.exist:
+            self.current_animation.x = self.x
+            self.current_animation.y = self.y
             if self.dead:
                 self.idle = False
                 self.attacking = False
@@ -228,4 +228,4 @@ class Imp(Enemy):
                 self.current_animation = self.idle_animation
 
     def update_hitbox(self):
-        self.hitbox = pygame.Rect(self.x + 50, self.y, self.hitbox_width, self.hitbox_height)
+        self.hitbox = pygame.Rect(self.x + 50, self.y + 20, self.hitbox_width, self.hitbox_height)

@@ -6,6 +6,7 @@ from . import player
 from . import animations
 from . import layer
 from . import menu
+from . import ui
 
 
 class View:
@@ -19,7 +20,7 @@ class View:
                     enemies.Imp,
                     layer.Layer,
                     player.Player]] = [],
-               draw_health_bars: bool = False
+               draw_health_bars: bool = True
                ):
         for object in layers:
             if object is None:
@@ -32,12 +33,17 @@ class View:
                     View.draw_enemy_health_bar(screen, object)
             elif type(object) is player.Player:
                 View.render_player(screen, object)
+            elif type(object) is ui.Healthbar:
+                screen.blit(object, (5, 5))
             elif type(object) is pygame.Surface:
-                screen.blit(object, (0, 0))
+                View.draw_score(screen, object)
             else:
                 print("no object to render")
-            # elif layer_object is effects.Particle:
-            #   pass
+
+    @classmethod
+    def draw_score(cls, object: pygame.Surface, screen: pygame.Surface):
+        x = View.center(screen, object)
+        screen.blit(object, (x, 30))
 
     # @classmethod
     # def render_layer_array(
@@ -102,15 +108,17 @@ class View:
                     pygame.draw.rect(screen, (0, 255, 0), enemy.hitbox, 2)
 
     @classmethod
-    def draw_enemy_health_bar(cls, screen: pygame.Surface, enemy: enemies.Enemy):
+    def draw_enemy_health_bar(cls, screen: pygame.Surface, enemy: enemies.Demon | enemies.Imp):
         health_bar_bg = pygame.Surface((enemy.hitbox_width, 10))
         health_bar_width = int(enemy.hitbox_width * enemy.health / enemy.max_health)
+        if health_bar_width < 0:
+            health_bar_width = 0
         health_bar_bg.fill((0, 0, 0))
-        health_bar = pygame.Surface(health_bar_width, 8)
-        health_bar.fill(65, 155, 0)
+        health_bar = pygame.Surface((health_bar_width, 8))
+        health_bar.fill((65, 155, 0))
         health_bar.blit(health_bar_bg, (0, 1))
         x = View.center(enemy.current_animation.animation_list[0], health_bar_bg)
-        screen.blit(health_bar_bg, (x, enemy.y + 10))
+        screen.blit(health_bar_bg, (enemy.x + x, enemy.y + 10))
 
     @classmethod
     def center(cls, screen: pygame.Surface, object: pygame.Surface):
@@ -167,3 +175,25 @@ class View:
         fps_surface.get_width()
         x = screen_rect.width - (fps_surface.get_width() + 10)
         screen.blit(fps_surface, (x, 10))
+
+    @classmethod
+    def draw_wave_number(
+                  cls,
+                  screen: pygame.Surface,
+                  font: pygame.font.Font,
+                  total_waves: int,
+                  current_wave: int,
+                  coordinates: tuple = (10, 30),
+                  scale: float = None):
+
+        text_surface = font.render(f"Wave: {current_wave}/{total_waves}", True, (255, 255, 255))
+        if scale:
+            text_surface = pygame.transform.smoothscale(text_surface, (scale, scale))
+        screen.blit(text_surface, coordinates)
+
+    # @classmethod
+    # def draw_score(cls,
+    #                screen: pygame.font.Font,
+    #                score: int
+    #                duration
+    #                )

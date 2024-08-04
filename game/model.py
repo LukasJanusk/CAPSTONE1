@@ -6,6 +6,7 @@ from . import controller
 from . import ui
 from . import user
 from . import menu
+from . import enemies
 
 
 class Model:
@@ -76,6 +77,7 @@ class Model:
                 damage = self.character.current_attack.hit(self.character.frame, enemy.hitbox)
                 if damage:
                     enemy.health -= damage
+                    enemy.hit = True
                     print(f"Player dealt {damage} damage")
 
     def enemies_attack(self):
@@ -109,7 +111,8 @@ class Model:
                  [self.character] +
                  [self.current_level.layer6,
                   self.current_level.layer7] +
-                 [ui.health_bar.draw_health_bar()]
+                 [ui.health_bar.draw_health_bar()] +
+                 [ui.score.get_score_surface(str(self.current_level.score))]
                   )
         return layers
 
@@ -145,7 +148,12 @@ class Model:
                 enemy.attacking = False
                 enemy.guarding = False
                 enemy.stunned = False
-                self.current_level.current_wave_enemies.remove(enemy)
+                if enemy.exist is False:
+                    if enemy is enemies.Demon:
+                        self.current_level.score += 100
+                    if enemy is enemies.Imp:
+                        self.current_level.score += 10
+                    self.current_level.current_wave_enemies.remove(enemy)
 
     def update_layer_scroll(self):
         layers_list = self.current_level.get_layers_list()
@@ -157,8 +165,7 @@ class Model:
                     layer_item.distance = 0
         for enemy_obj in self.current_level.current_wave_enemies:
             if len(self.current_level.current_wave_enemies) > 0:
-                enemy_obj.x -= self.character.speed
-                print("enemy x updated")
+                enemy_obj.x += self.character.speed
 
     def update_camera(self):
         layers_list = self.current_level.get_layers_list()
