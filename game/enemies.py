@@ -9,10 +9,13 @@ from . import spritesheets
 
 class BaseEnemy(ABC):
     @abstractmethod
-    def update_frames(self):
+    def reset_frames(self):
         pass
 
     def update_states(self):
+        pass
+
+    def update_hitbox(self):
         pass
 
 
@@ -20,8 +23,8 @@ class BaseEnemy(ABC):
 class Enemy(BaseEnemy):
     x: int
     y: int
-    hitbox_width: int
-    hitbox_height: int
+    hitbox_width: int = 50
+    hitbox_height: int = 50
     health: float = 100
     max_health: float = 100
     damage: int = 0
@@ -43,9 +46,6 @@ class Enemy(BaseEnemy):
     hitbox = None
     current_animation = None
     attack = None
-
-    def __post_init__(self):
-        self.hitbox = pygame.Rect(self.x, self.y, self.hitbox_width, self.hitbox_height)
 
     @property
     def frame(self):
@@ -81,14 +81,16 @@ class Demon(Enemy):
     idle_animation = None
     hitbox_height = 420
     hitbox_width = 300
+    weight = 10
+    hitbox = None
 
     def __post_init__(self):
-        super().__post_init__()
-        self.attack_animation = animations.Animation(self.x, self.y, self.sprite_sheet_lsit[3], 0, 0, (150, 150, 150))
-        self.hit_animation = animations.Animation(self.x, self.y, self.sprite_sheet_lsit[1], 0, 0, (150, 150, 150))
-        self.death_animation = animations.Animation(self.x, self.y, self.sprite_sheet_lsit[2], 0, 0, (150, 150, 150))
-        self.running_animation = animations.Animation(self.x, self.y, self.sprite_sheet_lsit[4], 0, 0, (150, 150, 150))
-        self.idle_animation = animations.Animation(self.x, self.y, self.sprite_sheet_lsit[0], 0, 0, (150, 150, 150))
+        self.hitbox = pygame.Rect(self.x, self.y, self.hitbox_width, self.hitbox_height)
+        self.idle_animation = animations.Animation(self.sprite_sheet_list[0], self.x, self.y, 0, 0, (150, 150, 150))
+        self.hit_animation = animations.Animation(self.sprite_sheet_list[1], self.x, self.y, 0, 0, (150, 150, 150))
+        self.death_animation = animations.Animation(self.sprite_sheet_list[2], self.x, self.y, 0, 0, (150, 150, 150))
+        self.attack_animation = animations.Animation(self.sprite_sheet_list[3], self.x, self.y, 0, 0, (150, 150, 150))
+        self.running_animation = animations.Animation(self.sprite_sheet_list[4], self.x, self.y, 0, 0, (150, 150, 150))
         self.attack = attacks.Attack(self.damage, [6], 300, 180, 120, 270, -40, 0)
         if self.current_animation is None:
             self.current_animation = self.idle_animation
@@ -142,3 +144,88 @@ class Demon(Enemy):
             elif self.idle:
                 self.hit = False
                 self.current_animation = self.idle_animation
+
+    def update_hitbox(self):
+        self.hitbox = pygame.Rect(self.x, self.y, self.hitbox_width, self.hitbox_height)
+
+
+@dataclass
+class Imp(Enemy):
+    AI = None
+    health: float = 1000
+    max_health: float = 1000
+    damage: int = 5
+    sprite_sheet_list = spritesheets.imp_animations
+    attack_animation = None
+    hit_animation = None
+    death_animation = None
+    running_animation = None
+    idle_animation = None
+    hitbox_height = 120
+    hitbox_width = 60
+    weight = 80
+    hitbox = None
+
+    def __post_init__(self):
+        self.hitbox = pygame.Rect(self.x, self.y, self.hitbox_width, self.hitbox_height)
+        self.idle_animation = animations.Animation(self.sprite_sheet_list[0], self.x, self.y, 0, 0, (150, 150, 150))
+        self.hit_animation = animations.Animation(self.sprite_sheet_list[1], self.x, self.y, 0, 0, (150, 150, 150))
+        self.death_animation = animations.Animation(self.sprite_sheet_list[2], self.x, self.y, 0, 0, (150, 150, 150))
+        self.attack_animation = animations.Animation(self.sprite_sheet_list[3], self.x, self.y, 0, 0, (150, 150, 150))
+        self.running_animation = animations.Animation(self.sprite_sheet_list[4], self.x, self.y, 0, 0, (150, 150, 150))
+        self.attack = attacks.Attack(self.damage, [1, 2], 50, 30, 130, 75, -30, 0)
+        if self.current_animation is None:
+            self.current_animation = self.idle_animation
+
+    def reset_frames(self):
+        if self.exist:
+            if self.dead:
+                if self.frame >= 6:
+                    self.exist = False
+                    self.y = -500
+            elif self.hit is True:
+                if self.frame > 6:
+                    self.frame = 0
+            elif self.attacking is True:
+                if self.frame > 4:
+                    self.frame = 0
+                    self.attacking = False
+            elif self.running is True:
+                if self.frame > 4:
+                    self.frame = 0
+            elif self.idle is True:
+                if self.frame > 4:
+                    self.frame = 0
+        return self.frame
+
+    def update_states(self):
+        if self.exist:
+            if self.dead:
+                self.idle = False
+                self.attacking = False
+                self.hit = False
+                self.current_animation = self.death_animation
+            elif self.hit:
+                self.idle = False
+                self.attacking = False
+                self.running = False
+                self.current_animation = self.hit_animation
+                if self.frame == 6:
+                    self.hit = False
+                    self.frame = 0
+                    self.idle = True
+                    self.current_animation = self.idle_animation
+            elif self.running:
+                self.idle = False
+                self.attacking = False
+                self.current_animation = self.running_animation
+            elif self.attacking:
+                self.idle = False
+                self.running = False
+                self.current_animation = self.attack_animation
+            elif self.idle:
+                self.hit = False
+                self.current_animation = self.idle_animation
+
+    def update_hitbox(self):
+        self.hitbox = pygame.Rect(self.x + 50, self.y, self.hitbox_width, self.hitbox_height)

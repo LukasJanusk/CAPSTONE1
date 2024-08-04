@@ -2,7 +2,9 @@ from dataclasses import dataclass, field
 from typing import List
 from . import enemies
 from . import layer
-# import random
+import random
+available_enemies = [enemies.Demon(0, 50), enemies.Imp(0, 350)]
+available_enemies_weights = [enemies.Demon.weight, enemies.Imp.weight]
 
 
 @dataclass
@@ -22,11 +24,24 @@ class Level:
     current_wave: int = 0
     current_wave_enemies: List[enemies.Enemy] = field(default_factory=list)
 
-    def generate_wave(self):
-        pass
+    def generate_wave(self, player_x: int):
+        wave = []
+        for enemy in range(random.randint(7, 13)):
+            enemy: enemies.Enemy = random.choices(available_enemies, weights=available_enemies_weights, k=1)[0]
+            enemy.x = random.randint(int(player_x - 300), int(player_x + 1000))
+            wave.append(enemy)
+            print(f"Enemy {enemy} generated")
+        return wave
 
     def get_layers_list(self):
-        return [self.layer0, self.layer1, self.layer2, self.layer3, self.layer4, self.layer5, self.layer6, self.layer7]
+        return [self.layer0,
+                self.layer1,
+                self.layer2,
+                self.layer3,
+                self.layer4,
+                self.layer5,
+                self.layer6,
+                self.layer7]
 
 
 level0 = Level("Church",

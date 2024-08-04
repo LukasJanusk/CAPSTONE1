@@ -31,16 +31,20 @@ def main():
             View.draw_menus(screen, engine.menu_manager.current_menu)
         if engine.in_game:
             engine.controller.set_player_state()
-            engine.update_scroll()
+            engine.get_current_level_wave()
+            engine.update_enemies()
             engine.update_player()
+            engine.update_scroll()
             engine.calculate_attacks()
             View.render(screen, engine.get_layers_for_blit())
             View.draw_player_hitbox(screen, engine.character)
             View.draw_player_attack_hitbox(screen, engine.character)
             View.draw_enemies_hitboxes(screen, engine.current_level.current_wave_enemies)
             View.draw_fps(screen, font, int(clock.get_fps()))
+            if engine.character.frame == 3:
+                print(f"Currently there are: {len(engine.current_level.current_wave_enemies)} active enemies")
         pygame.display.flip()
-        clock.tick(240)
+        clock.tick(120)
 
 
 if __name__ == "__main__":

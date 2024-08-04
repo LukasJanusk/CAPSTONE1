@@ -37,10 +37,27 @@ class Model:
             self.in_game = True
             self.current_level = level.level3
 
+    def get_current_level_wave(self):
+        if len(self.current_level.current_wave_enemies) < 1 or self.current_level.current_wave_enemies is None:
+            self.current_level.current_wave_enemies = self.current_level.generate_wave(self.character.x)
+            # print("Wave generated")
+            # print(f"{len(self.current_level.current_wave_enemies)}")
+
     def update_enemies(self):
         self.update_enemies_existance()
         self.update_enemies_states()
         self.update_enemies_frame()
+        self.update_enemies_hitboxes()
+        self.update_enemies_attacks_hitboxes()
+
+    def update_enemies_attacks_hitboxes(self):
+        for enemy in self.current_level.current_wave_enemies:
+            if enemy.attack is not None:
+                enemy.attack.update_hitbox(enemy.x, enemy.y, enemy.facing_right)
+
+    def update_enemies_hitboxes(self):
+        for enemy in self.current_level.current_wave_enemies:
+            enemy.update_hitbox()
 
     def update_scroll(self):
         self.update_layer_scroll()
@@ -57,13 +74,17 @@ class Model:
         if self.character.current_attack is not None:
             for enemy in self.current_level.current_wave_enemies:
                 damage = self.character.current_attack.hit(self.character.frame, enemy.hitbox)
-                enemy.health -= damage
+                if damage:
+                    enemy.health -= damage
+                    print(f"Player dealt {damage} damage")
 
     def enemies_attack(self):
         for enemy in self.current_level.current_wave_enemies:
             if enemy.attacking:
                 damage = enemy.attack.hit(enemy.frame, self.character.hitbox)
-                self.character.health -= damage
+                if damage:
+                    self.character.health -= damage
+                    print(f"Player received {damage}")
 
     def update_player(self):
         # interaction between objects and enemies update
@@ -105,11 +126,11 @@ class Model:
     def update_enemies_frame(self):
         for enemy in self.current_level.current_wave_enemies:
             if enemy.exist:
-                enemy.current_time = pygame.time.get_ticks()
-                if enemy.current_time - enemy.last_update >= enemy.frame_rate:
+                current_time = pygame.time.get_ticks()
+                if current_time - enemy.last_update >= enemy.frame_rate:
                     enemy.frame += 1
-                    enemy.last_update = enemy.current_time
-                enemy.update_frames()
+                    enemy.last_update = current_time
+                enemy.reset_frames()
 
     def update_enemies_states(self):
         for enemy in self.current_level.current_wave_enemies:
@@ -136,7 +157,8 @@ class Model:
                     layer_item.distance = 0
         for enemy_obj in self.current_level.current_wave_enemies:
             if len(self.current_level.current_wave_enemies) > 0:
-                enemy_obj.x += self.character.speed
+                enemy_obj.x -= self.character.speed
+                print("enemy x updated")
 
     def update_camera(self):
         layers_list = self.current_level.get_layers_list()

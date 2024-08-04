@@ -1,12 +1,12 @@
+from dataclasses import dataclass
 from . import enemies
 from .player import char
 
 
+@dataclass
 class AI:
-    def __init__(self, name, enemy):
-        self.name: str = name
-        self.enemy: enemies.Enemy = enemy
-        self.player = char
+    enemy: enemies.Enemy
+    player = char
 
     def seek(self):
         if self.enemy.x + 20 <= self.player.x and self.player.x <= self.enemy.x + self.enemy.hitbox_width:

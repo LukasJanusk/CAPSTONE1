@@ -33,6 +33,7 @@ class Attack:
                 return self.damage
         else:
             self.collision = False
+            return False
 
     def draw_hitbox(self, game_surface, frame):
         if frame in self.damage_frames:

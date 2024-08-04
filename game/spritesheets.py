@@ -95,12 +95,33 @@ demon_animations = [demon_idle_animation_list,
 # ===== imp =====
 
 # idle
+imp_idle_image = pygame.image.load(os.path.join(".", "assets", "graphics", "sprites", "imp_idle.png"))
+imp_idle_sheet = SpriteSheets(imp_idle_image)
+imp_idle_animation_list = imp_idle_sheet.get_animation_list(150, 150, 1, (150, 150, 150), 5)
 # running
+imp_running_image = pygame.image.load(os.path.join(".", "assets", "graphics", "sprites", "imp_walking.png"))
+imp_running_sheet = SpriteSheets(imp_running_image)
+imp_running_animation_list = imp_running_sheet.get_animation_list(150, 150, 1, (150, 150, 150), 5)
 # attack
+imp_attack_image = pygame.image.load(os.path.join(".", "assets", "graphics", "sprites", "imp_attack.png"))
+imp_attack_sheet = SpriteSheets(imp_attack_image)
+imp_attack_animation_list = imp_attack_sheet.get_animation_list(150, 150, 1, (150, 150, 150), 5)
 # hit
+imp_hit_image = pygame.image.load(os.path.join(".", "assets", "graphics", "sprites", "imp_hit.png"))
+imp_hit_sheet = SpriteSheets(imp_hit_image)
+imp_hit_animation_list = imp_hit_sheet.get_animation_list(150, 150, 1, (150, 150, 150), 7)
 # stunned
 # death
+imp_death_image = pygame.image.load(os.path.join(".", "assets", "graphics", "sprites", "imp_death.png"))
+imp_death_sheet = SpriteSheets(imp_death_image)
+imp_death_animation_list = imp_death_sheet = imp_death_sheet.get_animation_list(150, 150, 1, (150, 150, 150), 7)
 # guarding
+
+imp_animations = [imp_idle_animation_list,
+                  imp_hit_animation_list,
+                  imp_death_animation_list,
+                  imp_attack_animation_list,
+                  imp_running_animation_list]
 
 # ===== shade =====
 
