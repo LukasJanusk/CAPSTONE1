@@ -36,11 +36,13 @@ def main():
             engine.update_player()
             engine.update_scroll()
             engine.calculate_attacks()
-            View.render(screen, engine.get_layers_for_blit())
+            View.render(screen, str(engine.current_level.score), engine.get_layers_for_blit())
             View.draw_player_hitbox(screen, engine.character)
             View.draw_player_attack_hitbox(screen, engine.character)
             View.draw_enemies_hitboxes(screen,
                                        engine.current_level.current_wave_enemies)
+            View.draw_enemies_attack_hitboxes(screen,
+                                              engine.current_level.current_wave_enemies)
             View.draw_fps(screen, font, int(clock.get_fps()))
             View.draw_wave_number(screen,
                                   pygame.font.Font(os.path.join(".", "assets", "fonts", "font.otf"), 25),

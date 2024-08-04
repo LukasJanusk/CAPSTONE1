@@ -164,6 +164,7 @@ class Player:
         return self.current_attack
 
     def update_hitbox(self):
+        self.hit = False
         if self.facing_right:
             self.hitbox = pygame.Rect(self.x + 20, self.y + 15, 70, 120)
         else:

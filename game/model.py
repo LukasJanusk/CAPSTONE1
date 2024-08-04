@@ -86,7 +86,8 @@ class Model:
                 damage = enemy.attack.hit(enemy.frame, self.character.hitbox)
                 if damage:
                     self.character.health -= damage
-                    print(f"Player received {damage}")
+                    self.character.hit = True
+                    print(f"Player received {damage} damage")
 
     def update_player(self):
         # interaction between objects and enemies update
@@ -111,8 +112,8 @@ class Model:
                  [self.character] +
                  [self.current_level.layer6,
                   self.current_level.layer7] +
-                 [ui.health_bar.draw_health_bar()] +
-                 [ui.score.get_score_surface(str(self.current_level.score))]
+                 [ui.health_bar] +
+                 [ui.score]
                   )
         return layers
 
@@ -149,9 +150,9 @@ class Model:
                 enemy.guarding = False
                 enemy.stunned = False
                 if enemy.exist is False:
-                    if enemy is enemies.Demon:
+                    if type(enemy) is enemies.Demon:
                         self.current_level.score += 100
-                    if enemy is enemies.Imp:
+                    if type(enemy) is enemies.Imp:
                         self.current_level.score += 10
                     self.current_level.current_wave_enemies.remove(enemy)
 

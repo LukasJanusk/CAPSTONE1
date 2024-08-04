@@ -98,7 +98,6 @@ class Healthbar:
         health_bar.fill(colour)
         health_bar_bg.blit(health_bar, (1, 1))
         health_bar_bg.blit(text, (115, 1))
-        print(type(health_bar_bg))
         self.health_bar_surface = health_bar_bg
         self.health = self.character.health
         return self.health_bar_surface

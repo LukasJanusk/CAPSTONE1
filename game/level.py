@@ -4,7 +4,7 @@ from . import enemies
 from . import layer
 import random
 available_enemies = ["demon", "imp"]
-available_enemies_weights = [10, 100]
+available_enemies_weights = [50, 100]
 
 
 @dataclass
@@ -23,7 +23,20 @@ class Level:
     waves: int = 10
     current_wave: int = 0
     current_wave_enemies: List[enemies.Enemy] = field(default_factory=list)
-    score: int = 0
+    _score: int = 0
+
+    @property
+    def score(self):
+        return self._score
+
+    @score.setter
+    def score(self, value):
+        if type(value) is not int:
+            raise TypeError("Score must be and Integer")
+        if value < 0:
+            raise ValueError("Score cannot be negative")
+        else:
+            self._score = value
 
     def is_colliding(self, new_enemy, wave: list):
         return any(new_enemy.hitbox.colliderect(enemy_obj.hitbox) for enemy_obj in wave)
@@ -42,7 +55,7 @@ class Level:
             elif choice == "imp":
                 enemy = enemies.Imp(x, random.randint(300, 360), name=str(i))
                 while self.is_colliding(enemy, wave):
-                    enemy.x += 1
+                    enemy.x += 30
                     enemy.update_hitbox()
                 wave.append(enemy)
             else:

@@ -13,13 +13,16 @@ class View:
     @classmethod
     def render(cls,
                screen: pygame.Surface,
+               score: str,
                layers: List[Union[
                     animations.Animation,
                     enemies.Enemy,
                     enemies.Demon,
                     enemies.Imp,
                     layer.Layer,
-                    player.Player]] = [],
+                    player.Player,
+                    ui.Healthbar,
+                    ui.Score]] = [],
                draw_health_bars: bool = True
                ):
         for object in layers:
@@ -34,16 +37,18 @@ class View:
             elif type(object) is player.Player:
                 View.render_player(screen, object)
             elif type(object) is ui.Healthbar:
-                screen.blit(object, (5, 5))
-            elif type(object) is pygame.Surface:
-                View.draw_score(screen, object)
+                screen.blit(object.draw_health_bar(), (5, 5))
+            elif type(object) is ui.Score:
+                View.draw_score(screen, object, score)
             else:
                 print("no object to render")
 
     @classmethod
-    def draw_score(cls, object: pygame.Surface, screen: pygame.Surface):
-        x = View.center(screen, object)
-        screen.blit(object, (x, 30))
+    def draw_score(cls, screen: pygame.Surface, object: ui.Score, score: str):
+        print(type(object))
+        score_surface = object.get_score_surface(score)
+        x = View.center(screen, score_surface)
+        screen.blit(score_surface, (x, 30))
 
     # @classmethod
     # def render_layer_array(
@@ -99,6 +104,15 @@ class View:
             player.current_attack.draw_hitbox(screen, player.frame)
 
     @classmethod
+    def draw_enemies_attack_hitboxes(cls, screen: pygame.Surface, enemies: List[Union[
+                    enemies.Enemy,
+                    enemies.Demon,
+                    enemies.Imp]]):
+        for enemy in enemies:
+            if enemy.attacking:
+                enemy.attack.draw_hitbox(screen, enemy.frame)
+
+    @classmethod
     def draw_enemies_hitboxes(cls, screen: pygame.Surface, enemies: List[enemies.Enemy]):
         for enemy in enemies:
             if enemy is not None:
@@ -116,7 +130,7 @@ class View:
         health_bar_bg.fill((0, 0, 0))
         health_bar = pygame.Surface((health_bar_width, 8))
         health_bar.fill((65, 155, 0))
-        health_bar.blit(health_bar_bg, (0, 1))
+        health_bar_bg.blit(health_bar, (0, 1))
         x = View.center(enemy.current_animation.animation_list[0], health_bar_bg)
         screen.blit(health_bar_bg, (enemy.x + x, enemy.y + 10))
 

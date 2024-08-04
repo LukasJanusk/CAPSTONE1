@@ -33,7 +33,7 @@ class Enemy(BaseEnemy):
     last_update = pygame.time.get_ticks()
     stun_duration: int = 200
     speed: float = 1.5
-    facing_right: bool = False
+    facing_right: bool = True
     running: bool = False
     attacking: bool = True
     guarding: bool = False
@@ -89,7 +89,7 @@ class Demon(Enemy):
         self.death_animation = animations.Animation(self.sprite_sheet_list[2], self.x, self.y, 0, 0, (150, 150, 150))
         self.attack_animation = animations.Animation(self.sprite_sheet_list[3], self.x, self.y, 0, 0, (150, 150, 150))
         self.running_animation = animations.Animation(self.sprite_sheet_list[4], self.x, self.y, 0, 0, (150, 150, 150))
-        self.attack = attacks.Attack(self.damage, [6], 300, 180, 120, 270, -40, 0)
+        self.attack = attacks.Attack(self.damage, [6], 300, 180, 0, 100, 0, 0)
         if self.current_animation is None:
             self.current_animation = self.idle_animation
 
@@ -172,7 +172,7 @@ class Imp(Enemy):
         self.death_animation = animations.Animation(self.sprite_sheet_list[2], self.x, self.y, 0, 0, (150, 150, 150))
         self.attack_animation = animations.Animation(self.sprite_sheet_list[3], self.x, self.y, 0, 0, (150, 150, 150))
         self.running_animation = animations.Animation(self.sprite_sheet_list[4], self.x, self.y, 0, 0, (150, 150, 150))
-        self.attack = attacks.Attack(self.damage, [1, 2], 50, 30, 130, 75, -30, 0)
+        self.attack = attacks.Attack(self.damage, [1, 2], 50, 30, 105, 60, -30, 0)
         if self.current_animation is None:
             self.current_animation = self.idle_animation
 
