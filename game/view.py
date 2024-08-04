@@ -1,5 +1,6 @@
 import pygame
 import math
+import numpy
 from typing import Union, List
 from . import enemies
 from . import player
@@ -33,6 +34,30 @@ class View:
             # elif layer_object is effects.Particle:
             #   pass
 
+    # @classmethod
+    # def render_layer_array(
+    #     cls,
+    #     screen: pygame.Surface,
+    #     layers: List[Union[animations.Animation, enemies.Enemy, layer.Layer, player.Player]] = []):
+
+    #     screen_width = screen.get_width()
+    #     screen_height = screen.get_height()
+    #     colour_key = (150, 150, 150)
+    #     combined_surface = pygame.Surface(screen.get_size())
+    #     color_key_array = pygame.surfarray.array3d(pygame.Surface((1, 1)).fill(colour_key)).transpose(1, 0, 2)[0, 0]
+    #     combined_array = numpy.zeros((screen_width, screen_height, 3), dtype=numpy.uint8)
+    #     images = []
+    #     for layer_object in layers:
+    #         if type(layer_object) is layer.Layer:
+    #             tiles = math.ceil(screen_width/layer.width) + 1
+    #             for i in range(tiles):
+    #                 surface = layer_object._IMAGE
+    #                 surface.size = (i * layer_object.width + layer_object.distance, 0)
+                    
+    #                 surface.x = -i * layer_object.width + layer_object.distance
+    #                 array2 = pygame.surfarray.array_colorkey(surface)
+    #                 array1.append(item for item in array2 if item not in array1)
+
     @classmethod
     def render_layer(cls, screen: pygame.Surface, layer: layer.Layer):
         screen_width = screen.get_width()
@@ -43,8 +68,10 @@ class View:
 
     @classmethod
     def render_enemy(cls, screen: pygame.Surface, enemy: enemies.Enemy):
-        animation: animations.Animation = enemy.current_animation
-        animation.animate(screen, enemy.frame, enemy.facing_right)
+        screen_rect = screen.get_rect()
+        if enemy.hitbox.colliderect(screen_rect):
+            animation: animations.Animation = enemy.current_animation
+            animation.animate(screen, enemy.frame, enemy.facing_right)
 
     @classmethod
     def render_player(cls, screen: pygame.Surface, player: player.Player):

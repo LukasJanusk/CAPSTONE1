@@ -8,8 +8,8 @@ from . import layer
 class Sound_controller:
     @classmethod
     def play_sound(cls, layers: List[Union[animations.Animation, enemies.Enemy, layer.Layer]] = []):
+        pass
         for sound in layers:
-
 
 
 @dataclass
