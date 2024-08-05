@@ -14,7 +14,8 @@ class Player:
     frame_rate: int = 80
     last_update = pygame.time.get_ticks()
     current_time = None
-    health: float = 1000
+    _health: float = 1000
+    maximum_health: int = 1000
     speed: float = 1.5
     jump_strength: float = 16
     vertical_position: float = 0
@@ -66,9 +67,21 @@ class Player:
         self.ATTACK_NORMAL_ANIMATION = Animation(spritesheets.attack_normal_list, self.x - 10, self.y - 8, -55)
         self.attack_normal = Attack(50, [1, 3], 170, 80, 0, 40, -70, 0)
         self.attack_upper = Attack(200, [7, 8], 190, 170, 0, -40, -90, 0)
-        self.hitbox = pygame.Rect(self.x, self.y, 80, 150)
+        self.hitbox = pygame.Rect(self.x + 10, self.y, 60, 150)
         if self.current_animation is None:
             self.current_animation is self.IDLE_ANIMATION
+
+    @property
+    def health(self):
+        return self._health
+
+    @health.setter
+    def health(self, value):
+        if value < 0:
+            value = 0
+        if value > self.maximum_health:
+            value = self.maximum_health
+        self._health = value
 
     @property
     def frame(self):
@@ -165,10 +178,23 @@ class Player:
 
     def update_hitbox(self):
         self.hit = False
+        self.hitbox = pygame.Rect(self.x + 35, self.y + 15, 40, 120)
         if self.facing_right:
-            self.hitbox = pygame.Rect(self.x + 20, self.y + 15, 70, 120)
+            if self.attacking_upper:
+                if self.frame in [3, 4, 5]:
+                    self.hitbox = pygame.Rect(self.x, self.y + 15, 40, 120)
+                if self.frame in [0, 1, 2]:
+                    self.hitbox = pygame.Rect(self.x + 15, self.y + 15, 40, 120)
+            else:
+                self.hitbox = pygame.Rect(self.x + 35, self.y + 15, 40, 120)
         else:
-            self.hitbox = pygame.Rect(self.x + 20, self.y + 15, 70, 120)
+            if self.attacking_upper:
+                if self.frame in [3, 4, 5]:
+                    self.hitbox = pygame.Rect(self.x + 60, self.y + 15, 40, 120)
+                if self.frame in [0, 1, 2]:
+                    self.hitbox = pygame.Rect(self.x + 45, self.y + 15, 40, 120)
+            else:
+                self.hitbox = pygame.Rect(self.x + 30, self.y + 15, 40, 120)
 
     def draw_hitbox(self, screen: pygame.Surface):
         if self.hit:

@@ -33,7 +33,7 @@ class Enemy(BaseEnemy):
     last_update = pygame.time.get_ticks()
     stun_duration: int = 200
     speed: float = 1.5
-    facing_right: bool = True
+    facing_right: bool = False
     running: bool = False
     attacking: bool = True
     guarding: bool = False
@@ -70,7 +70,7 @@ class Demon(Enemy):
     AI = None
     health: float = 10000
     max_health: float = 10000
-    damage: int = 50
+    damage: int = 5
     sprite_sheet_list = spritesheets.demon_animations
     attack_animation = None
     hit_animation = None
@@ -92,6 +92,9 @@ class Demon(Enemy):
         self.attack = attacks.Attack(self.damage, [6], 355, 180, 75, 240, 0, 0)
         if self.current_animation is None:
             self.current_animation = self.idle_animation
+
+    def __str__(self):
+        return "Demon"
 
     def reset_frames(self):
         if self.exist:
@@ -145,7 +148,7 @@ class Demon(Enemy):
                 self.current_animation = self.idle_animation
 
     def update_hitbox(self):
-        self.hitbox = pygame.Rect(self.x + 110, self.y + 80, self.hitbox_width, self.hitbox_height)
+        self.hitbox = pygame.Rect(self.x + 100, self.y + 80, self.hitbox_width, self.hitbox_height)
 
 
 @dataclass
@@ -153,7 +156,7 @@ class Imp(Enemy):
     AI = None
     health: float = 1000
     max_health: float = 1000
-    damage: int = 5
+    damage: int = 1
     sprite_sheet_list = spritesheets.imp_animations
     attack_animation = None
     hit_animation = None
@@ -172,9 +175,12 @@ class Imp(Enemy):
         self.death_animation = animations.Animation(self.sprite_sheet_list[2], self.x, self.y, 0, 0, (150, 150, 150))
         self.attack_animation = animations.Animation(self.sprite_sheet_list[3], self.x, self.y, 0, 0, (150, 150, 150))
         self.running_animation = animations.Animation(self.sprite_sheet_list[4], self.x, self.y, 0, 0, (150, 150, 150))
-        self.attack = attacks.Attack(self.damage, [1, 2], 50, 30, 105, 60, -30, 0)
+        self.attack = attacks.Attack(self.damage, [1, 2], 50, 30, 105, 60, -105, 0)
         if self.current_animation is None:
             self.current_animation = self.idle_animation
+
+    def __str__(self):
+        return "Imp"
 
     def reset_frames(self):
         if self.exist:

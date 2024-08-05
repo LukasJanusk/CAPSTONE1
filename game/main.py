@@ -26,6 +26,7 @@ def main():
             if engine.in_menu:
                 engine.run_menus(event)
             if engine.in_game:
+                engine.pause_game(event)
                 engine.get_player_input(event)
         if engine.in_menu:
             View.draw_menus(screen, engine.menu_manager.current_menu)
@@ -33,16 +34,15 @@ def main():
             engine.controller.set_player_state()
             engine.get_current_level_wave()
             engine.update_enemies()
+            engine.check_for_level_end()
             engine.update_player()
             engine.update_scroll()
             engine.calculate_attacks()
-            View.render(screen, str(engine.current_level.score), engine.get_layers_for_blit())
-            View.draw_player_hitbox(screen, engine.character)
-            View.draw_player_attack_hitbox(screen, engine.character)
-            View.draw_enemies_hitboxes(screen,
-                                       engine.current_level.current_wave_enemies)
-            View.draw_enemies_attack_hitboxes(screen,
-                                              engine.current_level.current_wave_enemies)
+            View.render(screen,
+                        str(engine.current_level.score),
+                        engine.get_layers_for_blit(),
+                        draw_hitboxes=True,
+                        draw_health_bars=True)
             View.draw_fps(screen, font, int(clock.get_fps()))
             View.draw_wave_number(screen,
                                   pygame.font.Font(os.path.join(".", "assets", "fonts", "font.otf"), 25),

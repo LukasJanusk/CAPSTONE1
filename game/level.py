@@ -20,7 +20,7 @@ class Level:
     layer5: layer.Layer = None
     layer6: layer.Layer = None
     layer7: layer.Layer = None
-    waves: int = 10
+    waves: int = 2
     current_wave: int = 0
     current_wave_enemies: List[enemies.Enemy] = field(default_factory=list)
     _score: int = 0
@@ -74,10 +74,10 @@ class Level:
                 self.layer7]
 
 
-level0 = Level("Church",
+level1 = Level("Church",
                layer0=layer.level0_layer0,
                layer1=layer.level0_layer1)
-level1 = Level("Fields",
+level2 = Level("Fields",
                layer0=layer.level1_layer0,
                layer1=layer.level1_layer1,
                layer2=layer.level1_layer2,

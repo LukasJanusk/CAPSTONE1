@@ -28,15 +28,59 @@ class Model:
     def load_user(self):
         self.user.load_user()
 
+    def pause_game(self, event: pygame.event.Event):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                self.in_game = False
+                self.in_menu = True
+                self.menu_manager.current_menu = menu.pause_menu
+
     def run_menus(self, event: pygame.event.Event):
         self.menu_manager.get_active_button(event)
         messege = self.menu_manager.set_active_menu(event)
         if messege == "quit":
             self.save_and_quit()
+        if messege == "level1":
+            self.in_menu = False
+            self.in_game = True
+            self.current_level = level.level1
+        if messege == "level2":
+            self.in_menu = False
+            self.in_game = True
+            self.current_level = level.level2
         if messege == "level3":
             self.in_menu = False
             self.in_game = True
             self.current_level = level.level3
+        if messege == "continue":
+            self.in_menu = False
+            self.in_game = True
+        if messege == "reset":
+            self.current_level.current_wave = 0
+            self.current_level.current_wave_enemies = []
+            self.current_level.score = 0
+            self.character.health = self.character.maximum_health
+            self.character.x = 100
+        if messege == "score":
+            self.set_highscore()
+            self.user.save_user()
+            self.current_level.current_wave = 0
+            self.current_level.current_wave_enemies = []
+            self.current_level.score = 0
+            self.character.health = self.character.maximum_health
+            self.character.x = 100
+
+    def set_highscore(self):
+        if self.current_level == level.level1:
+            self.user.level1_highscore = self.current_level.score
+        if self.current_level == level.level2:
+            self.user.level2_highscore = self.current_level.score
+        if self.current_level == level.level3:
+            self.user.level3_highscore = self.current_level.score
+        # if self.current_level == level.level4:
+        #     self.user.level4_highscore = self.current_level.score
+        # if self.current_level == level.level5:
+        #     self.user.level5_highscore = self.current_level.score
 
     def get_current_level_wave(self):
         if len(self.current_level.current_wave_enemies) < 1 or self.current_level.current_wave_enemies is None:
@@ -67,27 +111,37 @@ class Model:
     def get_player_input(self, event: pygame.event.Event):
         self.controller.get_player_key_events(event)
 
-    def calculate_attacks(self):
-        self.player_attack()
-        self.enemies_attack()
+    def calculate_attacks(self, print_damage: bool = False):
+        self.player_attack(print_damage=print_damage)
+        self.enemies_attack(print_damage=print_damage)
 
-    def player_attack(self):
+    def player_attack(self, print_damage=False):
         if self.character.current_attack is not None:
             for enemy in self.current_level.current_wave_enemies:
                 damage = self.character.current_attack.hit(self.character.frame, enemy.hitbox)
                 if damage:
                     enemy.health -= damage
-                    enemy.hit = True
-                    print(f"Player dealt {damage} damage")
+                    if not enemy.dead:
+                        enemy.hit = True
+                        enemy.frame = 0
+                    if print_damage:
+                        print(f"Player dealt {damage} damage to ", end="")
+                        print(enemy)
 
-    def enemies_attack(self):
+    def enemies_attack(self, print_damage=False):
         for enemy in self.current_level.current_wave_enemies:
             if enemy.attacking:
                 damage = enemy.attack.hit(enemy.frame, self.character.hitbox)
                 if damage:
-                    self.character.health -= damage
+                    if self.character.guarding:
+                        self.character.health -= int(damage / 2)
+                    else:
+                        self.character.health -= int(damage)
                     self.character.hit = True
-                    print(f"Player received {damage} damage")
+                    self.character.frame = 0
+                    if print_damage:
+                        print(f"Player received {damage} damage from ", end="")
+                        print(enemy)
 
     def update_player(self):
         # interaction between objects and enemies update
@@ -155,6 +209,14 @@ class Model:
                     if type(enemy) is enemies.Imp:
                         self.current_level.score += 10
                     self.current_level.current_wave_enemies.remove(enemy)
+
+    def check_for_level_end(self):
+        if self.current_level.current_wave == self.current_level.waves and len(self.current_level.current_wave_enemies) < 1:
+            self.in_game = False
+            self.in_menu = True
+            self.menu_manager.current_menu = menu.score_menu
+            self.menu_manager.current_menu.name = "SCORE:" + str(self.current_level.score)
+            self.menu_manager.current_menu.update_surface()
 
     def update_layer_scroll(self):
         layers_list = self.current_level.get_layers_list()

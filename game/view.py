@@ -23,7 +23,8 @@ class View:
                     player.Player,
                     ui.Healthbar,
                     ui.Score]] = [],
-               draw_health_bars: bool = True
+               draw_health_bars: bool = True,
+               draw_hitboxes: bool = True
                ):
         for object in layers:
             if object is None:
@@ -42,13 +43,16 @@ class View:
                 View.draw_score(screen, object, score)
             else:
                 print("no object to render")
+            if draw_hitboxes:
+                player_object = [item for item in layers if isinstance(item, player.Player)][0]
+                enemies_objects = [item for item in layers if isinstance(item, enemies.Demon | enemies.Imp)]
+                View.draw_hitboxes(screen, player_object, enemies_objects)
 
     @classmethod
     def draw_score(cls, screen: pygame.Surface, object: ui.Score, score: str):
-        print(type(object))
         score_surface = object.get_score_surface(score)
         x = View.center(screen, score_surface)
-        screen.blit(score_surface, (x, 30))
+        screen.blit(score_surface, (x, 10))
 
     @classmethod
     def render_layer(cls, screen: pygame.Surface, layer: layer.Layer):
@@ -59,7 +63,7 @@ class View:
             screen.blit(layer._IMAGE, (-i * layer.width + layer.distance, 0))
 
     @classmethod
-    def render_enemy(cls, screen: pygame.Surface, enemy: enemies.Enemy):
+    def render_enemy(cls, screen: pygame.Surface, enemy: enemies.Demon | enemies.Imp):
         animation: animations.Animation = enemy.current_animation
         animation.animate(screen, enemy.frame, enemy.facing_right)
 
@@ -67,6 +71,15 @@ class View:
     def render_player(cls, screen: pygame.Surface, player: player.Player):
         animation = View.get_fixed_position(player)
         animation.animate(screen, player.frame, player.facing_right)
+
+    @classmethod
+    def draw_hitboxes(cls, screen: pygame.Surface,
+                      player: player.Player,
+                      enemies: List[Union[enemies.Enemy, enemies.Demon, enemies.Imp]]):
+        View.draw_player_hitbox(screen, player)
+        View.draw_enemies_hitboxes(screen, enemies)
+        View.draw_player_attack_hitbox(screen, player)
+        View.draw_enemies_attack_hitboxes(screen, enemies)
 
     @classmethod
     def draw_player_hitbox(cls, screen: pygame.Surface, player: player.Player):
@@ -157,7 +170,7 @@ class View:
         screen.blit(current_menu.text_surface, (current_menu.text_x, 30))
         for index, button in enumerate(current_menu.buttons):
             button.center_button(screen)
-            screen.blit(button.surface, (button.x, 150 + index * 60))
+            screen.blit(button.surface, (button.x, 150 + index * 50))
 
     @classmethod
     def draw_fps(cls, screen: pygame.Surface, font: pygame.font.Font, fps: int):

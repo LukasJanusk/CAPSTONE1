@@ -31,12 +31,12 @@ class User:
     level3: bool = True
     level4: bool = True
     level5: bool = True
-    level0_highscore: int = 0
-    level1_highscore: int = 0
-    level2_highscore: int = 0
-    level3_highscore: int = 0
-    level4_highscore: int = 0
-    level5_highscore: int = 0
+    _level0_highscore: int = 0
+    _level1_highscore: int = 0
+    _level2_highscore: int = 0
+    _level3_highscore: int = 0
+    _level4_highscore: int = 0
+    _level5_highscore: int = 0
     input_manager = Typing_Controller()
 
     def __init__(self, name: str):
@@ -53,6 +53,51 @@ class User:
             raise ValueError("NAMES MUST BE LETTERS AND NUMBERS ONLY")
         else:
             self._NAME = name
+
+    @property
+    def level1_highscore(self):
+        return self._level1_highscore
+
+    @ level1_highscore.setter
+    def level1_highscore(self, value):
+        if value > self._level1_highscore:
+            self._level1_highscore = value
+
+    @property
+    def level2_highscore(self):
+        return self._level1_highscore
+
+    @ level2_highscore.setter
+    def level2_highscore(self, value):
+        if value > self._level2_highscore:
+            self._level2_highscore = value
+
+    @property
+    def level3_highscore(self):
+        return self._level3_highscore
+
+    @ level3_highscore.setter
+    def level3_highscore(self, value):
+        if value > self._level4_highscore:
+            self._level3_highscore = value
+
+    @property
+    def level4_highscore(self):
+        return self._level4_highscore
+
+    @ level4_highscore.setter
+    def level4_highscore(self, value):
+        if value > self._level4_highscore:
+            self._level4_highscore = value
+
+    @property
+    def level5_highscore(self):
+        return self._level5_highscore
+
+    @ level5_highscore.setter
+    def level5_highscore(self, value):
+        if value > self._level5_highscore:
+            self._level5_highscore = value
 
     def to_dict(self):
         return {"user": [{"NAME": self.NAME},

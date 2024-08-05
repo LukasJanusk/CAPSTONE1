@@ -40,18 +40,20 @@ back_button = Button("BACK", y=510)
 new_game_button = Button("NEW GAME")
 high_scores_button = Button("HIGHSCORES")
 settings_button = Button("SETTINGS")
-level0_button = Button("TESTING")
-level1_button = Button("LEVEL 1")
-level2_button = Button("LEVEL 2")
-level3_button = Button("LEVEL 3")
+level0_button = Button("TUTORIAL")
+level1_button = Button("MUSEUM")
+level2_button = Button("HILLS")
+level3_button = Button("BAMBOO FOREST")
 level4_button = Button("LEVEL 4")
-level5_button = Button("Level 5")
+level5_button = Button("LEVEL 5")
 continue_button = Button("CONTINUE")
+restart_button = Button("RESTART")
+main_menu_button = Button("MAIN MENU")
 
 
 @dataclass
 class Menu:
-    NAME: str
+    name: str
     active: bool = False
     x: int = 0
     y: int = 0
@@ -68,7 +70,7 @@ class Menu:
 
     def __post_init__(self):
         self.font = pygame.font.Font(os.path.join(".", "assets", "fonts", "font.otf"), self.font_size)
-        self.text_surface = self.font.render(self.NAME, True, (0, 0, 0))
+        self.text_surface = self.font.render(self.name, True, (0, 0, 0))
         self.text_rect = self.text_surface.get_rect()
         self.selected_button = self.buttons[0]
 
@@ -76,20 +78,24 @@ class Menu:
         screen_rect = screen.get_rect()
         self.text_x = (screen_rect.width - self.text_rect.width) // 2
 
+    def update_surface(self):
+        self.text_surface = self.font.render(self.name, True, (0, 0, 0))
+        self.text_rect = self.text_surface.get_rect()
+
 
 user_select_menu = Menu("SELECT USER", buttons=[quit_button])
 main_menu = Menu("MAIN MENU", buttons=[new_game_button, high_scores_button, settings_button, quit_button])
 settings_menu = Menu("SETTINGS", buttons=[back_button])
 high_scores_menu = Menu("HIGHSCORES", buttons=[back_button])
 new_game_menu = Menu("NEW GAME", buttons=[level0_button, level1_button, level2_button, level3_button, level4_button, level5_button, back_button])
-pause_menu = Menu("PAUSE", buttons=[continue_button, main_menu, quit_button])
+pause_menu = Menu("PAUSE", buttons=[continue_button, main_menu_button, quit_button])
+score_menu = Menu("SCORE", buttons=[new_game_button, main_menu_button])
 
 
 @dataclass
 class Menu_Controller:
     user = None
     active: bool = True
-    menus = []
     current_menu: Menu = None
 
     def __post_init__(self):
@@ -144,9 +150,51 @@ class Menu_Controller:
                         self.current_menu.active = False
                         self.current_menu = main_menu
                         self.current_menu.active = True
+                    elif self.current_menu.selected_button == level0_button:
+                        print("Level not yet introduced")
+                    elif self.current_menu.selected_button == level1_button:
+                        self.current_menu.active = False
+                        return "level1"
+                    elif self.current_menu.selected_button == level2_button:
+                        self.current_menu.active = False
+                        return "level2"
                     elif self.current_menu.selected_button == level3_button:
                         self.current_menu.active = False
                         return "level3"
+                    elif self.current_menu.selected_button == level4_button:
+                        print("Level not yet introduced")
+                    elif self.current_menu.selected_button == level5_button:
+                        print("Level not yet introduced")
+                elif self.current_menu == pause_menu:
+                    if self.current_menu.selected_button == continue_button:
+                        self.current_menu.active = False
+                        return "continue"
+                    elif self.current_menu.selected_button == main_menu_button:
+                        self.current_menu.active = False
+                        self.current_menu = main_menu
+                        self.current_menu.active = True
+                        return "reset"
+                    elif self.current_menu.selected_button == quit_button:
+                        return "quit"
+                elif self.current_menu == score_menu:
+                    if self.current_menu.selected_button == main_menu_button:
+                        self.current_menu.active = False
+                        self.current_menu = main_menu
+                        self.current_menu.active = True
+                        return "score"
+                    elif self.current_menu.selected_button == new_game_button:
+                        self.current_menu.active = False
+                        self.current_menu = new_game_menu
+                        self.current_menu.active = True
+                        return "score"
 
 
-menu_controller = Menu_Controller([user_select_menu, main_menu, settings_menu, high_scores_menu, new_game_menu, pause_menu])
+menu_controller = Menu_Controller()
+menus = [
+    user_select_menu,
+    main_menu,
+    settings_menu,
+    high_scores_menu,
+    new_game_menu,
+    score_menu,
+    pause_menu]
