@@ -1,9 +1,24 @@
-1. Score tracking and drawing on screen
-2. enemy AI
-3. enemy wave random spawning and selection 
-4. menus
-5. game end condition 
-6. highscore printing and saving
-7. sounds
-8. 2 more enemies for testing
+1. ~~Score tracking and drawing on screen~~
+2. enemy AI (0%)
+3. ~~enemy wave random spawning and selection~~
+4. menus (60%)
+5. ~~game end condition~~
+6. ~~highscore printing and saving~~
+7. sounds (5%)
+8. 2 more enemies for testing (50%)
 9. tests for View
+10. particle class for pygame surface objects to be generated as special effects
+11. level unlocking mechanism
+12. tutorial level
+13. music
+14. level objects(random spawns and enemy dropped ones)
+15. special attack modifiers for fire, cold, lightning
+16. block bar
+17. special abilities bar( like mana )
+18. projectile attacks ( for monster and player )
+19. ranged enemy to test
+20. optimize particles for performance( add limmits to amount and duration )
+21. Draw stylized UI layer
+22. Draw stylized Menu background
+23. Update current code and write tests 
+24. Change font rendering to be resizable object (should improve performance)

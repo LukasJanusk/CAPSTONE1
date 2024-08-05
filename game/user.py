@@ -42,6 +42,9 @@ class User:
     def __init__(self, name: str):
         self.NAME = name
 
+    def __str__(self) -> str:
+        return f"{self.NAME}"
+
     @property
     def NAME(self):
         return self._NAME
@@ -116,7 +119,6 @@ class User:
 
     def save_user(self):
         data = self.to_dict()
-        print(data)
         try:
             with open(os.path.join(".", "user", "user.json"), mode="w") as file:
                 json.dump(data, file, indent=4)
