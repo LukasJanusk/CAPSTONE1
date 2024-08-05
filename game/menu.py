@@ -187,6 +187,16 @@ class Menu_Controller:
                         self.current_menu = new_game_menu
                         self.current_menu.active = True
                         return "score"
+                elif self.current_menu == settings_menu:
+                    if self.current_menu.selected_button == back_button:
+                        self.current_menu.active = False
+                        self.current_menu = main_menu
+                        self.current_menu.active = True
+                elif self.current_menu == high_scores_menu:
+                    if self.current_menu.selected_button == back_button:
+                        self.current_menu.active = False
+                        self.current_menu = main_menu
+                        self.current_menu.active = True
 
 
 menu_controller = Menu_Controller()
