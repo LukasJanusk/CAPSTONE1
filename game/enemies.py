@@ -89,7 +89,7 @@ class Demon(Enemy):
         self.death_animation = animations.Animation(self.sprite_sheet_list[2], self.x, self.y, 0, 0, (150, 150, 150))
         self.attack_animation = animations.Animation(self.sprite_sheet_list[3], self.x, self.y, 0, 0, (150, 150, 150))
         self.running_animation = animations.Animation(self.sprite_sheet_list[4], self.x, self.y, 0, 0, (150, 150, 150))
-        self.attack = attacks.Attack(self.damage, [6], 300, 180, 0, 100, 0, 0)
+        self.attack = attacks.Attack(self.damage, [6], 355, 180, 75, 240, 0, 0)
         if self.current_animation is None:
             self.current_animation = self.idle_animation
 
@@ -104,7 +104,7 @@ class Demon(Enemy):
             elif self.attacking is True:
                 if self.frame >= 8:
                     self.frame = 0
-                    self.attacking = False
+                    # self.attacking = False
             elif self.running is True:
                 if self.frame >= 4:
                     self.frame = 0
