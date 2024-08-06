@@ -12,16 +12,17 @@ class Typing_Controller():
     typo: bool = False
     last_update = pygame.time.get_ticks()
 
-    def get_user_input(self, event: pygame.event.Event):
-        if self.typing is True:
+    @classmethod
+    def get_user_input(cls, event: pygame.event.Event):
+        if cls.typing is True:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
-                    self.typing = False
-                    return self.user_text
+                    cls.typing = False
+                    return cls.user_text
                 elif event.key == pygame.K_BACKSPACE:
-                    self.user_text = self.user_text[:-1]
+                    cls.user_text = cls.user_text[:-1]
                 else:
-                    self.user_text += event.unicode
+                    cls.user_text += event.unicode
 
 
 @dataclass

@@ -10,6 +10,7 @@ from . import menu
 from . import enemies
 from . import layer
 from . import settings
+from . import ai
 
 
 class Model:
@@ -35,13 +36,10 @@ class Model:
     def pause_game(self, event: pygame.event.Event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                if self.in_game is True:
-                    self.in_game = False
-                    self.in_menu = True
-                    self.menu_manager.current_menu = menu.pause_menu
-                elif self.in_menu and self.menu_manager.current_menu is menu.pause_menu:
-                    self.in_menu = False
-                    self.in_game = True
+                self.in_game = False
+                self.in_menu = True
+                self.menu_manager.current_menu = menu.pause_menu
+                pygame.event.clear()
 
     def run_menus(self, event: pygame.event.Event):
         self.menu_manager.get_active_button(event)
@@ -63,12 +61,14 @@ class Model:
         if messege == "continue":
             self.in_menu = False
             self.in_game = True
+            pygame.event.clear()
         if messege == "reset":
             self.current_level.current_wave = 0
             self.current_level.current_wave_enemies = []
             self.current_level.score = 0
             self.character.health = self.character.maximum_health
             self.character.x = 100
+            self.character.y = 400
         if messege == "score":
             self.set_highscore()
             self.user.save_user()
@@ -101,6 +101,13 @@ class Model:
                 if print_info:
                     print(f"Wave of {len(self.current_level.current_wave_enemies)} enemies generated")
                 return True
+
+    def run_enemies_ai(self):
+        for enemy in self.current_level.current_wave_enemies:
+            if type(enemy) is enemies.Demon:
+                ai.DemonAI.choose_action(enemy, self.character)
+            if type(enemy) is enemies.Imp:
+                ai.ImpAI.choose_action(enemy, self.character)
 
     def update_enemies(self):
         self.update_enemies_existance()
@@ -216,13 +223,15 @@ class Model:
                     if type(enemy) is enemies.Demon:
                         self.current_level.score += 100
                     if type(enemy) is enemies.Imp:
-                        self.current_level.score += 20
+                        self.current_level.score += 30
                     self.current_level.current_wave_enemies.remove(enemy)
                     if print_info:
                         print(f"Enemy , {enemy}, removed from the active enemies list")
 
     def check_for_level_end(self):
-        if self.current_level.current_wave == self.current_level.total_waves and len(self.current_level.current_wave_enemies) < 1:
+        if ((self.current_level.current_wave == self.current_level.total_waves
+                and len(self.current_level.current_wave_enemies) < 1)
+                or self.character.health == 0):
             self.in_game = False
             self.in_menu = True
             self.menu_manager.current_menu = menu.score_menu

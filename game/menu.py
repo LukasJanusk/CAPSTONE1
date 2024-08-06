@@ -24,6 +24,9 @@ class Button:
         self.surface = self.font.render(self.NAME, True, (0, 0, 0))
         self.rect = self.surface.get_rect()
 
+    def __str__(self):
+        return self.NAME
+
     def center_button(self, screen: pygame.Surface):
         screen_rect = screen.get_rect()
         self.x = (screen_rect.width - self.rect.width) // 2
@@ -73,6 +76,9 @@ class Menu:
         self.text_surface = self.font.render(self.name, True, (0, 0, 0))
         self.text_rect = self.text_surface.get_rect()
         self.selected_button = self.buttons[0]
+
+    def __str__(self):
+        return self.name
 
     def center_text(self, screen: pygame.Surface):
         screen_rect = screen.get_rect()
@@ -197,6 +203,11 @@ class Menu_Controller:
                         self.current_menu.active = False
                         self.current_menu = main_menu
                         self.current_menu.active = True
+            elif event.key == pygame.K_ESCAPE:
+                print(self.current_menu)
+                if str(self.current_menu) == "PAUSE":
+                    self.current_menu.active = False
+                    return "continue"
 
 
 menu_controller = Menu_Controller()

@@ -20,7 +20,7 @@ class Level:
     layer5: layer.Layer = None
     layer6: layer.Layer = None
     layer7: layer.Layer = None
-    total_waves: int = 10
+    total_waves: int = 15
     current_wave: int = 0
     current_wave_enemies: List[Union[enemies.Enemy, enemies.Demon, enemies.Imp]] = field(default_factory=list)
     _score: int = 0
@@ -47,9 +47,9 @@ class Level:
                                                         enemies.Imp,
                                                         ]]:
         wave = []
-        for i in range(random.randint(1, 2)):
+        for i in range(random.randint((1 * self.current_wave + 1), 2 * (self.current_wave + 1))):
             choice = random.choices(available_enemies, weights=available_enemies_weights, k=1)[0]
-            x = random.randint(int(player_x - 300), int(player_x + 1000))
+            x = random.randint(int(player_x - 150), int(player_x + 1000))
             if choice == "demon":
                 enemy = enemies.Demon(x, 50, name=str(i))
                 while self.is_colliding(enemy, wave):
@@ -57,7 +57,7 @@ class Level:
                     enemy.update_hitbox()
                 wave.append(enemy)
             elif choice == "imp":
-                enemy = enemies.Imp(x, random.randint(300, 360), name=str(i))
+                enemy = enemies.Imp(x, random.randint(320, 360), name=str(i))
                 while self.is_colliding(enemy, wave):
                     enemy.x += 30
                     enemy.update_hitbox()

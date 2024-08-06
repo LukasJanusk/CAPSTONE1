@@ -1,5 +1,6 @@
 import pygame
 import math
+import os
 from typing import Union, List
 from . import enemies
 from . import player
@@ -10,8 +11,12 @@ from . import ui
 
 
 class View:
-    @classmethod
-    def render(cls,
+    font_small = pygame.font.Font(os.path.join(".", "assets", "fonts", "font.otf"), 18)
+    font_medium = pygame.font.Font(os.path.join(".", "assets", "fonts", "font.otf"), 25)
+    font_large = pygame.font.Font(os.path.join(".", "assets", "fonts", "font.otf"), 45)
+
+    @staticmethod
+    def render(
                screen: pygame.Surface,
                score: str,
                layers: List[Union[
@@ -50,32 +55,32 @@ class View:
                 enemies_objects = [item for item in layers if isinstance(item, enemies.Demon | enemies.Imp)]
                 View.draw_hitboxes(screen, player_object, enemies_objects)
 
-    @classmethod
-    def draw_score(cls, screen: pygame.Surface, object: ui.Score, score: str):
+    @staticmethod
+    def draw_score(screen: pygame.Surface, object: ui.Score, score: str):
         score_surface = object.get_score_surface(score)
         x = View.center(screen, score_surface)
         screen.blit(score_surface, (x, 10))
 
-    @classmethod
-    def render_layer(cls, screen: pygame.Surface, layer: layer.Layer):
+    @staticmethod
+    def render_layer(screen: pygame.Surface, layer: layer.Layer):
         screen_width = screen.get_width()
         tiles = math.ceil(screen_width/layer.width) + 1
         for i in range(tiles):
             screen.blit(layer._IMAGE, (i * layer.width + layer.distance, 0))
             screen.blit(layer._IMAGE, (-i * layer.width + layer.distance, 0))
 
-    @classmethod
-    def render_enemy(cls, screen: pygame.Surface, enemy: enemies.Demon | enemies.Imp):
+    @staticmethod
+    def render_enemy(screen: pygame.Surface, enemy: enemies.Demon | enemies.Imp):
         animation: animations.Animation = enemy.current_animation
         animation.animate(screen, enemy.frame, enemy.facing_right)
 
-    @classmethod
-    def render_player(cls, screen: pygame.Surface, player: player.Player):
+    @staticmethod
+    def render_player(screen: pygame.Surface, player: player.Player):
         animation = View.get_fixed_position(player)
         animation.animate(screen, player.frame, player.facing_right)
 
-    @classmethod
-    def draw_hitboxes(cls, screen: pygame.Surface,
+    @staticmethod
+    def draw_hitboxes(screen: pygame.Surface,
                       player: player.Player,
                       enemies: List[Union[enemies.Enemy, enemies.Demon, enemies.Imp]]):
         View.draw_player_hitbox(screen, player)
@@ -83,20 +88,20 @@ class View:
         View.draw_player_attack_hitbox(screen, player)
         View.draw_enemies_attack_hitboxes(screen, enemies)
 
-    @classmethod
-    def draw_player_hitbox(cls, screen: pygame.Surface, player: player.Player):
+    @staticmethod
+    def draw_player_hitbox(screen: pygame.Surface, player: player.Player):
         if player.hit:
             pygame.draw.rect(screen, (255, 0, 0), player.hitbox, 2)
         else:
             pygame.draw.rect(screen, (0, 255, 0), player.hitbox, 2)
 
-    @classmethod
-    def draw_player_attack_hitbox(cls, screen: pygame.Surface, player: player.Player):
+    @staticmethod
+    def draw_player_attack_hitbox(screen: pygame.Surface, player: player.Player):
         if player.current_attack is not None:
             player.current_attack.draw_hitbox(screen, player.frame)
 
-    @classmethod
-    def draw_enemies_attack_hitboxes(cls, screen: pygame.Surface, enemies: List[Union[
+    @staticmethod
+    def draw_enemies_attack_hitboxes(screen: pygame.Surface, enemies: List[Union[
                     enemies.Enemy,
                     enemies.Demon,
                     enemies.Imp]]):
@@ -104,8 +109,8 @@ class View:
             if enemy.attacking:
                 enemy.attack.draw_hitbox(screen, enemy.frame)
 
-    @classmethod
-    def draw_enemies_hitboxes(cls, screen: pygame.Surface, enemies: List[enemies.Enemy]):
+    @staticmethod
+    def draw_enemies_hitboxes(screen: pygame.Surface, enemies: List[enemies.Enemy]):
         for enemy in enemies:
             if enemy is not None:
                 if enemy.hit:
@@ -113,8 +118,8 @@ class View:
                 else:
                     pygame.draw.rect(screen, (0, 255, 0), enemy.hitbox, 2)
 
-    @classmethod
-    def draw_enemy_health_bar(cls, screen: pygame.Surface, enemy: enemies.Demon | enemies.Imp):
+    @staticmethod
+    def draw_enemy_health_bar(screen: pygame.Surface, enemy: enemies.Demon | enemies.Imp):
         health_bar_bg = pygame.Surface((enemy.hitbox_width, 10))
         health_bar_width = int(enemy.hitbox_width * enemy.health / enemy.max_health)
         if health_bar_width < 0:
@@ -126,15 +131,15 @@ class View:
         x = View.center(enemy.current_animation.animation_list[0], health_bar_bg)
         screen.blit(health_bar_bg, (enemy.x + x, enemy.y + 10))
 
-    @classmethod
-    def center(cls, screen: pygame.Surface, object: pygame.Surface) -> int:
+    @staticmethod
+    def center(screen: pygame.Surface, object: pygame.Surface) -> int:
         object_rect = object.get_rect()
         screen_rect = screen.get_rect()
         x = (screen_rect.width - object_rect.width) // 2
         return x
 
-    @classmethod
-    def get_fixed_position(cls, player: player.Player):
+    @staticmethod
+    def get_fixed_position(player: player.Player):
         if player.current_animation == player.IDLE_ANIMATION:
             player.IDLE_ANIMATION.x = player.x
             player.IDLE_ANIMATION.y = player.y
@@ -165,8 +170,8 @@ class View:
             player.GUARD_ANIMATION.buffer_facing_left_x = -20
             return player.GUARD_ANIMATION
 
-    @classmethod
-    def draw_menus(cls, screen: pygame.Surface, current_menu: menu.Menu):
+    @staticmethod
+    def draw_menus(screen: pygame.Surface, current_menu: menu.Menu):
         screen.fill(current_menu.colour)
         current_menu.center_text(screen)
         screen.blit(current_menu.text_surface, (current_menu.text_x, 30))
@@ -175,24 +180,23 @@ class View:
             screen.blit(button.surface, (button.x, 150 + index * 50))
 
     @classmethod
-    def draw_fps(cls, screen: pygame.Surface, font: pygame.font.Font, fps: int):
+    def draw_fps(cls, screen: pygame.Surface, fps: int):
         screen_rect = screen.get_rect()
-        fps_surface = font. render(f"FPS: {fps}", True, (255, 255, 255))
+        fps_surface = cls.font_small. render(f"FPS: {fps}", True, (255, 255, 255))
         fps_surface.get_width()
         x = screen_rect.width - (fps_surface.get_width() + 10)
         screen.blit(fps_surface, (x, 10))
 
     @classmethod
     def draw_wave_number(
-                  cls,
-                  screen: pygame.Surface,
-                  font: pygame.font.Font,
-                  total_waves: int,
-                  current_wave: int,
-                  coordinates: tuple = (10, 30),
-                  scale: float = None):
-
-        text_surface = font.render(f"Wave: {current_wave}/{total_waves}", True, (255, 255, 255))
+                        cls,
+                        screen: pygame.Surface,
+                        total_waves: int,
+                        current_wave: int,
+                        coordinates: tuple = (10, 30),
+                        scale: float = None
+                        ):
+        text_surface = cls.font_medium.render(f"Wave: {current_wave}/{total_waves}", True, (255, 255, 255))
         if scale:
             text_surface = pygame.transform.smoothscale(text_surface, (scale, scale))
         screen.blit(text_surface, coordinates)

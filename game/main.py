@@ -1,5 +1,4 @@
 import pygame
-import os
 import cProfile
 from . import model
 from .view import View
@@ -11,7 +10,6 @@ def main():
     width = 800
     pygame.display.set_caption("game")
     screen = pygame.display.set_mode((width, height), pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.RESIZABLE)
-    font = pygame.font.Font(os.path.join(".", "assets", "fonts", "font.otf"), 18)
     clock = pygame.time.Clock()
     engine = model.Model()
     engine.load_user()
@@ -32,6 +30,7 @@ def main():
             View.draw_menus(screen, engine.menu_manager.current_menu)
         if engine.in_game:
             engine.controller.set_player_state()
+            engine.run_enemies_ai()
             engine.get_current_level_wave()
             engine.update_enemies()
             engine.check_for_level_end()
@@ -43,11 +42,11 @@ def main():
                 str(engine.current_level.score),
                 engine.get_layers_for_blit(),
                 draw_hitboxes=False,
-                draw_health_bars=True)
-            View.draw_fps(screen, font, int(clock.get_fps()))
+                draw_health_bars=True
+                )
+            View.draw_fps(screen, int(clock.get_fps()))
             View.draw_wave_number(
                 screen,
-                pygame.font.Font(os.path.join(".", "assets", "fonts", "font.otf"), 25),
                 engine.current_level.total_waves,
                 engine.current_level.current_wave
                 )

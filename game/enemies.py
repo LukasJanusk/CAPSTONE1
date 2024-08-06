@@ -35,7 +35,7 @@ class Enemy(BaseEnemy):
     speed: float = 1.5
     facing_right: bool = False
     running: bool = False
-    attacking: bool = True
+    attacking: bool = False
     guarding: bool = False
     stunned: bool = False
     hit: bool = False
@@ -68,10 +68,9 @@ class Enemy(BaseEnemy):
 
 @dataclass
 class Demon(Enemy):
-    AI = None
     health: float = 10000
     max_health: float = 10000
-    damage: int = 5
+    damage: int = 25
     sprite_sheet_list = spritesheets.demon_animations
     attack_animation = None
     hit_animation = None
@@ -82,6 +81,9 @@ class Demon(Enemy):
     hitbox_width = 300
     weight = 10
     hitbox = None
+    actions = ["seek", "flee"]
+    action_last_update = pygame.time.get_ticks()
+    action_duration = 3000
 
     def __post_init__(self):
         self.hitbox = pygame.Rect(self.x, self.y, self.hitbox_width, self.hitbox_height)
@@ -135,6 +137,7 @@ class Demon(Enemy):
                 self.attacking = False
                 self.running = False
                 self.current_animation = self.hit_animation
+                self.speed = 0
                 if self.frame == 4:
                     self.hit = False
                     self.frame = 0
@@ -144,13 +147,19 @@ class Demon(Enemy):
                 self.idle = False
                 self.attacking = False
                 self.current_animation = self.running_animation
+                self.speed = 2.5
             elif self.attacking:
                 self.idle = False
                 self.running = False
                 self.current_animation = self.attack_animation
+                self.speed = 0
             elif self.idle:
                 self.hit = False
                 self.current_animation = self.idle_animation
+                self.speed = 0
+        if not self.facing_right:
+            self.speed *= -1
+        self.x += self.speed
 
     def update_hitbox(self):
         self.hitbox = pygame.Rect(self.x + 100, self.y + 80, self.hitbox_width, self.hitbox_height)
@@ -158,10 +167,9 @@ class Demon(Enemy):
 
 @dataclass
 class Imp(Enemy):
-    AI = None
     health: float = 1000
     max_health: float = 1000
-    damage: int = 1
+    damage: int = 10
     sprite_sheet_list = spritesheets.imp_animations
     attack_animation = None
     hit_animation = None
@@ -172,6 +180,9 @@ class Imp(Enemy):
     hitbox_width = 60
     weight = 80
     hitbox = None
+    actions = ["seek", "flee", "idle"]
+    action_last_update = pygame.time.get_ticks()
+    action_duration = 3000
 
     def __post_init__(self):
         self.hitbox = pygame.Rect(self.x, self.y, self.hitbox_width, self.hitbox_height)
@@ -220,6 +231,7 @@ class Imp(Enemy):
                 self.attacking = False
                 self.hit = False
                 self.current_animation = self.death_animation
+                self.speed = 0
             elif self.hit:
                 self.idle = False
                 self.attacking = False
@@ -230,17 +242,29 @@ class Imp(Enemy):
                     self.frame = 0
                     self.idle = True
                     self.current_animation = self.idle_animation
-            elif self.running:
-                self.idle = False
-                self.attacking = False
-                self.current_animation = self.running_animation
+                self.speed = 0
             elif self.attacking:
                 self.idle = False
-                self.running = False
                 self.current_animation = self.attack_animation
+                self.speed = 5
+                self.y += 2
+                if self.y > 380:
+                    self.y -= 2
+            elif self.running:
+                self.idle = False
+                if not self.attacking:
+                    self.current_animation = self.running_animation
+                    self.speed = 1
             elif self.idle:
                 self.hit = False
                 self.current_animation = self.idle_animation
+                self.speed = 0
+                self.y -= 1
+                if self.y < 100:
+                    self.y += 1
+            if not self.facing_right:
+                self.speed *= -1
+            self.x += self.speed
 
     def update_hitbox(self):
         self.hitbox = pygame.Rect(self.x + 50, self.y + 20, self.hitbox_width, self.hitbox_height)
