@@ -1,5 +1,6 @@
 import pygame
 import sys
+from typing import Union, List
 from . import player
 from . import level
 from . import controller
@@ -7,6 +8,8 @@ from . import ui
 from . import user
 from . import menu
 from . import enemies
+from . import layer
+from . import settings
 
 
 class Model:
@@ -16,8 +19,8 @@ class Model:
         self.character: player.Player = player.char
         self.current_level: level.Level = None
         self.controller: controller.Controller = controller.player_input_manager
+        self.settings: settings.Settings = settings.settings
         self.in_menu: bool = True
-        self.pause: bool = False
         self.in_game: bool = False
 
     def save_and_quit(self):
@@ -25,15 +28,20 @@ class Model:
         pygame.quit()
         sys.exit()
 
-    def load_user(self):
-        self.user.load_user()
+    def load_user(self) -> bool:
+        if self.user.load_user():
+            return True
 
     def pause_game(self, event: pygame.event.Event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                self.in_game = False
-                self.in_menu = True
-                self.menu_manager.current_menu = menu.pause_menu
+                if self.in_game is True:
+                    self.in_game = False
+                    self.in_menu = True
+                    self.menu_manager.current_menu = menu.pause_menu
+                elif self.in_menu and self.menu_manager.current_menu is menu.pause_menu:
+                    self.in_menu = False
+                    self.in_game = True
 
     def run_menus(self, event: pygame.event.Event):
         self.menu_manager.get_active_button(event)
@@ -82,11 +90,17 @@ class Model:
         # if self.current_level == level.level5:
         #     self.user.level5_highscore = self.current_level.score
 
-    def get_current_level_wave(self):
+    def get_current_level_wave(self, print_info=False) -> bool:
         if len(self.current_level.current_wave_enemies) < 1 or self.current_level.current_wave_enemies is None:
             self.current_level.current_wave_enemies = self.current_level.generate_wave(self.character.x)
-            # print("Wave generated")
-            # print(f"{len(self.current_level.current_wave_enemies)}")
+            if self.current_level.current_wave_enemies is None or len(self.current_level.current_wave_enemies) == 0:
+                if print_info:
+                    print("Failed to create new wave for current level")
+                return False
+            else:
+                if print_info:
+                    print(f"Wave of {len(self.current_level.current_wave_enemies)} enemies generated")
+                return True
 
     def update_enemies(self):
         self.update_enemies_existance()
@@ -144,7 +158,6 @@ class Model:
                         print(enemy)
 
     def update_player(self):
-        # interaction between objects and enemies update
         self.character.reset_frames()
         self.character.update_speed()
         self.character.update_hitbox()
@@ -155,7 +168,7 @@ class Model:
             self.character.current_attack.update_hitbox(self.character.x, self.character.y, self.character.facing_right)
         self.update_player_frame()
 
-    def get_layers_for_blit(self):
+    def get_layers_for_blit(self) -> List[Union[ui.Score, ui.Healthbar, layer.Layer, player.Player, enemies.Enemy, enemies.Demon, enemies.Imp]]:
         layers = [self.current_level.layer0,
                   self.current_level.layer1,
                   self.current_level.layer2,
@@ -170,10 +183,6 @@ class Model:
                  [ui.score]
                   )
         return layers
-
-    def get_objects_for_render(self):
-        objects = []
-        return objects
 
     def update_player_frame(self):
         self.character.current_time = pygame.time.get_ticks()
@@ -194,7 +203,7 @@ class Model:
         for enemy in self.current_level.current_wave_enemies:
             enemy.update_states()
 
-    def update_enemies_existance(self):
+    def update_enemies_existance(self, print_info=False):
         for enemy in self.current_level.current_wave_enemies:
             if enemy.health <= 0:
                 enemy.dead = True
@@ -207,11 +216,13 @@ class Model:
                     if type(enemy) is enemies.Demon:
                         self.current_level.score += 100
                     if type(enemy) is enemies.Imp:
-                        self.current_level.score += 10
+                        self.current_level.score += 20
                     self.current_level.current_wave_enemies.remove(enemy)
+                    if print_info:
+                        print(f"Enemy , {enemy}, removed from the active enemies list")
 
     def check_for_level_end(self):
-        if self.current_level.current_wave == self.current_level.waves and len(self.current_level.current_wave_enemies) < 1:
+        if self.current_level.current_wave == self.current_level.total_waves and len(self.current_level.current_wave_enemies) < 1:
             self.in_game = False
             self.in_menu = True
             self.menu_manager.current_menu = menu.score_menu

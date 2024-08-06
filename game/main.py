@@ -42,17 +42,17 @@ def main():
                 screen,
                 str(engine.current_level.score),
                 engine.get_layers_for_blit(),
-                draw_hitboxes=True,
+                draw_hitboxes=False,
                 draw_health_bars=True)
             View.draw_fps(screen, font, int(clock.get_fps()))
             View.draw_wave_number(
                 screen,
                 pygame.font.Font(os.path.join(".", "assets", "fonts", "font.otf"), 25),
-                engine.current_level.waves,
+                engine.current_level.total_waves,
                 engine.current_level.current_wave
                 )
         pygame.display.flip()
-        clock.tick(120)
+        clock.tick(90)
 
 
 if __name__ == "__main__":

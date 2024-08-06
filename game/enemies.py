@@ -60,6 +60,7 @@ class Enemy(BaseEnemy):
         else:
             self._frame = value
 
+    # might change later if slow mechanic was introduced
     @property
     def frame_rate(self):
         return self._frame_rate
@@ -99,20 +100,20 @@ class Demon(Enemy):
     def reset_frames(self):
         if self.exist:
             if self.dead:
-                if self.frame >= 6:
+                if self.frame > 5:
                     self.exist = False
             elif self.hit is True:
-                if self.frame >= 5:
+                if self.frame > 5:
                     self.frame = 0
             elif self.attacking is True:
-                if self.frame >= 8:
+                if self.frame > 8:
                     self.frame = 0
                     # self.attacking = False
             elif self.running is True:
-                if self.frame >= 4:
+                if self.frame > 4:
                     self.frame = 0
             elif self.idle is True:
-                if self.frame >= 4:
+                if self.frame > 4:
                     self.frame = 0
         return self.frame
 

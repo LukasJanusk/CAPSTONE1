@@ -9,6 +9,8 @@ import os
 class Typing_Controller():
     user_text: str = ""
     typing: bool = True
+    typo: bool = False
+    last_update = pygame.time.get_ticks()
 
     def get_user_input(self, event: pygame.event.Event):
         if self.typing is True:
@@ -39,14 +41,11 @@ class User:
     _level5_highscore: int = 0
     input_manager = Typing_Controller()
 
-    def __init__(self, name: str):
-        self.NAME = name
-
     def __str__(self) -> str:
         return f"{self.NAME}"
 
     @property
-    def NAME(self):
+    def NAME(self) -> str:
         return self._NAME
 
     @NAME.setter
@@ -58,7 +57,7 @@ class User:
             self._NAME = name
 
     @property
-    def level1_highscore(self):
+    def level1_highscore(self) -> int:
         return self._level1_highscore
 
     @ level1_highscore.setter
@@ -67,7 +66,7 @@ class User:
             self._level1_highscore = value
 
     @property
-    def level2_highscore(self):
+    def level2_highscore(self) -> int:
         return self._level1_highscore
 
     @ level2_highscore.setter
@@ -76,7 +75,7 @@ class User:
             self._level2_highscore = value
 
     @property
-    def level3_highscore(self):
+    def level3_highscore(self) -> int:
         return self._level3_highscore
 
     @ level3_highscore.setter
@@ -85,7 +84,7 @@ class User:
             self._level3_highscore = value
 
     @property
-    def level4_highscore(self):
+    def level4_highscore(self) -> int:
         return self._level4_highscore
 
     @ level4_highscore.setter
@@ -94,7 +93,7 @@ class User:
             self._level4_highscore = value
 
     @property
-    def level5_highscore(self):
+    def level5_highscore(self) -> int:
         return self._level5_highscore
 
     @ level5_highscore.setter
@@ -102,7 +101,7 @@ class User:
         if value > self._level5_highscore:
             self._level5_highscore = value
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         return {"user": [{"NAME": self.NAME},
                          {"level0": self.level0},
                          {"level1": self.level1},
@@ -117,16 +116,18 @@ class User:
                          {"level4_highscore": self.level4_highscore},
                          {"level5_highscore": self.level5_highscore}]}
 
-    def save_user(self):
+    def save_user(self) -> bool:
         data = self.to_dict()
         try:
             with open(os.path.join(".", "user", "user.json"), mode="w") as file:
                 json.dump(data, file, indent=4)
                 print("User data saved")
+                return True
         except Exception as e:
             print(f"Failed to save user data: {e}")
+            return False
 
-    def load_user(self):
+    def load_user(self) -> bool:
         file_path = os.path.join(".", "user", "user.json")
         if not os.path.isfile(file_path):
             self.save_user()
@@ -150,8 +151,10 @@ class User:
                     self.level5_highscore = data["user"][12]["level5_highscore"]
                     self.input_manager = Typing_Controller()
                     print("User data loaded")
+                    return True
             except Exception as e:
                 print(f"Failed to load user data: {e}")
+                return False
 
     def reset_user_data(self):
         pass

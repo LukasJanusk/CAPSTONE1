@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List
+from typing import List, Union
 from . import enemies
 from . import layer
 import random
@@ -20,13 +20,13 @@ class Level:
     layer5: layer.Layer = None
     layer6: layer.Layer = None
     layer7: layer.Layer = None
-    waves: int = 2
+    total_waves: int = 10
     current_wave: int = 0
-    current_wave_enemies: List[enemies.Enemy] = field(default_factory=list)
+    current_wave_enemies: List[Union[enemies.Enemy, enemies.Demon, enemies.Imp]] = field(default_factory=list)
     _score: int = 0
 
     @property
-    def score(self):
+    def score(self) -> int:
         return self._score
 
     @score.setter
@@ -38,12 +38,16 @@ class Level:
         else:
             self._score = value
 
-    def is_colliding(self, new_enemy, wave: list):
+    def is_colliding(self, new_enemy, wave: list) -> bool:
         return any(new_enemy.hitbox.colliderect(enemy_obj.hitbox) for enemy_obj in wave)
 
-    def generate_wave(self, player_x: int):
+    def generate_wave(self, player_x: int) -> bool | List[Union[
+                                                        enemies.Enemy,
+                                                        enemies.Demon,
+                                                        enemies.Imp,
+                                                        ]]:
         wave = []
-        for i in range(random.randint(7, 13)):
+        for i in range(random.randint(1, 2)):
             choice = random.choices(available_enemies, weights=available_enemies_weights, k=1)[0]
             x = random.randint(int(player_x - 300), int(player_x + 1000))
             if choice == "demon":
@@ -63,7 +67,7 @@ class Level:
         self.current_wave += 1
         return wave
 
-    def get_layers_list(self):
+    def get_layers_list(self) -> List[Union[layer.Layer]]:
         return [self.layer0,
                 self.layer1,
                 self.layer2,

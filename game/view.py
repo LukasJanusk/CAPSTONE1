@@ -15,14 +15,14 @@ class View:
                screen: pygame.Surface,
                score: str,
                layers: List[Union[
-                    animations.Animation,
-                    enemies.Enemy,
-                    enemies.Demon,
-                    enemies.Imp,
-                    layer.Layer,
-                    player.Player,
-                    ui.Healthbar,
-                    ui.Score]] = [],
+                                  animations.Animation,
+                                  enemies.Enemy,
+                                  enemies.Demon,
+                                  enemies.Imp,
+                                  layer.Layer,
+                                  player.Player,
+                                  ui.Healthbar,
+                                  ui.Score]] = [],
                draw_health_bars: bool = True,
                draw_hitboxes: bool = True
                ):
@@ -31,7 +31,9 @@ class View:
                 continue
             elif type(object) is layer.Layer:
                 View.render_layer(screen, object)
-            elif type(object) is enemies.Enemy or type(object) is enemies.Demon or type(object) is enemies.Imp:
+            elif (type(object) is enemies.Enemy or
+                  type(object) is enemies.Demon or
+                  type(object) is enemies.Imp):
                 View.render_enemy(screen, object)
                 if draw_health_bars:
                     View.draw_enemy_health_bar(screen, object)
@@ -125,7 +127,7 @@ class View:
         screen.blit(health_bar_bg, (enemy.x + x, enemy.y + 10))
 
     @classmethod
-    def center(cls, screen: pygame.Surface, object: pygame.Surface):
+    def center(cls, screen: pygame.Surface, object: pygame.Surface) -> int:
         object_rect = object.get_rect()
         screen_rect = screen.get_rect()
         x = (screen_rect.width - object_rect.width) // 2
@@ -194,10 +196,3 @@ class View:
         if scale:
             text_surface = pygame.transform.smoothscale(text_surface, (scale, scale))
         screen.blit(text_surface, coordinates)
-
-    # @classmethod
-    # def draw_score(cls,
-    #                screen: pygame.font.Font,
-    #                score: int
-    #                duration
-    #                )
