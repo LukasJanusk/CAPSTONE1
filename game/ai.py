@@ -116,12 +116,5 @@ class ImpAI(AI):
 
     def idle(imp: enemies.Imp, player: player.Player):
         imp.action_duration = 1500
-        # if player.x + 50 < imp.x:
-        #     imp.facing_right = False
-        #     imp.running = True
-        # elif player.x - 30 > imp.x:
-        #     imp.facing_right = True
-        #     imp.running = True
-        # else:
         imp.running = False
         imp.idle = True
