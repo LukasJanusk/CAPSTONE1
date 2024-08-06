@@ -118,6 +118,10 @@ class Demon(Enemy):
         return self.frame
 
     def update_states(self):
+        animations = [self.idle_animation, self.hit_animation, self.death_animation, self.attack_animation, self.running_animation]
+        for animation in animations:
+            animation.x = self.x
+            animation.y = self.y
         if self.exist:
             self.current_animation.x = self.x
             self.current_animation.y = self.y
@@ -204,6 +208,10 @@ class Imp(Enemy):
         return self.frame
 
     def update_states(self):
+        animations = [self.idle_animation, self.hit_animation, self.death_animation, self.attack_animation, self.running_animation]
+        for animation in animations:
+            animation.x = self.x
+            animation.y = self.y
         if self.exist:
             self.current_animation.x = self.x
             self.current_animation.y = self.y
