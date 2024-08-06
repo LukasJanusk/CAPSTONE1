@@ -26,7 +26,6 @@ class SpriteSheets(pygame.sprite.Sprite):
 
 
 """ PLAYER ANIMATION EXTRACTION """
-
 # Loading Spritesheet images
 sprite_sheet_image = pygame.image.load(os.path.join(".", "assets", "graphics", "sprites", "stick_idle.png"))
 sprite_walk_image = pygame.image.load(os.path.join(".", "assets", "graphics", "sprites", "stick_walk.png"))

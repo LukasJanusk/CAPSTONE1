@@ -27,7 +27,7 @@ class Typing_Controller():
 
 @dataclass
 class User:
-    NAME: str
+    _name: str
     level0: bool = True
     level1: bool = True
     level2: bool = True
@@ -43,19 +43,30 @@ class User:
     input_manager = Typing_Controller()
 
     def __str__(self) -> str:
-        return f"{self.NAME}"
+        return f"{self.name}"
 
     @property
-    def NAME(self) -> str:
-        return self._NAME
+    def name(self) -> str:
+        return self._name
 
-    @NAME.setter
-    def NAME(self, name: str):
+    @name.setter
+    def name(self, value):
+        if type(value) is not str:
+            raise TypeError("Name must be a string of letters and numbers only")
         regex = r"[a-zA-Z0-9]+(?: [a-zA-Z0-9]+)*"
-        if not re.match(regex, name):
-            raise ValueError("NAMES MUST BE LETTERS AND NUMBERS ONLY")
+        if not re.match(regex, value):
+            raise ValueError("Name must contain letters and numbers only")
         else:
-            self._NAME = name
+            self._name = value
+
+    @property
+    def level0_highscore(self) -> int:
+        return self._level0_highscore
+
+    @ level0_highscore.setter
+    def level0_highscore(self, value):
+        if value > self._level0_highscore:
+            self._level0_highscore = value
 
     @property
     def level1_highscore(self) -> int:
@@ -103,7 +114,7 @@ class User:
             self._level5_highscore = value
 
     def to_dict(self) -> dict:
-        return {"user": [{"NAME": self.NAME},
+        return {"user": [{"NAME": self.name},
                          {"level0": self.level0},
                          {"level1": self.level1},
                          {"level2": self.level2},
@@ -137,7 +148,7 @@ class User:
                 path = os.path.join(".", "user", "user.json")
                 with open(path, mode="r") as file:
                     data = json.load(file)
-                    self.NAME = data["user"][0]["NAME"]
+                    self.name = data["user"][0]["NAME"]
                     self.level0 = data["user"][1]["level0"]
                     self.level1 = data["user"][2]["level1"]
                     self.level2 = data["user"][3]["level2"]

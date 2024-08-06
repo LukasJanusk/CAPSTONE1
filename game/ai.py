@@ -2,8 +2,8 @@ from dataclasses import dataclass
 from abc import ABC, abstractmethod
 import random
 import pygame
-from . import enemies
-from . import player
+from game import enemies
+from game import player
 
 
 @dataclass
