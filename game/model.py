@@ -1,6 +1,7 @@
 import pygame
 import sys
 from typing import Union, List
+import random
 from . import player
 from . import level
 from . import controller
@@ -11,6 +12,8 @@ from . import enemies
 from . import layer
 from . import settings
 from . import ai
+from . import particles
+from . particles import blood_colours
 
 
 class Model:
@@ -23,6 +26,7 @@ class Model:
         self.settings: settings.Settings = settings.settings
         self.in_menu: bool = True
         self.in_game: bool = False
+        self.particles: list = []
 
     def save_and_quit(self):
         self.user.save_user()
@@ -148,6 +152,22 @@ class Model:
                     if print_damage:
                         print(f"Player dealt {damage} damage to ", end="")
                         print(enemy)
+                    particle_generation_rect = Model.get_collision_rect(self.character.current_attack.hitbox, enemy.hitbox)
+                    particle_generation_position = Model.get_random_position_in_rect(particle_generation_rect)
+                    if type(enemy) is enemies.Demon:
+                        particles_n = random.randint(15, 30)
+                        particles_size = random.randint(5, 7)
+                    if type(enemy) is enemies.Imp:
+                        particles_n = random.randint(15, 20)
+                        particles_size = random.randint(3, 5)
+                    list = particles.Circle.generate_cicles(particles_n,
+                                                            random.choice(blood_colours),
+                                                            particle_generation_position,
+                                                            self.character.facing_right,
+                                                            radius=particles_size,
+                                                            speed=random.randint(4, 5)
+                                                            )
+                    self.particles += list
 
     def enemies_attack(self, print_damage=False):
         for enemy in self.current_level.current_wave_enemies:
@@ -184,6 +204,7 @@ class Model:
                   self.current_level.layer5] + (
                   self.current_level.current_wave_enemies +
                  [self.character] +
+                  self.particles +
                  [self.current_level.layer6,
                   self.current_level.layer7] +
                  [ui.health_bar] +
@@ -249,6 +270,10 @@ class Model:
         for enemy_obj in self.current_level.current_wave_enemies:
             if len(self.current_level.current_wave_enemies) > 0:
                 enemy_obj.x += self.character.speed
+        for particle in self.particles:
+            x, y = particle.position
+            x += self.character.speed
+            particle.position = (x, y)
 
     def update_camera(self):
         layers_list = self.current_level.get_layers_list()
@@ -260,6 +285,10 @@ class Model:
                         layer_item.distance -= (0.5 * layer_item.scroll_multiplier)
                 for enemy in self.current_level.current_wave_enemies:
                     enemy.x -= 0.5
+                for particle in self.particles:
+                    x, y = particle.position
+                    x -= 0.5
+                    particle.position = (x, y)
         if not self.character.facing_right:
             if self.character.x < 390:
                 self.character.x += 0.5
@@ -268,3 +297,39 @@ class Model:
                         layer_item.distance += (0.5 * layer_item.scroll_multiplier)
                 for enemy in self.current_level.current_wave_enemies:
                     enemy.x += 0.5
+                for particle in self.particles:
+                    x, y = particle.position
+                    x += 0.5
+                    particle.position = (x, y)
+
+    @staticmethod
+    def get_random_position_in_rect(rect: pygame.rect.Rect) -> tuple:
+        x = random.randint(rect.x, rect.x + rect.width)
+        y = random.randint(rect.y, rect.y + rect.height)
+        return (x, y)
+
+    @staticmethod
+    def get_collision_rect(rect1: pygame.rect.Rect, rect2: pygame.rect.Rect) -> pygame.rect.Rect:
+        if rect1.colliderect(rect2):
+            return rect1.clip(rect2)
+        return None
+
+    def update_particles(self):
+        for particle in self.particles:
+            if type(particle) is particles.Circle:
+                particle.update_position()
+                particle.decrease_size(0.2)
+                x, y = particle.position
+                if particle.update_existance() is False:
+                    self.particles.remove(particle)
+                elif y >= 560:
+                    maybe = random.choice([True, False])
+                    if maybe:
+                        list = particles.Circle.generate_cicles(1,
+                                                                random.choice(blood_colours),
+                                                                particle.position,
+                                                                random.choice([True, False]),
+                                                                random.randint(2, 6),
+                                                                speed=(random.randint(10, 100)/100))
+                        self.particles += list
+                    self.particles.remove(particle)

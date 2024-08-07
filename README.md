@@ -32,3 +32,46 @@ pip install -r requirements.txt
 ```bash
 python run_game.py
 ```
+
+## Controls
+
+### Menu Controls
+- **Navigate Up**: `W` or `Up Arrow`
+- **Navigate Down**: `S` or `Down Arrow`
+- **Select/Confirm**: `Enter`
+
+### In-Game Controls
+- **Jump**: `W`
+- **Duck**: `S` (currently does nothing)
+- **Move Left**: `A`
+- **Move Right**: `D`
+- **Hold to Run**: `LShift` (currently no animation)
+- **Hold to Charge and Execute Heavy Attack**: `Y`
+- **Quick Combo Attack**: `U` (hold to repeat continuously)
+- **Hold to Block**: `Space`
+- **Pause Game**: `Esc`
+
+
+## Project Structure
+
+CAPSTONE1/
+├── assets/
+│ ├── sounds/
+│ ├── musics/
+│ ├── graphics/
+│ │ ├── levels/
+│ │ └── sprites/
+│ └── fonts/
+├── docs/
+│ ├── design.md
+│ ├── user_manual.md
+│ └── developer_guide.md
+├── game/
+├── tests/
+├── user/
+│ ├── profiles/
+│ └── settings/
+├── run_game.py
+├── TODO.txt
+├── requirements.txt
+└── README.md

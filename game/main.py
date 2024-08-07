@@ -33,6 +33,7 @@ def main():
             engine.run_enemies_ai()
             engine.get_current_level_wave()
             engine.update_enemies()
+            engine.update_particles()
             engine.check_for_level_end()
             engine.update_player()
             engine.update_scroll()

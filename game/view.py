@@ -8,6 +8,7 @@ from . import animations
 from . import layer
 from . import menu
 from . import ui
+from . import particles
 
 
 class View:
@@ -26,6 +27,7 @@ class View:
                                   enemies.Imp,
                                   layer.Layer,
                                   player.Player,
+                                  particles.Circle,
                                   ui.Healthbar,
                                   ui.Score]] = [],
                draw_health_bars: bool = True,
@@ -48,6 +50,8 @@ class View:
                 screen.blit(object.draw_health_bar(), (5, 5))
             elif type(object) is ui.Score:
                 View.draw_score(screen, object, score)
+            elif type(object) is particles.Circle:
+                object.render_circle(screen)
             else:
                 print("no object to render")
             if draw_hitboxes:
