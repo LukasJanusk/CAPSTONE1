@@ -51,11 +51,12 @@ def main():
                 screen,
                 str(engine.current_level.score),
                 engine.get_layers_for_blit(),
-                draw_hitboxes=False,
-                draw_health_bars=True
-                )
-            engine.print_particles_n()
-            View.draw_fps(screen, int(clock.get_fps()))
+                draw_hitboxes=engine.settings.draw_hitboxes,
+                draw_health_bars=engine.settings.draw_health_bar,
+                draw_particles=engine.settings.draw_particles)
+            # engine.print_particles_n()
+            if engine.settings.draw_fps:
+                View.draw_fps(screen, int(clock.get_fps()))
             View.draw_wave_number(
                 screen,
                 engine.current_level.total_waves,

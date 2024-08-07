@@ -78,12 +78,13 @@ class Demon(Enemy):
     running_animation = None
     idle_animation = None
     hitbox_height = 420
-    hitbox_width = 300
+    hitbox_width = 250
     weight = 10
     hitbox = None
     actions = ["seek", "flee"]
     action_last_update = pygame.time.get_ticks()
     action_duration = 3000
+    _stun_threshold = 7000
 
     def __post_init__(self):
         self.hitbox = pygame.Rect(
@@ -143,6 +144,17 @@ class Demon(Enemy):
             )
         if self.current_animation is None:
             self.current_animation = self.idle_animation
+
+    @property
+    def stun_threshold(self):
+        return self._stun_threshold
+
+    @stun_threshold.setter
+    def stun_threshold(self, value):
+        if value <= 0:
+            self._stun_threshold = 0
+        else:
+            self._stun_threshold = value
 
     def __str__(self):
         return "Demon"
@@ -217,7 +229,7 @@ class Demon(Enemy):
 
     def update_hitbox(self):
         self.hitbox = pygame.Rect(
-            self.x + 100,
+            self.x + 125,
             self.y + 80,
             self.hitbox_width,
             self.hitbox_height

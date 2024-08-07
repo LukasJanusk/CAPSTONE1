@@ -36,7 +36,8 @@ class View:
                     ui.Healthbar,
                     ui.Score]] = [],
             draw_health_bars: bool = True,
-            draw_hitboxes: bool = True
+            draw_hitboxes: bool = True,
+            draw_particles: bool = True,
             ):
         for object in layers:
             if object is None:
@@ -56,7 +57,8 @@ class View:
             elif type(object) is ui.Score:
                 View.draw_score(screen, object, score)
             elif type(object) is particles.Circle:
-                object.render_circle(screen)
+                if draw_particles:
+                    object.render_circle(screen)
             else:
                 print("no object to render")
             if draw_hitboxes:

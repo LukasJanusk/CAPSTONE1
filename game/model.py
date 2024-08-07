@@ -163,8 +163,15 @@ class Model:
                 if damage:
                     enemy.health -= damage
                     if not enemy.dead:
-                        enemy.hit = True
-                        enemy.frame = 0
+                        if type(enemy) is enemies.Demon:
+                            enemy.stun_threshold -= damage
+                            print(enemy.stun_threshold)
+                            if enemy.stun_threshold == 0 or damage > 200:
+                                enemy.hit = True
+                                enemy.frame = 0
+                        else:
+                            enemy.frame = 0
+                            enemy.hit = True
                     if print_damage:
                         print(f"Player dealt {damage} damage to ", end="")
                         print(enemy)
