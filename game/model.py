@@ -95,15 +95,18 @@ class Model:
         #     self.user.level5_highscore = self.current_level.score
 
     def get_current_level_wave(self, print_info=False) -> bool:
-        if len(self.current_level.current_wave_enemies) < 1 or self.current_level.current_wave_enemies is None:
+        if (len(self.current_level.current_wave_enemies) < 1
+                or self.current_level.current_wave_enemies is None):
             self.current_level.current_wave_enemies = self.current_level.generate_wave(self.character.x)
-            if self.current_level.current_wave_enemies is None or len(self.current_level.current_wave_enemies) == 0:
+            if (self.current_level.current_wave_enemies is None
+                    or len(self.current_level.current_wave_enemies) == 0):
                 if print_info:
                     print("Failed to create new wave for current level")
                 return False
             else:
                 if print_info:
-                    print(f"Wave of {len(self.current_level.current_wave_enemies)} enemies generated")
+                    print(
+                        f"Wave of {len(self.current_level.current_wave_enemies)} enemies generated")
                 return True
 
     def run_enemies_ai(self):
@@ -152,21 +155,27 @@ class Model:
                     if print_damage:
                         print(f"Player dealt {damage} damage to ", end="")
                         print(enemy)
-                    particle_generation_rect = Model.get_collision_rect(self.character.current_attack.hitbox, enemy.hitbox)
-                    particle_generation_position = Model.get_random_position_in_rect(particle_generation_rect)
+                    particle_generation_rect = Model.get_collision_rect(
+                        self.character.current_attack.hitbox,
+                        enemy.hitbox
+                        )
+                    particle_generation_position = Model.get_random_position_in_rect(
+                        particle_generation_rect
+                        )
                     if type(enemy) is enemies.Demon:
                         particles_n = random.randint(15, 30)
                         particles_size = random.randint(5, 7)
                     if type(enemy) is enemies.Imp:
                         particles_n = random.randint(15, 20)
                         particles_size = random.randint(3, 5)
-                    list = particles.Circle.generate_cicles(particles_n,
-                                                            random.choice(blood_colours),
-                                                            particle_generation_position,
-                                                            self.character.facing_right,
-                                                            radius=particles_size,
-                                                            speed=random.randint(4, 5)
-                                                            )
+                    list = particles.Circle.generate_cicles(
+                        particles_n,
+                        random.choice(blood_colours),
+                        particle_generation_position,
+                        self.character.facing_right,
+                        radius=particles_size,
+                        speed=random.randint(4, 5)
+                        )
                     self.particles += list
 
     def enemies_attack(self, print_damage=False):
@@ -192,24 +201,38 @@ class Model:
         self.character.get_current_animation()
         self.character.get_current_attack()
         if self.character.current_attack is not None:
-            self.character.current_attack.update_hitbox(self.character.x, self.character.y, self.character.facing_right)
+            self.character.current_attack.update_hitbox(
+                self.character.x,
+                self.character.y,
+                self.character.facing_right
+                )
         self.update_player_frame()
 
-    def get_layers_for_blit(self) -> List[Union[ui.Score, ui.Healthbar, layer.Layer, player.Player, enemies.Enemy, enemies.Demon, enemies.Imp]]:
-        layers = [self.current_level.layer0,
-                  self.current_level.layer1,
-                  self.current_level.layer2,
-                  self.current_level.layer3,
-                  self.current_level.layer4,
-                  self.current_level.layer5] + (
-                  self.current_level.current_wave_enemies +
-                 [self.character] +
-                  self.particles +
-                 [self.current_level.layer6,
-                  self.current_level.layer7] +
-                 [ui.health_bar] +
-                 [ui.score]
-                  )
+    def get_layers_for_blit(self) -> List[
+        Union[
+            ui.Score,
+            ui.Healthbar,
+            layer.Layer,
+            player.Player,
+            enemies.Enemy,
+            enemies.Demon,
+            enemies.Imp]
+            ]:
+        layers = [
+            self.current_level.layer0,
+            self.current_level.layer1,
+            self.current_level.layer2,
+            self.current_level.layer3,
+            self.current_level.layer4,
+            self.current_level.layer5] + (
+            self.current_level.current_wave_enemies +
+            [self.character] +
+            self.particles +
+            [self.current_level.layer6,
+             self.current_level.layer7] +
+            [ui.health_bar] +
+            [ui.score]
+            )
         return layers
 
     def update_player_frame(self):
@@ -263,7 +286,8 @@ class Model:
         layers_list = self.current_level.get_layers_list()
         for layer_item in layers_list:
             if layer_item is not None:
-                layer_current_scroll = (layer_item.scroll + self.character.speed) * layer_item.scroll_multiplier
+                layer_current_scroll = (
+                    layer_item.scroll + self.character.speed) * layer_item.scroll_multiplier
                 layer_item.distance += layer_current_scroll
                 if abs(layer_item.distance) > layer_item.width:
                     layer_item.distance = 0
@@ -309,7 +333,10 @@ class Model:
         return (x, y)
 
     @staticmethod
-    def get_collision_rect(rect1: pygame.rect.Rect, rect2: pygame.rect.Rect) -> pygame.rect.Rect:
+    def get_collision_rect(
+        rect1: pygame.rect.Rect,
+        rect2: pygame.rect.Rect
+            ) -> pygame.rect.Rect:
         if rect1.colliderect(rect2):
             return rect1.clip(rect2)
         return None
@@ -325,11 +352,12 @@ class Model:
                 elif y >= 560:
                     maybe = random.choice([True, False])
                     if maybe:
-                        list = particles.Circle.generate_cicles(1,
-                                                                random.choice(blood_colours),
-                                                                particle.position,
-                                                                random.choice([True, False]),
-                                                                random.randint(2, 6),
-                                                                speed=(random.randint(10, 100)/100))
+                        list = particles.Circle.generate_cicles(
+                            1,
+                            random.choice(blood_colours),
+                            particle.position,
+                            random.choice([True, False]),
+                            random.randint(2, 6),
+                            speed=(random.randint(10, 100)/100))
                         self.particles += list
                     self.particles.remove(particle)

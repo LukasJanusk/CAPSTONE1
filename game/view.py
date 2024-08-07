@@ -12,27 +12,31 @@ from . import particles
 
 
 class View:
-    font_small = pygame.font.Font(os.path.join(".", "assets", "fonts", "font.otf"), 18)
-    font_medium = pygame.font.Font(os.path.join(".", "assets", "fonts", "font.otf"), 25)
-    font_large = pygame.font.Font(os.path.join(".", "assets", "fonts", "font.otf"), 45)
+    font_small = pygame.font.Font(
+        os.path.join(".", "assets", "fonts", "font.otf"), 18)
+    font_medium = pygame.font.Font(
+        os.path.join(".", "assets", "fonts", "font.otf"), 25)
+    font_large = pygame.font.Font(
+        os.path.join(".", "assets", "fonts", "font.otf"), 45)
 
     @staticmethod
     def render(
-               screen: pygame.Surface,
-               score: str,
-               layers: List[Union[
-                                  animations.Animation,
-                                  enemies.Enemy,
-                                  enemies.Demon,
-                                  enemies.Imp,
-                                  layer.Layer,
-                                  player.Player,
-                                  particles.Circle,
-                                  ui.Healthbar,
-                                  ui.Score]] = [],
-               draw_health_bars: bool = True,
-               draw_hitboxes: bool = True
-               ):
+            screen: pygame.Surface,
+            score: str,
+            layers: List[
+                Union[
+                    animations.Animation,
+                    enemies.Enemy,
+                    enemies.Demon,
+                    enemies.Imp,
+                    layer.Layer,
+                    player.Player,
+                    particles.Circle,
+                    ui.Healthbar,
+                    ui.Score]] = [],
+            draw_health_bars: bool = True,
+            draw_hitboxes: bool = True
+            ):
         for object in layers:
             if object is None:
                 continue
@@ -55,8 +59,10 @@ class View:
             else:
                 print("no object to render")
             if draw_hitboxes:
-                player_object = [item for item in layers if isinstance(item, player.Player)][0]
-                enemies_objects = [item for item in layers if isinstance(item, enemies.Demon | enemies.Imp)]
+                player_object = [
+                    item for item in layers if isinstance(item, player.Player)][0]
+                enemies_objects = [
+                    item for item in layers if isinstance(item, enemies.Demon | enemies.Imp)]
                 View.draw_hitboxes(screen, player_object, enemies_objects)
 
     @staticmethod
@@ -84,9 +90,11 @@ class View:
         animation.animate(screen, player.frame, player.facing_right)
 
     @staticmethod
-    def draw_hitboxes(screen: pygame.Surface,
-                      player: player.Player,
-                      enemies: List[Union[enemies.Enemy, enemies.Demon, enemies.Imp]]):
+    def draw_hitboxes(
+            screen: pygame.Surface,
+            player: player.Player,
+            enemies: List[Union[enemies.Enemy, enemies.Demon, enemies.Imp]]
+            ):
         View.draw_player_hitbox(screen, player)
         View.draw_enemies_hitboxes(screen, enemies)
         View.draw_player_attack_hitbox(screen, player)
@@ -193,13 +201,13 @@ class View:
 
     @classmethod
     def draw_wave_number(
-                        cls,
-                        screen: pygame.Surface,
-                        total_waves: int,
-                        current_wave: int,
-                        coordinates: tuple = (10, 30),
-                        scale: float = None
-                        ):
+            cls,
+            screen: pygame.Surface,
+            total_waves: int,
+            current_wave: int,
+            coordinates: tuple = (10, 30),
+            scale: float = None
+            ):
         text_surface = cls.font_medium.render(f"Wave: {current_wave}/{total_waves}", True, (255, 255, 255))
         if scale:
             text_surface = pygame.transform.smoothscale(text_surface, (scale, scale))

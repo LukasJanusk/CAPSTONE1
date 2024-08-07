@@ -59,12 +59,18 @@ class Player:
     hitbox = None
 
     def __post_init__(self):
-        self.IDLE_ANIMATION = Animation(spritesheets.idle_animation_list, self.x, self.y, -24)
-        self.WALKING_ANIMATION = Animation(spritesheets.walking_animation_list, self.x, self.y - 15)
-        self.GUARD_ANIMATION = Animation(spritesheets.guard_animation_list, self.x, self.y, -20)
-        self.JUMPING_ANIMATION = Animation(spritesheets.jumping_animation_list, self.x, self.y, -15)
-        self.ATTACK_UPPER_ANIMATION = Animation(spritesheets.attack_upper_list, self.x - 90, self.y - 40)
-        self.ATTACK_NORMAL_ANIMATION = Animation(spritesheets.attack_normal_list, self.x - 10, self.y - 8, -55)
+        self.IDLE_ANIMATION = Animation(
+            spritesheets.idle_animation_list, self.x, self.y, -24)
+        self.WALKING_ANIMATION = Animation(
+            spritesheets.walking_animation_list, self.x, self.y - 15)
+        self.GUARD_ANIMATION = Animation(
+            spritesheets.guard_animation_list, self.x, self.y, -20)
+        self.JUMPING_ANIMATION = Animation(
+            spritesheets.jumping_animation_list, self.x, self.y, -15)
+        self.ATTACK_UPPER_ANIMATION = Animation(
+            spritesheets.attack_upper_list, self.x - 90, self.y - 40)
+        self.ATTACK_NORMAL_ANIMATION = Animation(
+            spritesheets.attack_normal_list, self.x - 10, self.y - 8, -55)
         self.attack_normal = Attack(50, [1, 3], 170, 80, 0, 40, -70, 0)
         self.attack_upper = Attack(200, [7, 8], 190, 170, 0, -40, -90, 0)
         self.hitbox = pygame.Rect(self.x + 10, self.y, 60, 150)

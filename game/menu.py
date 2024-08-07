@@ -20,7 +20,10 @@ class Button:
     rect: pygame.Rect = None
 
     def __post_init__(self):
-        self.font = pygame.font.Font(os.path.join(".", "assets", "fonts", "font.otf"), self.font_size)
+        self.font = pygame.font.Font(
+            os.path.join(
+                ".", "assets", "fonts", "font.otf"),
+            self.font_size)
         self.surface = self.font.render(self.NAME, True, (0, 0, 0))
         self.rect = self.surface.get_rect()
 
@@ -33,9 +36,17 @@ class Button:
 
     def update_colour(self):
         if self.hover:
-            self.surface = self.font.render(self.NAME, True, self.hover_colour)
+            self.surface = self.font.render(
+                self.NAME,
+                True,
+                self.hover_colour
+                )
         else:
-            self.surface = self.font.render(self.NAME, True, self.text_colour)
+            self.surface = self.font.render(
+                self.NAME,
+                True,
+                self.text_colour
+                )
 
 
 quit_button = Button("QUIT")
@@ -72,7 +83,10 @@ class Menu:
     text_rect: pygame.rect.Rect = None
 
     def __post_init__(self):
-        self.font = pygame.font.Font(os.path.join(".", "assets", "fonts", "font.otf"), self.font_size)
+        self.font = pygame.font.Font(
+            os.path.join(
+                ".", "assets", "fonts", "font.otf"),
+            self.font_size)
         self.text_surface = self.font.render(self.name, True, (0, 0, 0))
         self.text_rect = self.text_surface.get_rect()
         self.selected_button = self.buttons[0]
@@ -89,13 +103,45 @@ class Menu:
         self.text_rect = self.text_surface.get_rect()
 
 
-user_select_menu = Menu("SELECT USER", buttons=[quit_button])
-main_menu = Menu("MAIN MENU", buttons=[new_game_button, high_scores_button, settings_button, quit_button])
-settings_menu = Menu("SETTINGS", buttons=[back_button])
-high_scores_menu = Menu("HIGHSCORES", buttons=[back_button])
-new_game_menu = Menu("NEW GAME", buttons=[level0_button, level1_button, level2_button, level3_button, level4_button, level5_button, back_button])
-pause_menu = Menu("PAUSE", buttons=[continue_button, main_menu_button, quit_button])
-score_menu = Menu("SCORE", buttons=[new_game_button, main_menu_button])
+user_select_menu = Menu(
+    "SELECT USER",
+    buttons=[quit_button]
+    )
+main_menu = Menu(
+    "MAIN MENU",
+    buttons=[
+        new_game_button,
+        high_scores_button,
+        settings_button,
+        quit_button
+        ])
+settings_menu = Menu(
+    "SETTINGS",
+    buttons=[back_button])
+high_scores_menu = Menu(
+    "HIGHSCORES",
+    buttons=[back_button])
+new_game_menu = Menu(
+    "NEW GAME",
+    buttons=[
+        level0_button,
+        level1_button,
+        level2_button,
+        level3_button,
+        level4_button,
+        level5_button,
+        back_button])
+pause_menu = Menu(
+    "PAUSE",
+    buttons=[
+        continue_button,
+        main_menu_button,
+        quit_button])
+score_menu = Menu(
+    "SCORE",
+    buttons=[
+        new_game_button,
+        main_menu_button])
 
 
 @dataclass
@@ -218,4 +264,5 @@ menus = [
     high_scores_menu,
     new_game_menu,
     score_menu,
-    pause_menu]
+    pause_menu
+    ]

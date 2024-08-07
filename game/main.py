@@ -9,7 +9,12 @@ def main():
     height = 640
     width = 800
     pygame.display.set_caption("game")
-    screen = pygame.display.set_mode((width, height), pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.RESIZABLE)
+    screen = pygame.display.set_mode(
+        (width, height),
+        pygame.HWSURFACE |
+        pygame.DOUBLEBUF |
+        pygame.RESIZABLE
+        )
     clock = pygame.time.Clock()
     engine = model.Model()
     engine.load_user()
@@ -27,7 +32,9 @@ def main():
                 engine.pause_game(event)
                 engine.get_player_input(event)
         if engine.in_menu:
-            View.draw_menus(screen, engine.menu_manager.current_menu)
+            View.draw_menus(
+                screen,
+                engine.menu_manager.current_menu)
         if engine.in_game:
             engine.controller.set_player_state()
             engine.run_enemies_ai()

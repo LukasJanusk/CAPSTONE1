@@ -231,28 +231,5 @@ class Controller:
         else:
             self.player.idle = True
 
-    # def update_speed(self):
-    #     if not self.player.jumping:
-    #         self.player.aerial_movement = False
-    #     self.player.speed = 0
-    #     if self.player.running is True:
-    #         self.player.speed += 2.5
-    #     if self.player.walking is True:
-    #         self.player.speed += 1.5
-    #     if self.player.dashing:
-    #         self.player.speed += 4
-    #     if self.player.attack_moving is True:
-    #         self.player.speed += 0.4
-    #     if self.player.aerial_movement is True:
-    #         self.player.speed += 2
-    #     if self.player.ducking is True:
-    #         self.player.speed = 0
-    #     if self.player.guarding is True:
-    #         self.player.speed = 0
-    #     if self.player.idle is True:
-    #         self.player.speed = 0
-    #     if self.player.facing_right:
-    #         self.player.speed = self.player.speed * -1
-
 
 player_input_manager = Controller()

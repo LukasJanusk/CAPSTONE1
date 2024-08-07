@@ -126,7 +126,8 @@ class User:
                          {"level2_highscore": self.level2_highscore},
                          {"level3_highscore": self.level3_highscore},
                          {"level4_highscore": self.level4_highscore},
-                         {"level5_highscore": self.level5_highscore}]}
+                         {"level5_highscore": self.level5_highscore}
+                         ]}
 
     def save_user(self) -> bool:
         data = self.to_dict()

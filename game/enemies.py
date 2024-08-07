@@ -86,13 +86,61 @@ class Demon(Enemy):
     action_duration = 3000
 
     def __post_init__(self):
-        self.hitbox = pygame.Rect(self.x, self.y, self.hitbox_width, self.hitbox_height)
-        self.idle_animation = animations.Animation(self.sprite_sheet_list[0], self.x, self.y, 0, 0, (150, 150, 150))
-        self.hit_animation = animations.Animation(self.sprite_sheet_list[1], self.x, self.y, 0, 0, (150, 150, 150))
-        self.death_animation = animations.Animation(self.sprite_sheet_list[2], self.x, self.y, 0, 0, (150, 150, 150))
-        self.attack_animation = animations.Animation(self.sprite_sheet_list[3], self.x, self.y, 0, 0, (150, 150, 150))
-        self.running_animation = animations.Animation(self.sprite_sheet_list[4], self.x, self.y, 0, 0, (150, 150, 150))
-        self.attack = attacks.Attack(self.damage, [6], 355, 180, 75, 240, 0, 0)
+        self.hitbox = pygame.Rect(
+            self.x,
+            self.y,
+            self.hitbox_width,
+            self.hitbox_height
+            )
+        self.idle_animation = animations.Animation(
+            self.sprite_sheet_list[0],
+            self.x, self.y,
+            0,
+            0,
+            (150, 150, 150)
+            )
+        self.hit_animation = animations.Animation(
+            self.sprite_sheet_list[1],
+            self.x,
+            self.y,
+            0,
+            0,
+            (150, 150, 150)
+            )
+        self.death_animation = animations.Animation(
+            self.sprite_sheet_list[2],
+            self.x,
+            self.y,
+            0,
+            0,
+            (150, 150, 150)
+            )
+        self.attack_animation = animations.Animation(
+            self.sprite_sheet_list[3],
+            self.x,
+            self.y,
+            0,
+            0,
+            (150, 150, 150)
+            )
+        self.running_animation = animations.Animation(
+            self.sprite_sheet_list[4],
+            self.x,
+            self.y,
+            0,
+            0,
+            (150, 150, 150)
+            )
+        self.attack = attacks.Attack(
+            self.damage,
+            [6],
+            355,
+            180,
+            75,
+            240,
+            0,
+            0
+            )
         if self.current_animation is None:
             self.current_animation = self.idle_animation
 
@@ -120,7 +168,13 @@ class Demon(Enemy):
         return self.frame
 
     def update_states(self):
-        animations = [self.idle_animation, self.hit_animation, self.death_animation, self.attack_animation, self.running_animation]
+        animations = [
+            self.idle_animation,
+            self.hit_animation,
+            self.death_animation,
+            self.attack_animation,
+            self.running_animation
+            ]
         for animation in animations:
             animation.x = self.x
             animation.y = self.y
@@ -162,7 +216,12 @@ class Demon(Enemy):
         self.x += self.speed
 
     def update_hitbox(self):
-        self.hitbox = pygame.Rect(self.x + 100, self.y + 80, self.hitbox_width, self.hitbox_height)
+        self.hitbox = pygame.Rect(
+            self.x + 100,
+            self.y + 80,
+            self.hitbox_width,
+            self.hitbox_height
+            )
 
 
 @dataclass
@@ -185,13 +244,62 @@ class Imp(Enemy):
     action_duration = 3000
 
     def __post_init__(self):
-        self.hitbox = pygame.Rect(self.x, self.y, self.hitbox_width, self.hitbox_height)
-        self.idle_animation = animations.Animation(self.sprite_sheet_list[0], self.x, self.y, 0, 0, (150, 150, 150))
-        self.hit_animation = animations.Animation(self.sprite_sheet_list[1], self.x, self.y, 0, 0, (150, 150, 150))
-        self.death_animation = animations.Animation(self.sprite_sheet_list[2], self.x, self.y, 0, 0, (150, 150, 150))
-        self.attack_animation = animations.Animation(self.sprite_sheet_list[3], self.x, self.y, 0, 0, (150, 150, 150))
-        self.running_animation = animations.Animation(self.sprite_sheet_list[4], self.x, self.y, 0, 0, (150, 150, 150))
-        self.attack = attacks.Attack(self.damage, [1, 2], 50, 30, 105, 60, -105, 0)
+        self.hitbox = pygame.Rect(
+            self.x,
+            self.y,
+            self.hitbox_width,
+            self.hitbox_height
+            )
+        self.idle_animation = animations.Animation(
+            self.sprite_sheet_list[0],
+            self.x,
+            self.y,
+            0,
+            0,
+            (150, 150, 150)
+            )
+        self.hit_animation = animations.Animation(
+            self.sprite_sheet_list[1],
+            self.x,
+            self.y,
+            0,
+            0,
+            (150, 150, 150)
+            )
+        self.death_animation = animations.Animation(
+            self.sprite_sheet_list[2],
+            self.x,
+            self.y,
+            0,
+            0,
+            (150, 150, 150)
+            )
+        self.attack_animation = animations.Animation(
+            self.sprite_sheet_list[3],
+            self.x,
+            self.y,
+            0,
+            0,
+            (150, 150, 150)
+            )
+        self.running_animation = animations.Animation(
+            self.sprite_sheet_list[4],
+            self.x,
+            self.y,
+            0,
+            0,
+            (150, 150, 150)
+            )
+        self.attack = attacks.Attack(
+            self.damage,
+            [1, 2],
+            50,
+            30,
+            105,
+            60,
+            -105,
+            0
+            )
         if self.current_animation is None:
             self.current_animation = self.idle_animation
 
@@ -219,7 +327,13 @@ class Imp(Enemy):
         return self.frame
 
     def update_states(self):
-        animations = [self.idle_animation, self.hit_animation, self.death_animation, self.attack_animation, self.running_animation]
+        animations = [
+            self.idle_animation,
+            self.hit_animation,
+            self.death_animation,
+            self.attack_animation,
+            self.running_animation
+            ]
         for animation in animations:
             animation.x = self.x
             animation.y = self.y
@@ -267,4 +381,8 @@ class Imp(Enemy):
             self.x += self.speed
 
     def update_hitbox(self):
-        self.hitbox = pygame.Rect(self.x + 50, self.y + 20, self.hitbox_width, self.hitbox_height)
+        self.hitbox = pygame.Rect(
+            self.x + 50,
+            self.y + 20,
+            self.hitbox_width,
+            self.hitbox_height)

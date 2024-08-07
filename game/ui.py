@@ -7,7 +7,9 @@ from .spritesheets import SpriteSheets
 
 pygame.init()
 screen = pygame.display.set_mode((800, 640))
-font = pygame.font.Font(os.path.join(".", "assets", "fonts", "font.otf"), 18)
+font = pygame.font.Font(
+    os.path.join(".", "assets", "fonts", "font.otf"),
+    18)
 
 
 @dataclass
@@ -21,7 +23,8 @@ class UI(SpriteSheets):
     def __post_init__(self):
         self.width = self.sheet.get_width()
         self.height = self.sheet.get_height()
-        self._IMAGE = self.get_image(self.frame, self.width, self.height, 1, (150, 150, 150))
+        self._IMAGE = self.get_image(
+            self.frame, self.width, self.height, 1, (150, 150, 150))
 
 
 @dataclass
@@ -29,14 +32,16 @@ class Score:
     last_update: int = pygame.time.get_ticks()
     width: int = 1
     height: int = 1
-    _font = pygame.font.Font(os.path.join(".", "assets", "fonts", "font.otf"), 50)
+    _font = pygame.font.Font(
+        os.path.join(".", "assets", "fonts", "font.otf"), 50)
     _font_size = 50
     rect: pygame.Rect = None
     surface: pygame.Surface = None
 
     @property
     def font(self):
-        return pygame.font.Font(os.path.join(".", "assets", "fonts", "font.otf"), self.font_size)
+        return pygame.font.Font(
+            os.path.join(".", "assets", "fonts", "font.otf"), self.font_size)
 
     @property
     def font_size(self):
@@ -83,7 +88,8 @@ class Healthbar:
     def draw_health_bar(self):
         if self.character.health == self.health:
             return self.health_bar_surface
-        text = font.render(f"{ceil(self.character.health)}/1000", True, (255, 255, 255))
+        text = font.render(
+            f"{ceil(self.character.health)}/1000", True, (255, 255, 255))
         full_health_width = 302
         current_health_width = int(self.character.health * 0.3)
         if current_health_width < 0:

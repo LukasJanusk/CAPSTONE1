@@ -22,7 +22,12 @@ class Level:
     layer7: layer.Layer = None
     total_waves: int = 15
     current_wave: int = 0
-    current_wave_enemies: List[Union[enemies.Enemy, enemies.Demon, enemies.Imp]] = field(default_factory=list)
+    current_wave_enemies: List[
+        Union[
+            enemies.Enemy,
+            enemies.Demon,
+            enemies.Imp]
+            ] = field(default_factory=list)
     _score: int = 0
 
     @property
@@ -39,16 +44,25 @@ class Level:
             self._score = value
 
     def is_colliding(self, new_enemy, wave: list) -> bool:
-        return any(new_enemy.hitbox.colliderect(enemy_obj.hitbox) for enemy_obj in wave)
+        return any(
+            new_enemy.hitbox.colliderect(enemy_obj.hitbox) for enemy_obj in wave)
 
     def generate_wave(self, player_x: int) -> bool | List[Union[
-                                                        enemies.Enemy,
-                                                        enemies.Demon,
-                                                        enemies.Imp,
-                                                        ]]:
+        enemies.Enemy,
+        enemies.Demon,
+        enemies.Imp,
+        ]
+            ]:
         wave = []
-        for i in range(random.randint((1 * self.current_wave + 1), 2 * (self.current_wave + 1))):
-            choice = random.choices(available_enemies, weights=available_enemies_weights, k=1)[0]
+        for i in range(
+            random.randint(
+                (1 * self.current_wave + 1),
+                2 * (self.current_wave + 1))
+                ):
+            choice = random.choices(
+                available_enemies,
+                weights=available_enemies_weights,
+                k=1)[0]
             x = random.randint(int(player_x - 150), int(player_x + 1000))
             if choice == "demon":
                 enemy = enemies.Demon(x, 50, name=str(i))

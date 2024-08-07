@@ -163,7 +163,14 @@ def main():
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    list = Circle.generate_cicles(random.randint(5, 30), random_red, random.choice(positions), random.choice([True]), 15, 2000)
+                    list = Circle.generate_cicles(
+                        random.randint(5, 30),
+                        random_red,
+                        random.choice(positions),
+                        random.choice([True]),
+                        15,
+                        2000
+                        )
                     circles += list
         fps = int(clock.get_fps())
         font_surf = font.render(str(fps), True, (255, 255, 255))
