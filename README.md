@@ -6,13 +6,13 @@
 First, clone the repository to your local machine using the following command:
 
 ```bash
-git clone <https://github.com/LukasJanusk/CAPSTONE1>
+git clone https://github.com/LukasJanusk/CAPSTONE1
 ```
 
 2. Navigate to the Project Directory
 Change your current directory to the project directory:
 ```bash
-cd <CAPSTONE1>
+cd CAPSTONE1
 ```
 3. Install Dependencies
 
@@ -51,6 +51,18 @@ python run_game.py
 - **Hold to Block**: `Space`
 - **Pause Game**: `Esc`
 
+## To Run Tests
+
+1. Navigate to the Project Directory:
+
+```bash
+cd CAPSTONE1
+```
+2. Run tests:
+
+```bash
+pytest
+```
 
 ## Project Structure
 
