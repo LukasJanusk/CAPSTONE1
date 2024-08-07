@@ -31,7 +31,7 @@ class Enemy(BaseEnemy):
     _frame: int = 0
     _frame_rate: int = 160
     last_update = pygame.time.get_ticks()
-    stun_duration: int = 200
+    stun_duration: int = 2000
     speed: float = 1.5
     facing_right: bool = False
     running: bool = False

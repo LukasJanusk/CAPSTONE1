@@ -11,7 +11,16 @@ class Controller:
         self.set_keydown_events(event)
 
     def set_key_up_events(self, event: pygame.event.Event):
-        frame_reset_list = [pygame.K_a, pygame.K_d, pygame.K_w, pygame.K_s, pygame.K_w, pygame.K_y, pygame.K_u, pygame.K_h]
+        frame_reset_list = [
+            pygame.K_a,
+            pygame.K_d,
+            pygame.K_w,
+            pygame.K_s,
+            pygame.K_w,
+            pygame.K_y,
+            pygame.K_u,
+            pygame.K_h
+            ]
         if event.type == pygame.KEYUP:
             if event.key in frame_reset_list:
                 self.player.frame = 0
