@@ -9,6 +9,7 @@ from . import layer
 from . import menu
 from . import ui
 from . import particles
+from . import user
 
 
 class View:
@@ -183,13 +184,22 @@ class View:
             return player.GUARD_ANIMATION
 
     @staticmethod
-    def draw_menus(screen: pygame.Surface, current_menu: menu.Menu):
+    def draw_menus(screen: pygame.Surface, current_menu: menu.Menu, user: user.User):
         screen.fill(current_menu.colour)
         current_menu.center_text(screen)
         screen.blit(current_menu.text_surface, (current_menu.text_x, 30))
-        for index, button in enumerate(current_menu.buttons):
-            button.center_button(screen)
-            screen.blit(button.surface, (button.x, 150 + index * 50))
+        if current_menu is menu.high_scores_menu:
+            current_menu.selected_button.y = 550
+            current_menu.selected_button.center_button(screen)
+            View.draw_highscores(screen, user)
+            screen.blit(
+                current_menu.selected_button.surface,
+                (current_menu.selected_button.x, current_menu.selected_button.y)
+                )
+        else:
+            for index, button in enumerate(current_menu.buttons):
+                button.center_button(screen)
+                screen.blit(button.surface, (button.x, 150 + index * 50))
 
     @classmethod
     def draw_fps(cls, screen: pygame.Surface, fps: int):
@@ -212,3 +222,37 @@ class View:
         if scale:
             text_surface = pygame.transform.smoothscale(text_surface, (scale, scale))
         screen.blit(text_surface, coordinates)
+
+    @classmethod
+    def draw_highscores(cls, screen: pygame.Surface, user: user.User):
+        bg_rect = pygame.rect.Rect(0, 0, 500, 400)
+        bg = pygame.surface.Surface((500, 400))
+        bg.fill((28, 73, 98))
+        x = View.center(screen, bg)
+        bg_rect.x = x
+        bg_rect.y = 130
+        scores = [
+            cls.font_large.render(
+                "LEVEL 1: " + str(user.level1_highscore),
+                True,
+                (0, 0, 0)),
+            cls.font_large.render(
+                "LEVEL 2: " + str(user.level2_highscore),
+                True,
+                (0, 0, 0)),
+            cls.font_large.render(
+                "LEVEL 3: " + str(user.level3_highscore),
+                True,
+                (0, 0, 0)),
+            cls.font_large.render(
+                "LEVEL 4: " + str(user.level4_highscore),
+                True,
+                (0, 0, 0)),
+            cls.font_large.render(
+                "LEVEL 5: " + str(user.level5_highscore),
+                True,
+                (0, 0, 0))
+                ]
+        for index, score in enumerate(scores):
+            bg.blit(score, (20, 20 + 50 * index))
+        screen.blit(bg, bg_rect)

@@ -79,7 +79,7 @@ class User:
 
     @property
     def level2_highscore(self) -> int:
-        return self._level1_highscore
+        return self._level2_highscore
 
     @ level2_highscore.setter
     def level2_highscore(self, value):

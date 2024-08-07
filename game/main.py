@@ -34,7 +34,9 @@ def main():
         if engine.in_menu:
             View.draw_menus(
                 screen,
-                engine.menu_manager.current_menu)
+                engine.menu_manager.current_menu,
+                engine.user
+                )
         if engine.in_game:
             engine.controller.set_player_state()
             engine.run_enemies_ai()

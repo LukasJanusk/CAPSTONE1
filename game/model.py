@@ -81,6 +81,7 @@ class Model:
             self.current_level.score = 0
             self.character.health = self.character.maximum_health
             self.character.x = 100
+            pygame.event.clear()
 
     def set_highscore(self):
         if self.current_level == level.level1:
@@ -163,11 +164,11 @@ class Model:
                         particle_generation_rect
                         )
                     if type(enemy) is enemies.Demon:
-                        particles_n = random.randint(15, 30)
-                        particles_size = random.randint(5, 7)
+                        particles_n = random.randint(9, 13)
+                        particles_size = random.randint(6, 8)
                     if type(enemy) is enemies.Imp:
-                        particles_n = random.randint(15, 20)
-                        particles_size = random.randint(3, 5)
+                        particles_n = random.randint(7, 9)
+                        particles_size = random.randint(4, 5)
                     list = particles.Circle.generate_cicles(
                         particles_n,
                         random.choice(blood_colours),
@@ -345,7 +346,7 @@ class Model:
         for particle in self.particles:
             if type(particle) is particles.Circle:
                 particle.update_position()
-                particle.decrease_size(0.2)
+                particle.decrease_size(0.15)
                 x, y = particle.position
                 if particle.update_existance() is False:
                     self.particles.remove(particle)
