@@ -35,13 +35,16 @@ class DemonAI(AI):
     def seek(demon: enemies.Demon, player: player.Player):
         demon.action_duration = 1000
         if not demon.dead:
-            if player.hitbox.colliderect(demon.hitbox):
+            if int(demon.x + 250) in range(
+                    int(player.x + 62) - 150,
+                    int(player.x + 62) + 150
+                    ):
                 demon.attacking = True
                 demon.running = False
-            elif player.x - 250 <= demon.x:
+            elif (player.x + 62) <= (demon.x + 250):
                 demon.facing_right = False
                 demon.running = True
-            elif player.x - 250 > demon.x:
+            elif (player.x + 62) > (demon.x + 250):
                 demon.facing_right = True
                 demon.running = True
 
@@ -57,7 +60,7 @@ class DemonAI(AI):
 
     @staticmethod
     def idle(demon: enemies.Demon, player: player.Player):
-        demon.action_duration = 1000
+        demon.action_duration = 500
         if not demon.dead and not demon.attacking:
             if demon.x in range(player.x - 501, player.x + 600):
                 demon.idle = True

@@ -54,6 +54,7 @@ def main():
                 draw_hitboxes=False,
                 draw_health_bars=True
                 )
+            engine.print_particles_n()
             View.draw_fps(screen, int(clock.get_fps()))
             View.draw_wave_number(
                 screen,

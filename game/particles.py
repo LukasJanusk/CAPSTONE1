@@ -102,11 +102,11 @@ class Circle(Particle):
         x += random.randint(-2, 2)
         self.position = (x, y)
 
-    def decrease_size(self, n: float = 1):
-        self.radius -= n
+    def decrease_size(self, decay: float = 0.1):
+        self.radius -= decay
 
-    def increase_size(self, n: float = 1):
-        self.radius += n
+    def increase_size(self, expansion: float = 0.1):
+        self.radius += expansion
 
     def update_existance(self):
         if self.radius <= 1:
