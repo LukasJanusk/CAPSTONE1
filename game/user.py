@@ -92,7 +92,7 @@ class User:
 
     @ level3_highscore.setter
     def level3_highscore(self, value):
-        if value > self._level4_highscore:
+        if value > self._level3_highscore:
             self._level3_highscore = value
 
     @property
