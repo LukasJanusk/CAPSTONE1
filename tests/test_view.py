@@ -5,10 +5,8 @@ import sys
 
 
 def pytest_configure(config):
-    # Change the current working directory to the root directory
     root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     os.chdir(root_dir)
-    # Ensure the root directory is in the PYTHONPATH
     sys.path.append(root_dir)
 
 

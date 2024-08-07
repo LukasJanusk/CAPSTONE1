@@ -16,10 +16,8 @@ attack2 = attacks.Attack(1, [4, 5, 6, 7, 8, 9], 50, 50)
 
 
 def pytest_configure(config):
-    # Change the current working directory to the root directory
     root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     os.chdir(root_dir)
-    # Ensure the root directory is in the PYTHONPATH
     sys.path.append(root_dir)
 
 

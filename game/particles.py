@@ -168,8 +168,7 @@ def main():
                         random_red,
                         random.choice(positions),
                         random.choice([True]),
-                        15,
-                        2000
+                        6,
                         )
                     circles += list
         fps = int(clock.get_fps())
