@@ -75,14 +75,10 @@ CAPSTONE1/
 │ │ └── sprites/
 │ └── fonts/
 ├── docs/
-│ ├── design.md
-│ ├── user_manual.md
-│ └── developer_guide.md
+│ ├── game_model.png
 ├── game/
 ├── tests/
 ├── user/
-│ ├── profiles/
-│ └── settings/
 ├── run_game.py
 ├── TODO.txt
 ├── requirements.txt
