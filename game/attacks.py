@@ -58,6 +58,6 @@ class Attack:
     def draw_hitbox(self, game_surface, frame):
         if frame in self.damage_frames:
             if self.collision:
-                pygame.draw.rect(game_surface, (255, 0, 0), self.hitbox, 4)
+                pygame.draw.rect(game_surface, (255, 0, 0), self.hitbox, 2)
             else:
                 pygame.draw.rect(game_surface, (0, 0, 255), self.hitbox, 2)

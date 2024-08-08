@@ -94,6 +94,30 @@ class Model:
             self.character.health = self.character.maximum_health
             self.character.x = 100
             pygame.event.clear()
+        if messege == "fps":
+            self.settings.draw_fps = True
+            if self.settings.draw_fps is True:
+                menu.draw_fps_button.NAME = "DRAW FPS -------------------------- ON "
+            else:
+                menu.draw_fps_button.NAME = "DRAW FPS -------------------------- OFF"
+        if messege == "healthbar":
+            self.settings.draw_health_bar = True
+            if self.settings.draw_health_bar is True:
+                menu.draw_monsters_healthbars_button.NAME = "DRAW MONESTER HEALTHABARS --------- ON "
+            else:
+                menu.draw_monsters_healthbars_button.NAME = "DRAW MONESTER HEALTHABARS --------- OFF"
+        if messege == "particles":
+            self.settings.render_particles = True
+            if self.settings.render_particles is True:
+                menu.render_particles_button.NAME = "RENDER PARTICLES ------------------ ON "
+            else:
+                menu.render_particles_button.NAME = "RENDER PARTICLES ------------------ OFF"
+        if messege == "hitboxes":
+            self.settings.draw_hitboxes = True
+            if self.settings.draw_hitboxes is True:
+                menu.draw_hitboxes_button.NAME = "DRAW HITBOXES --------------------- ON "
+            else:
+                menu.draw_hitboxes_button.NAME = "DRAW HITBOXES --------------------- OFF"
 
     def set_highscore(self):
         if self.current_level == level.level1:
@@ -165,7 +189,6 @@ class Model:
                     if not enemy.dead:
                         if type(enemy) is enemies.Demon:
                             enemy.stun_threshold -= damage
-                            print(enemy.stun_threshold)
                             if enemy.stun_threshold == 0 or damage > 200:
                                 enemy.hit = True
                                 enemy.frame = 0

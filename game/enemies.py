@@ -213,7 +213,7 @@ class Demon(Enemy):
                 self.idle = False
                 self.attacking = False
                 self.current_animation = self.running_animation
-                self.speed = 2.5
+                self.speed = 1.5
             elif self.attacking:
                 self.idle = False
                 self.running = False

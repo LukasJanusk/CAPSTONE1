@@ -6,11 +6,9 @@ pygame.init()
 
 
 def main():
-    height = 640
-    width = 800
     pygame.display.set_caption("game")
     screen = pygame.display.set_mode(
-        (width, height),
+        (800, 640),
         pygame.HWSURFACE |
         pygame.DOUBLEBUF |
         pygame.RESIZABLE
@@ -51,9 +49,9 @@ def main():
                 screen,
                 str(engine.current_level.score),
                 engine.get_layers_for_blit(),
-                draw_hitboxes=engine.settings.draw_hitboxes,
-                draw_health_bars=engine.settings.draw_health_bar,
-                draw_particles=engine.settings.draw_particles)
+                hitboxes=engine.settings.draw_hitboxes,
+                health_bars=engine.settings.draw_health_bar,
+                particles=engine.settings.render_particles)
             # engine.print_particles_n()
             if engine.settings.draw_fps:
                 View.draw_fps(screen, int(clock.get_fps()))

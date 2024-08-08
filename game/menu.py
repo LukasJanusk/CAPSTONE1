@@ -63,6 +63,10 @@ level5_button = Button("LEVEL 5")
 continue_button = Button("CONTINUE")
 restart_button = Button("RESTART")
 main_menu_button = Button("MAIN MENU")
+draw_hitboxes_button = Button("DRAW HITBOXES --------------------- OFF")
+draw_monsters_healthbars_button = Button("DRAW MONESTER HEALTHABARS --------- OFF")
+draw_fps_button = Button("DRAW FPS -------------------------- OFF")
+render_particles_button = Button("RENDER PARTICLES ------------------ OFF")
 
 
 @dataclass
@@ -117,7 +121,12 @@ main_menu = Menu(
         ])
 settings_menu = Menu(
     "SETTINGS",
-    buttons=[back_button])
+    buttons=[
+        draw_hitboxes_button,
+        draw_fps_button,
+        draw_monsters_healthbars_button,
+        render_particles_button,
+        back_button])
 high_scores_menu = Menu(
     "HIGHSCORES",
     buttons=[back_button])
@@ -244,6 +253,14 @@ class Menu_Controller:
                         self.current_menu.active = False
                         self.current_menu = main_menu
                         self.current_menu.active = True
+                    if self.current_menu.selected_button == draw_monsters_healthbars_button:
+                        return "healthbar"
+                    if self.current_menu.selected_button == draw_hitboxes_button:
+                        return "hitboxes"
+                    if self.current_menu.selected_button == draw_fps_button:
+                        return "fps"
+                    if self.current_menu.selected_button == render_particles_button:
+                        return "particles"
                 elif self.current_menu == high_scores_menu:
                     if self.current_menu.selected_button == back_button:
                         self.current_menu.active = False

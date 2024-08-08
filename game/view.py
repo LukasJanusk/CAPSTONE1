@@ -8,7 +8,7 @@ from . import animations
 from . import layer
 from . import menu
 from . import ui
-from . import particles
+from .particles import Particle, Circle
 from . import user
 
 
@@ -32,12 +32,13 @@ class View:
                     enemies.Imp,
                     layer.Layer,
                     player.Player,
-                    particles.Circle,
+                    Circle,
+                    Particle,
                     ui.Healthbar,
                     ui.Score]] = [],
-            draw_health_bars: bool = True,
-            draw_hitboxes: bool = True,
-            draw_particles: bool = True,
+            health_bars: bool = True,
+            hitboxes: bool = True,
+            particles: bool = True,
             ):
         for object in layers:
             if object is None:
@@ -48,25 +49,25 @@ class View:
                   type(object) is enemies.Demon or
                   type(object) is enemies.Imp):
                 View.render_enemy(screen, object)
-                if draw_health_bars:
+                if hitboxes:
+                    View.draw_enemy_hitboxes(screen, object)
+                    View.draw_enemy_attack_hitboxes(screen, object)
+                if health_bars:
                     View.draw_enemy_health_bar(screen, object)
             elif type(object) is player.Player:
                 View.render_player(screen, object)
+                if hitboxes:
+                    View.draw_player_hitbox(screen, object)
+                    View.draw_player_attack_hitbox(screen, object)
             elif type(object) is ui.Healthbar:
                 screen.blit(object.draw_health_bar(), (5, 5))
             elif type(object) is ui.Score:
                 View.draw_score(screen, object, score)
-            elif type(object) is particles.Circle:
-                if draw_particles:
+            elif type(object) is Circle:
+                if particles:
                     object.render_circle(screen)
             else:
                 print("no object to render")
-            if draw_hitboxes:
-                player_object = [
-                    item for item in layers if isinstance(item, player.Player)][0]
-                enemies_objects = [
-                    item for item in layers if isinstance(item, enemies.Demon | enemies.Imp)]
-                View.draw_hitboxes(screen, player_object, enemies_objects)
 
     @staticmethod
     def draw_score(screen: pygame.Surface, object: ui.Score, score: str):
@@ -99,9 +100,11 @@ class View:
             enemies: List[Union[enemies.Enemy, enemies.Demon, enemies.Imp]]
             ):
         View.draw_player_hitbox(screen, player)
-        View.draw_enemies_hitboxes(screen, enemies)
+        for enemy in enemies:
+            View.draw_enemy_hitboxes(screen, enemy)
         View.draw_player_attack_hitbox(screen, player)
-        View.draw_enemies_attack_hitboxes(screen, enemies)
+        for enemy in enemies:
+            View.draw_enemy_attack_hitboxes(screen, enemy)
 
     @staticmethod
     def draw_player_hitbox(screen: pygame.Surface, player: player.Player):
@@ -116,22 +119,19 @@ class View:
             player.current_attack.draw_hitbox(screen, player.frame)
 
     @staticmethod
-    def draw_enemies_attack_hitboxes(screen: pygame.Surface, enemies: List[Union[
+    def draw_enemy_attack_hitboxes(screen: pygame.Surface, enemy: Union[
                     enemies.Enemy,
                     enemies.Demon,
-                    enemies.Imp]]):
-        for enemy in enemies:
-            if enemy.attacking:
-                enemy.attack.draw_hitbox(screen, enemy.frame)
+                    enemies.Imp]):
+        if enemy.attacking:
+            enemy.attack.draw_hitbox(screen, enemy.frame)
 
     @staticmethod
-    def draw_enemies_hitboxes(screen: pygame.Surface, enemies: List[enemies.Enemy]):
-        for enemy in enemies:
-            if enemy is not None:
-                if enemy.hit:
-                    pygame.draw.rect(screen, (255, 0, 0), enemy.hitbox, 2)
-                else:
-                    pygame.draw.rect(screen, (0, 255, 0), enemy.hitbox, 2)
+    def draw_enemy_hitboxes(screen: pygame.Surface, enemy: enemies.Enemy):
+        if enemy.hit:
+            pygame.draw.rect(screen, (255, 0, 0), enemy.hitbox, 2)
+        else:
+            pygame.draw.rect(screen, (0, 255, 0), enemy.hitbox, 2)
 
     @staticmethod
     def draw_enemy_health_bar(screen: pygame.Surface, enemy: enemies.Demon | enemies.Imp):
