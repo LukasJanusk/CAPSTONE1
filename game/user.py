@@ -129,7 +129,7 @@ class User:
                          {"level5_highscore": self.level5_highscore}
                          ]}
 
-    def save_user(self) -> bool:
+    def save(self) -> bool:
         data = self.to_dict()
         try:
             with open(os.path.join(".", "user", "user.json"), mode="w") as file:
@@ -140,10 +140,10 @@ class User:
             print(f"Failed to save user data: {e}")
             return False
 
-    def load_user(self) -> bool:
+    def load(self) -> bool:
         file_path = os.path.join(".", "user", "user.json")
         if not os.path.isfile(file_path):
-            self.save_user()
+            self.save()
         else:
             try:
                 path = os.path.join(".", "user", "user.json")

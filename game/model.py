@@ -41,12 +41,15 @@ class Model:
     #         self._particles += value
 
     def save_and_quit(self):
-        self.user.save_user()
+        self.user.save()
+        self.settings.save()
         pygame.quit()
         sys.exit()
 
     def load_user(self) -> bool:
-        if self.user.load_user():
+        if self.user.load():
+            self.settings.load()
+            self.update_setting_buttons()
             return True
 
     def pause_game(self, event: pygame.event.Event):
@@ -87,7 +90,7 @@ class Model:
             self.character.y = 400
         if messege == "score":
             self.set_highscore()
-            self.user.save_user()
+            self.user.save()
             self.current_level.current_wave = 0
             self.current_level.current_wave_enemies = []
             self.current_level.score = 0
@@ -408,3 +411,21 @@ class Model:
 
     def print_particles_n(self):
         print(len(self.particles))
+
+    def update_setting_buttons(self):
+        if self.settings.draw_fps is True:
+            menu.draw_fps_button.NAME = "DRAW FPS -------------------------- ON "
+        else:
+            menu.draw_fps_button.NAME = "DRAW FPS -------------------------- OFF"
+        if self.settings.draw_health_bar is True:
+            menu.draw_monsters_healthbars_button.NAME = "DRAW MONESTER HEALTHABARS --------- ON "
+        else:
+            menu.draw_monsters_healthbars_button.NAME = "DRAW MONESTER HEALTHABARS --------- OFF"
+        if self.settings.render_particles is True:
+            menu.render_particles_button.NAME = "RENDER PARTICLES ------------------ ON "
+        else:
+            menu.render_particles_button.NAME = "RENDER PARTICLES ------------------ OFF"
+        if self.settings.draw_hitboxes is True:
+            menu.draw_hitboxes_button.NAME = "DRAW HITBOXES --------------------- ON "
+        else:
+            menu.draw_hitboxes_button.NAME = "DRAW HITBOXES --------------------- OFF"

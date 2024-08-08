@@ -1,4 +1,6 @@
 from dataclasses import dataclass
+import json
+import os
 
 
 @dataclass
@@ -52,6 +54,49 @@ class Settings:
             self._render_particles = False
         else:
             self._render_particles = True
+
+    def save(self) -> bool:
+        data = self.to_dict()
+        try:
+            with open(os.path.join(".", "user", "settings.json"), mode="w") as file:
+                json.dump(data, file, indent=4)
+                print("Settings saved")
+                return True
+        except Exception as e:
+            print(f"Failed to save settings: {e}")
+            return False
+
+    def load(self) -> bool:
+        file_path = os.path.join(".", "user", "settings.json")
+        if not os.path.isfile(file_path):
+            self.save()
+        else:
+            try:
+                path = os.path.join(".", "user", "settings.json")
+                with open(path, mode="r") as file:
+                    data = json.load(file)
+                    settings_data = data.get("settings", [])
+                    self._draw_hitboxes = settings_data[0].get("draw_hitboxes", self._draw_hitboxes)
+                    self._draw_health_bar = settings_data[1].get("draw_health_bar", self._draw_health_bar)
+                    self._draw_fps = settings_data[2].get("draw_fps", self._draw_fps)
+                    self._limit_particles = settings_data[3].get("limit_particles", self._limit_particles)
+                    self._render_particles = settings_data[4].get("render_particles", self._render_particles)
+                    print("Settings loaded")
+                    return True
+            except Exception as e:
+                print(f"Failed to load settings: {e}")
+                return False
+
+    def to_dict(self) -> dict:
+        return {
+            "settings": [
+                {"draw_hitboxes": self._draw_hitboxes},
+                {"draw_health_bar": self._draw_health_bar},
+                {"draw_fps": self._draw_fps},
+                {"limit_particles": self._limit_particles},
+                {"render_particles": self._render_particles}
+            ]
+        }
 
 
 settings = Settings()

@@ -1,0 +1,19 @@
+{
+    "settings": [
+        {
+            "draw_hitboxes": false
+        },
+        {
+            "draw_health_bar": true
+        },
+        {
+            "draw_fps": true
+        },
+        {
+            "limit_particles": false
+        },
+        {
+            "render_particles": true
+        }
+    ]
+}
