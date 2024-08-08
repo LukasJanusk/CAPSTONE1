@@ -31,12 +31,14 @@ def main():
                 engine.pause_game(event)
                 engine.get_player_input(event)
         if engine.in_menu:
+            pygame.mixer.pause()
             View.draw_menus(
                 screen,
                 engine.menu_manager.current_menu,
                 engine.user
                 )
         if engine.in_game:
+            pygame.mixer.unpause()
             engine.controller.set_player_state()
             engine.run_enemies_ai()
             engine.get_current_level_wave()

@@ -1,10 +1,13 @@
+import pygame
 from dataclasses import dataclass, field
+import os
 from typing import List, Union
 from . import enemies
 from . import layer
 import random
 available_enemies = ["demon", "imp"]
 available_enemies_weights = [50, 100]
+pygame.mixer.init()
 
 
 @dataclass
@@ -29,6 +32,7 @@ class Level:
             enemies.Imp]
             ] = field(default_factory=list)
     _score: int = 0
+    ambient_sound: pygame.mixer.Sound = None
 
     @property
     def score(self) -> int:
@@ -112,4 +116,8 @@ level3 = Level("Bamboo forest",
                layer4=layer.level3_layer4,
                layer5=layer.level3_layer5,
                layer6=layer.level3_layer6,
-               layer7=layer.level3_layer7)
+               layer7=layer.level3_layer7,
+               ambient_sound=pygame.mixer.Sound(
+                   os.path.join(
+                       ".", "assets", "sounds", "level3_ambient.ogg"))
+               )

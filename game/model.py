@@ -78,6 +78,7 @@ class Model:
             self.in_menu = False
             self.in_game = True
             self.current_level = level.level3
+            self.play_level_sounds()
         if messege == "continue":
             self.in_menu = False
             self.in_game = True
@@ -470,3 +471,7 @@ class Model:
             return []
         else:
             return attack_sounds
+
+    def play_level_sounds(self):
+        if self.current_level is not None:
+            self.current_level.ambient_sound.play(loops=-1)
