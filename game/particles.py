@@ -68,7 +68,7 @@ class Circle(Particle):
         radius: int = 2,
         speed: float = 6,
         gravity: float = 0.1
-                        ) -> list:
+            ) -> list:
         circles = []
         for particle in range(n):
             name = f"{particle}" + str(random.choices(string.digits, k=5))
@@ -81,7 +81,7 @@ class Circle(Particle):
                 gravity=gravity
                 )
             if facing_right is not None:
-                circle.vertical_speed = float(random.randint(-20, -10)/10)
+                circle.vertical_speed = float(random.randint(-20, 10)/10)
                 circle.facing_right = facing_right
                 if not circle.facing_right:
                     circle.speed *= -1

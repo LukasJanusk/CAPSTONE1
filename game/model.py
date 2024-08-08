@@ -229,8 +229,7 @@ class Model:
                             particle_generation_position,
                             self.character.facing_right,
                             radius=particles_size,
-                            speed=random.randint(4, 5)
-                            )
+                            speed=random.randint(4, 5))
                         self.particles += list
 
     def enemies_attack(self, print_damage: bool = False):
@@ -238,9 +237,9 @@ class Model:
             if enemy.attacking:
                 damage = enemy.attack.hit(enemy.frame, self.character.hitbox)
                 if damage:
-                    if self.character.guarding:
-                        self.character.health -= int(damage / 2)
-                    else:
+                    # if self.character.guarding:
+                    #     self.character.health -= int(damage / 2)
+                    if not self.character.guarding:
                         self.character.health -= int(damage)
                     self.character.hit = True
                     self.character.frame = 0
@@ -485,7 +484,6 @@ class Model:
                     hit_sound = Model.get_hit_sound(enemy)
                     attack_sounds.append(player_attack_sound)
                     attack_sounds.append(hit_sound)
-        print(len(attack_sounds))
         if len(attack_sounds) == 0:
             return []
         else:
