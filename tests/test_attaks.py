@@ -11,8 +11,8 @@ hitbox4 = pygame.Rect(-50, -50, 30, 30)
 hitbox5 = pygame.Rect(500, 600, 1000, 1000)
 hitbox6 = pygame.Rect(0, 0, 500, 500)
 
-attack1 = attacks.Attack(50, [1, 3, 5], 500, 500)
-attack2 = attacks.Attack(1, [4, 5, 6, 7, 8, 9], 50, 50)
+attack1 = attacks.Attack(None, 50, [1, 3, 5], 500, 500)
+attack2 = attacks.Attack(None, 1, [4, 5, 6, 7, 8, 9], 50, 50)
 
 
 def pytest_configure(config):
