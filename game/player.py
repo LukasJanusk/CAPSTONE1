@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from .animations import Animation
 from . import spritesheets
 from .attacks import Attack
+from .sound import attack_normal_hit_sound, attack_upper_hit_sound
 
 
 @dataclass
@@ -71,8 +72,26 @@ class Player:
             spritesheets.attack_upper_list, self.x - 90, self.y - 40)
         self.ATTACK_NORMAL_ANIMATION = Animation(
             spritesheets.attack_normal_list, self.x - 10, self.y - 8, -55)
-        self.attack_normal = Attack(50, [1, 3], 170, 80, 0, 40, -70, 0)
-        self.attack_upper = Attack(200, [7, 8], 190, 170, 0, -40, -90, 0)
+        self.attack_normal = Attack(
+            attack_normal_hit_sound,
+            50,
+            [1, 3],
+            170,
+            80,
+            0,
+            40,
+            -70,
+            0)
+        self.attack_upper = Attack(
+            attack_upper_hit_sound,
+            200,
+            [7, 8],
+            190,
+            170,
+            0,
+            -40,
+            -90,
+            0)
         self.hitbox = pygame.Rect(self.x + 10, self.y, 60, 150)
         if self.current_animation is None:
             self.current_animation is self.IDLE_ANIMATION

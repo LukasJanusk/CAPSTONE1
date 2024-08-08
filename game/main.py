@@ -1,6 +1,7 @@
 import pygame
 import cProfile
 from . import model
+from .sound import Sound_Controller
 from .view import View
 pygame.init()
 
@@ -60,6 +61,7 @@ def main():
                 engine.current_level.total_waves,
                 engine.current_level.current_wave
                 )
+            Sound_Controller.play_sounds(engine.get_attack_sounds())
         pygame.display.flip()
         clock.tick(90)
 

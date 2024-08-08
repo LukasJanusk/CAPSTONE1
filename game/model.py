@@ -12,6 +12,7 @@ from . import enemies
 from . import layer
 from . import settings
 from . import ai
+from . import sound
 from .particles import Circle, blood_colours
 
 
@@ -429,3 +430,43 @@ class Model:
             menu.draw_hitboxes_button.NAME = "DRAW HITBOXES --------------------- ON "
         else:
             menu.draw_hitboxes_button.NAME = "DRAW HITBOXES --------------------- OFF"
+
+    @staticmethod
+    def get_attack_sound(
+            attacker: player.Player | enemies.Enemy | enemies.Demon | enemies.Imp,
+            ) -> sound.AttackSound:
+        current_time = pygame.time.get_ticks()
+        if type(attacker) is player.Player:
+            last_update = attacker.current_attack.sound.last_update
+            downtime = attacker.current_attack.sound.DOWNTIME
+        if (type(attacker) is enemies.Demon or
+                type(attacker) is enemies.Imp or
+                type(attacker) is enemies.Enemy):
+            last_update = attacker.attack.sound.last_update
+            downtime = attacker.attack.sound.DOWNTIME
+        if current_time - last_update > downtime:
+            if type(attacker) is player.Player:
+                attacker.current_attack.sound.last_update = current_time
+                return attacker.current_attack.sound
+            if (type(attacker) is enemies.Demon or
+                    type(attacker) is enemies.Imp or
+                    type(attacker) is enemies.Enemy):
+                attacker.attack.sound.last_update = current_time
+                return attacker.attack.sound
+
+    def get_attack_sounds(self):
+        attack_sounds = []
+        for enemy in self.current_level.current_wave_enemies:
+            if enemy.attacking:
+                if enemy.attack.hit(enemy.frame, self.character.hitbox):
+                    sound = Model.get_attack_sound(enemy)
+                    attack_sounds.append(sound)
+            if self.character.current_attack is not None:
+                if self.character.current_attack.hit(self.character.frame, enemy.hitbox):
+                    player_attack_sound = Model.get_attack_sound(self.character)
+                    attack_sounds.append(player_attack_sound)
+        print(len(attack_sounds))
+        if len(attack_sounds) == 0:
+            return []
+        else:
+            return attack_sounds

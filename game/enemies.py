@@ -4,7 +4,9 @@ from abc import ABC, abstractmethod
 from . import attacks
 from . import animations
 from . import spritesheets
+from .sound import demon_attack_hit_sound, imp_attack_hit_sound
 # from typing import Optional
+pygame.mixer.init()
 
 
 class BaseEnemy(ABC):
@@ -133,6 +135,7 @@ class Demon(Enemy):
             (150, 150, 150)
             )
         self.attack = attacks.Attack(
+            demon_attack_hit_sound,
             self.damage,
             [6],
             355,
@@ -303,6 +306,7 @@ class Imp(Enemy):
             (150, 150, 150)
             )
         self.attack = attacks.Attack(
+            imp_attack_hit_sound,
             self.damage,
             [1, 2],
             50,
