@@ -4,7 +4,12 @@ from abc import ABC, abstractmethod
 from . import attacks
 from . import animations
 from . import spritesheets
-from .sound import demon_attack_hit_sound, imp_attack_hit_sound
+from .sound import (
+    demon_attack_hit_sound,
+    demon_hit_sound,
+    imp_attack_hit_sound,
+    imp_hit_sound,
+    )
 # from typing import Optional
 pygame.mixer.init()
 
@@ -87,6 +92,7 @@ class Demon(Enemy):
     action_last_update = pygame.time.get_ticks()
     action_duration = 3000
     _stun_threshold = 7000
+    hit_sound = demon_hit_sound
 
     def __post_init__(self):
         self.hitbox = pygame.Rect(
@@ -257,6 +263,7 @@ class Imp(Enemy):
     actions = ["seek", "flee", "idle"]
     action_last_update = pygame.time.get_ticks()
     action_duration = 3000
+    hit_sound = imp_hit_sound
 
     def __post_init__(self):
         self.hitbox = pygame.Rect(

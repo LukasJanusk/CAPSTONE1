@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from .animations import Animation
 from . import spritesheets
 from .attacks import Attack
-from .sound import attack_normal_hit_sound, attack_upper_hit_sound
+from .sound import attack_normal_hit_sound, attack_upper_hit_sound, player_hit_sound
 
 
 @dataclass
@@ -58,6 +58,7 @@ class Player:
     attack_upper = None
     current_attack = None
     hitbox = None
+    hit_sound = player_hit_sound
 
     def __post_init__(self):
         self.IDLE_ANIMATION = Animation(

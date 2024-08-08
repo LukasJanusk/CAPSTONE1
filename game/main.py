@@ -31,7 +31,7 @@ def main():
                 engine.pause_game(event)
                 engine.get_player_input(event)
         if engine.in_menu:
-            pygame.mixer.pause()
+            pygame.mixer.stop()
             View.draw_menus(
                 screen,
                 engine.menu_manager.current_menu,
@@ -63,7 +63,7 @@ def main():
                 engine.current_level.total_waves,
                 engine.current_level.current_wave
                 )
-            Sound_Controller.play_sounds(engine.get_attack_sounds())
+            Sound_Controller.play_sounds(engine.get_sounds())
         pygame.display.flip()
         clock.tick(90)
 

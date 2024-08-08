@@ -14,6 +14,11 @@ from . import settings
 from . import ai
 from . import sound
 from .particles import Circle, blood_colours
+from .sound import (
+    attack_normal_sound1,
+    attack_normal_sound2,
+    attack_upper_sound1,
+)
 
 
 class Model:
@@ -27,6 +32,7 @@ class Model:
         self.in_menu: bool = True
         self.in_game: bool = False
         self.particles: list = []
+        self.sounds: list = []
 
     # @property
     # def particles(self):
@@ -435,7 +441,7 @@ class Model:
     @staticmethod
     def get_attack_sound(
             attacker: player.Player | enemies.Enemy | enemies.Demon | enemies.Imp,
-            ) -> sound.AttackSound:
+            ) -> sound.HitSound:
         current_time = pygame.time.get_ticks()
         if type(attacker) is player.Player:
             last_update = attacker.current_attack.sound.last_update
@@ -455,17 +461,30 @@ class Model:
                 attacker.attack.sound.last_update = current_time
                 return attacker.attack.sound
 
+    @staticmethod
+    def get_hit_sound(object: player.Player | enemies.Enemy | enemies.Imp | enemies.Demon):
+        current_time = pygame.time.get_ticks()
+        downtime_hit = object.hit_sound.DOWNTIME
+        last_update_hit = object.hit_sound.last_update
+        if current_time - last_update_hit > downtime_hit:
+            object.hit_sound.last_update = current_time
+            return object.hit_sound
+
     def get_attack_sounds(self):
         attack_sounds = []
         for enemy in self.current_level.current_wave_enemies:
             if enemy.attacking:
                 if enemy.attack.hit(enemy.frame, self.character.hitbox):
                     sound = Model.get_attack_sound(enemy)
+                    hit_sound = Model.get_hit_sound(self.character)
                     attack_sounds.append(sound)
+                    attack_sounds.append(hit_sound)
             if self.character.current_attack is not None:
                 if self.character.current_attack.hit(self.character.frame, enemy.hitbox):
                     player_attack_sound = Model.get_attack_sound(self.character)
+                    hit_sound = Model.get_hit_sound(enemy)
                     attack_sounds.append(player_attack_sound)
+                    attack_sounds.append(hit_sound)
         print(len(attack_sounds))
         if len(attack_sounds) == 0:
             return []
@@ -475,3 +494,24 @@ class Model:
     def play_level_sounds(self):
         if self.current_level is not None:
             self.current_level.ambient_sound.play(loops=-1)
+
+    def get_animation_sound(self):
+        if self.character.attacking_normal:
+            if self.character.frame == attack_normal_sound1.frame:
+                return attack_normal_sound1
+            if self.character.frame == attack_normal_sound2.frame:
+                return attack_normal_sound2
+        if self.character.attacking_upper:
+            if self.character.frame == attack_upper_sound1.frame:
+                return attack_upper_sound1
+
+    def get_sounds(self):
+        if len(self.sounds) > 200:
+            self.sounds = self.sounds[:-30]
+        sounds = []
+        animation_sound = self.get_animation_sound()
+        if animation_sound:
+            sounds.append(animation_sound)
+        hit_sounds = self.get_attack_sounds()
+        sounds += hit_sounds
+        return sounds

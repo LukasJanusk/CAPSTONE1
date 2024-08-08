@@ -1,12 +1,12 @@
 import pygame
 from dataclasses import dataclass
 from typing import List
-from .sound import AttackSound
+from .sound import HitSound
 
 
 @dataclass
 class Attack:
-    sound: AttackSound
+    sound: HitSound
     damage: int
     damage_frames: List[int]
     hitbox_width: int
