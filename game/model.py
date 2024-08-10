@@ -229,17 +229,17 @@ class Model:
                             particle_generation_rect
                             )
                         if type(enemy) is enemies.Demon:
-                            particles_n = random.randint(14, 15)
+                            particles_n = random.randint(10, 12)
                             particles_size = 5
                         if type(enemy) is enemies.Imp:
-                            particles_n = random.randint(14, 15)
+                            particles_n = random.randint(10, 12)
                             particles_size = 3
                         if len(self.particles) < 400:
                             list = Blood.generate_blood(
                                 particles_n,
                                 particle_generation_position,
                                 particles_size,
-                                1,
+                                2,
                                 facing_right=self.character.facing_right
                             )
                             particles += list

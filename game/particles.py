@@ -194,6 +194,50 @@ class Blood(Circle):
 
 
 @dataclass
+class Ember(Circle):
+    colours = fire_colours = [
+        (255, 69, 0),
+        (255, 140, 0),
+        (255, 165, 0),
+        (255, 215, 0),
+        (255, 255, 102),
+        (255, 255, 224),
+        (255, 255, 240)
+        ]
+    colour = random.choice(blood_colours)
+    vertical_speed = 3
+    speed: float = 2
+    gravity: float = 0
+    atmosphere = 0
+
+    @classmethod
+    def generate_embers(
+        cls,
+        n: int,
+        position: tuple[int, int],
+        radius: int,
+        discrepency: int,
+        facing_right: bool
+            ) -> list:
+        """Generates ember particles"""
+        embers = []
+        for i in range(n):
+            ember = Ember(
+                id=i,
+                position=position,
+                colour=random.choice(cls.colours),
+                speed=cls.speed,
+                vertical_speed=cls.speed,
+                gravity=cls.gravity,
+                atmosphere=cls.atmosphere,
+                facing_right=facing_right,
+                radius=radius + random.choice((-discrepency, discrepency)),
+            )
+            embers.append(ember)
+        return embers
+
+
+@dataclass
 class Square(Particle):
     width: float = 1
     height: float = 1
@@ -249,8 +293,69 @@ class BlockSquare(Square):
 
 @dataclass
 class Line(Particle):
-    vector_x: int = None
-    vector_y: int = None
+    length: int = 2
+    width: int = 4
+    vector: tuple = None
+    angle: float = None
+    colours = [
+        (173, 216, 230),  # Light Blue
+        (192, 226, 238),  # Slightly lighter blue
+        (211, 237, 245),  # Very light blue
+        (230, 247, 252),  # Almost white with a hint of blue
+        (240, 252, 255),  # Very faint blue, close to white
+        (255, 255, 255)   # White
+    ]
+
+    def __post_init__(self):
+        # Determine the angle based on the direction
+        if self.facing_right:
+            self.angle = random.uniform(0, 90) if random.choice([True, False]) else random.uniform(270, 360)
+        else:
+            self.angle = random.uniform(90, 270)
+
+        x, y = self.position
+        self.vector = (x + self.length, y + self.length)
+
+    def calculate_random_vector(self, range: int) -> None:
+        self.position = self.vector
+        random_angle = self.angle + random.uniform(-range, range)
+        random_angle_rad = math.radians(random_angle)
+        x_component = self.length * math.cos(random_angle_rad)
+        y_component = self.length * math.sin(random_angle_rad)
+
+        x, y = self.position
+        new_x = x + x_component
+        new_y = y + y_component
+
+        self.vector = (int(new_x), int(new_y))
+
+    def render_line(self, screen: pygame.surface.Surface) -> None:
+        pygame.draw.line(
+            screen,
+            random.choice(self.colours),
+            self.position,
+            self.vector,
+            self.width
+        )
+
+    @classmethod
+    def generate_lines(cls, n: int, position: tuple[int, int], facing_right: bool):
+        """Generates line particles"""
+        lines = []
+        for i in range(n):
+            line = Line(
+                id=i,
+                position=position,
+                colour=random.choice(cls.colours),
+                speed=1,
+                vertical_speed=0,
+                facing_right=facing_right,
+                length=2,
+                atmosphere=0.2,
+                gravity=random.randint(-10, 10) / 10,
+            )
+            lines.append(line)
+        return lines
 
 
 def main():
@@ -262,7 +367,6 @@ def main():
         pygame.DOUBLEBUF
         )
     clock = pygame.time.Clock()
-    circles = []
     particles = []
     list = []
 
@@ -275,26 +379,52 @@ def main():
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    list = Blood.generate_blood(10, mouse_pos, 10, 2, False)
+                    list = Blood.generate_blood(15, mouse_pos, 6, 2, False)
+                    list_square = BlockSquare.generate_block_squares(15, mouse_pos, 15)
+                    line_list = Line.generate_lines(15, mouse_pos, True)
+                    embers_list = Ember.generate_embers(15, mouse_pos, 4, 1, True)
+                    particles += line_list
                     particles += list
+                    particles += list_square
+                    particles += embers_list
         fps = int(clock.get_fps())
         font_surf = font.render(str(fps), True, (255, 255, 255))
         screen.fill((120, 120, 120))
         for particle in particles:
-            particle.update_position()
-            particle.decrease_size(0.15)
-            x, y = particle.position
-            if particle.update_existance() is False:
-                particles.remove(particle)
-            elif y > 560:
-                splash_list = Blood.generate_blood_splash(particle.position, float(particle.radius))
-                particles += splash_list
-                particles.remove(particle)
+            if type(particle) is Circle or type(particle) is Blood or type(particle) is Ember:
+                particle.decrease_size(0.05)
+                particle.update_position()
+                if particle.update_existance() is False:
+                    particles.remove(particle)
+                else:
+                    x, y = particle.position
+                    if y > 560 and type(particle) is not BlockSquare:
+                        splash_list = Blood.generate_blood_splash(particle.position, float(particle.radius))
+                        particles += splash_list
+                        particles.remove(particle)
+            if type(particle) is BlockSquare:
+                particle.decrease_size(0.5)
+                particle.update_position()
+                if particle.width < 1:
+                    particles.remove(particle)
+            if type(particle) is Line:
+                particle.calculate_random_vector(10)
+                particle.update_position()
+                particle.length += 0.5
+                if particle.length > 30 or particle. width < 1:
+                    particles.remove(particle)
         for particle in particles:
-            particle.render_circle(screen)
-            print(len(circles))
+            if type(particle) is Circle or type(particle) is Blood or type(particle) is Ember:
+                particle.render_circle(screen)
+            elif type(particle) is Square or type(particle) is BlockSquare:
+                x, y = particle.position
+                rect = pygame.rect.Rect(x, y, particle.width, particle.height)
+                pygame.draw.rect(screen, particle.colour, rect)
+            elif type(particle) is Line:
+                particle.render_line(screen)
         screen.blit(font_surf, (10, 10))
         pygame.display.flip()
+        print(len(particles))
 
         clock.tick(90)
 
