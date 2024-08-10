@@ -13,7 +13,7 @@ from . import layer
 from . import settings
 from . import ai
 from . import sound
-from .particles import Circle, blood_colours
+from .particles import Particle, Circle, Blood, Square, BlockSquare
 from .sound import (
     attack_normal_sound1,
     attack_normal_sound2,
@@ -34,19 +34,6 @@ class Model:
         self.in_game: bool = False
         self.particles: list = []
         self.sounds: list = []
-
-    # @property
-    # def particles(self):
-    #     return self._particles
-
-    # @particles.setter
-    # def particles(self, value):
-    #     # if (not isinstance(value, list)
-    #     #     or not all(isinstance(
-    #     #         item, (particles.Circle, particles.Line, particles.Particle)) for item in value)):
-    #     #     raise TypeError("Trying to add non-particle items to particle items list")
-    #     if len(self._particles) + len(value) <= 650:
-    #         self._particles += value
 
     def save_and_quit(self):
         self.user.save()
@@ -210,36 +197,12 @@ class Model:
                     if print_damage:
                         print(f"Player dealt {damage} damage to ", end="")
                         print(enemy)
-                    particle_generation_rect = Model.get_collision_rect(
-                        self.character.current_attack.hitbox,
-                        enemy.hitbox
-                        )
-                    particle_generation_position = Model.get_random_position_in_rect(
-                        particle_generation_rect
-                        )
-                    if type(enemy) is enemies.Demon:
-                        particles_n = random.randint(7, 10)
-                        particles_size = random.randint(3, 5)
-                    if type(enemy) is enemies.Imp:
-                        particles_n = random.randint(7, 10)
-                        particles_size = random.randint(2, 4)
-                    if len(self.particles) < 400:
-                        list = Circle.generate_cicles(
-                            particles_n,
-                            random.choice(blood_colours),
-                            particle_generation_position,
-                            self.character.facing_right,
-                            radius=particles_size,
-                            speed=random.randint(4, 5))
-                        self.particles += list
 
     def enemies_attack(self, print_damage: bool = False):
         for enemy in self.current_level.current_wave_enemies:
             if enemy.attacking:
                 damage = enemy.attack.hit(enemy.frame, self.character.hitbox)
                 if damage:
-                    # if self.character.guarding:
-                    #     self.character.health -= int(damage / 2)
                     if not self.character.guarding:
                         self.character.health -= int(damage)
                     self.character.hit = True
@@ -247,6 +210,79 @@ class Model:
                     if print_damage:
                         print(f"Player received {damage} damage from ", end="")
                         print(enemy)
+
+    def generate_particles(self):
+        self.generate_blood_particles()
+        self.generate_block_particles()
+
+    def generate_blood_particles(self):
+        particles = []
+        if self.character.current_attack is not None:
+            for enemy in self.current_level.current_wave_enemies:
+                if self.character.current_attack.hit(self.character.frame, enemy.hitbox):
+                    if not enemy.dead:
+                        particle_generation_rect = Particle.get_collision_rect(
+                            self.character.current_attack.hitbox,
+                            enemy.hitbox
+                            )
+                        particle_generation_position = Particle.get_random_position_in_rect(
+                            particle_generation_rect
+                            )
+                        if type(enemy) is enemies.Demon:
+                            particles_n = random.randint(14, 15)
+                            particles_size = 5
+                        if type(enemy) is enemies.Imp:
+                            particles_n = random.randint(14, 15)
+                            particles_size = 3
+                        if len(self.particles) < 400:
+                            list = Blood.generate_blood(
+                                particles_n,
+                                particle_generation_position,
+                                particles_size,
+                                1,
+                                facing_right=self.character.facing_right
+                            )
+                            particles += list
+            for particle in self.particles:
+                if type(particle) is Blood:
+                    x, y = particle.position
+                    if y >= 560:
+                        if len(self.particles) < 400:
+                            splash_list = Blood.generate_blood_splash(
+                                particle.position,
+                                particle.radius
+                            )
+                            particles += splash_list
+                        self.particles.remove(particle)
+        self.particles += particles
+
+    def generate_block_particles(self):
+        particles = []
+        if self.character.guarding and len(self.particles) < 450:
+            for enemy in self.current_level.current_wave_enemies:
+                if enemy.attacking:
+                    if enemy.attack.hit(enemy.frame, self.character.hitbox):
+                        rect = Particle.get_collision_rect(enemy.attack.hitbox, self.character.hitbox)
+                        position = Particle.get_random_position_in_rect(rect)
+                        block_squares = BlockSquare.generate_block_squares(5, position, 15)
+                        particles += block_squares
+        self.particles += particles
+
+    def update_particles(self):
+        for particle in self.particles:
+            if type(particle) is Circle or type(particle) is Blood:
+                particle.update_position()
+                particle.decrease_size(0.10)
+                if particle.update_existance() is False:
+                    self.particles.remove(particle)
+            elif type(particle) is Square or type(particle) is BlockSquare:
+                particle.update_position()
+                particle.decrease_size(decay=0.5)
+                if particle.width <= 1:
+                    self.particles.remove(particle)
+
+    def print_particles_n(self):
+        print(len(self.particles))
 
     def update_player(self):
         self.character.reset_frames()
@@ -380,45 +416,6 @@ class Model:
                     x, y = particle.position
                     x += 0.5
                     particle.position = (x, y)
-
-    @staticmethod
-    def get_random_position_in_rect(rect: pygame.rect.Rect) -> tuple:
-        x = random.randint(rect.x, rect.x + rect.width)
-        y = random.randint(rect.y, rect.y + rect.height)
-        return (x, y)
-
-    @staticmethod
-    def get_collision_rect(
-        rect1: pygame.rect.Rect,
-        rect2: pygame.rect.Rect
-            ) -> pygame.rect.Rect:
-        if rect1.colliderect(rect2):
-            return rect1.clip(rect2)
-        return None
-
-    def update_particles(self):
-        for particle in self.particles:
-            if type(particle) is Circle:
-                particle.update_position()
-                particle.decrease_size(0.05)
-                x, y = particle.position
-                if particle.update_existance() is False:
-                    self.particles.remove(particle)
-                elif y >= 560:
-                    maybe = random.choice([True, False])
-                    if maybe and len(self.particles) < 400:
-                        list = Circle.generate_cicles(
-                            1,
-                            random.choice(blood_colours),
-                            particle.position,
-                            random.choice([True, False]),
-                            random.randint(1, 3),
-                            speed=(random.randint(10, 100)/100))
-                        self.particles += list
-                    self.particles.remove(particle)
-
-    def print_particles_n(self):
-        print(len(self.particles))
 
     def update_setting_buttons(self):
         if self.settings.draw_fps is True:

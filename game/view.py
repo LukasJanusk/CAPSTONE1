@@ -8,7 +8,7 @@ from . import animations
 from . import layer
 from . import menu
 from . import ui
-from .particles import Particle, Circle
+from .particles import Particle, Circle, Blood, Square, BlockSquare
 from . import user
 
 
@@ -33,6 +33,7 @@ class View:
                     layer.Layer,
                     player.Player,
                     Circle,
+                    Blood,
                     Particle,
                     ui.Healthbar,
                     ui.Score]] = [],
@@ -63,9 +64,14 @@ class View:
                 screen.blit(object.draw_health_bar(), (5, 5))
             elif type(object) is ui.Score:
                 View.draw_score(screen, object, score)
-            elif type(object) is Circle:
+            elif type(object) is Circle or type(object) is Blood:
                 if particles:
                     object.render_circle(screen)
+            elif type(object) is Square or type(object) is BlockSquare:
+                if particles:
+                    x, y = object.position
+                    rect = pygame.rect.Rect(x, y, object.width, object.height)
+                    pygame.draw.rect(screen, object.colour, rect)
             else:
                 print("no object to render")
 

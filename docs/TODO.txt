@@ -1,0 +1,48 @@
+1. ~~Score tracking and drawing on screen~~
+2. ~~basic enemy AI~~
+3. ~~enemy wave random spawning and selection~~
+4. ~menus~
+5. ~~game end condition~~
+6. ~~highscore printing and saving~~
+7. sounds (5%)
+8. 2 more enemies for testing (50%)
+9. tests for View (50%)
+10. ~particle class for pygame surface objects to be generated as special effects~
+11. level unlocking mechanism
+12. tutorial level
+13. In menu and in game music
+14. level objects(random spawns and enemy dropped ones)
+15. special attack modifiers for fire, cold, lightning
+16. block bar
+17. special abilities bar( like mana )
+18. projectile attacks ( for monster and player )
+19. ranged enemy to test
+20. optimize particles for performance( add limmits to amount and duration )(80%)
+21. Draw stylized UI layer
+22. Draw stylized Menu background
+23. Update current code and write tests 
+24. Update Game model diagram
+25. Change font rendering to be resizable object (should improve performance)
+26. Do performance testing (optimize rendering with pixel arrays if necessary)
+27. Update layers images with correct colourkey areas(might improve performace)
+28. AUTOMATE ASSETS LOADING(Requires naming standartization and enemies generalization.
+Would significantly hasten new enemy creation process. Same can be done for new characters and levels in the future)
+29. Add settings menu and toggles for graphics and sound options( other options if needed )
+
+
+DONE or FUNCTIONAL:
+1.Player Class and functionality (80%)
+2.Enemy Class and functionality (80%)
+3.Layer Class and functionality (100%)
+4.SpriteSheet Class and functionality (100%)
+5.Animation Class and functionality (80%)
+6.Attack Class and functionality (80%)
+7.Level Class and functionality (90%)
+8.Menu Class and required classes for it to function (80%)
+9.View Class (70%)
+10.Controller class for player inputs (80%)
+11.Runtime profile for testing (100%)
+12.Game Model Class (70%)
+13.User class (80%)
+14.UI Class and elementss (50%)
+15.Particle class and its subclasses (50%)

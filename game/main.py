@@ -43,11 +43,12 @@ def main():
             engine.run_enemies_ai()
             engine.get_current_level_wave()
             engine.update_enemies()
-            engine.update_particles()
             engine.check_for_level_end()
             engine.update_player()
             engine.update_scroll()
             engine.calculate_attacks()
+            engine.generate_particles()
+            engine.update_particles()
             View.render(
                 screen,
                 str(engine.current_level.score),
@@ -55,7 +56,6 @@ def main():
                 hitboxes=engine.settings.draw_hitboxes,
                 health_bars=engine.settings.draw_health_bar,
                 particles=engine.settings.render_particles)
-            # engine.print_particles_n()
             if engine.settings.draw_fps:
                 View.draw_fps(screen, int(clock.get_fps()))
             View.draw_wave_number(
