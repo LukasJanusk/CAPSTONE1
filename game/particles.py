@@ -206,7 +206,7 @@ class Ember(Circle):
         ]
     colour = random.choice(blood_colours)
     vertical_speed = 3
-    speed: float = 2
+    speed: float = 0
     gravity: float = 0
     atmosphere = 0
 
@@ -227,7 +227,7 @@ class Ember(Circle):
                 position=position,
                 colour=random.choice(cls.colours),
                 speed=cls.speed,
-                vertical_speed=cls.speed,
+                vertical_speed=cls.vertical_speed,
                 gravity=cls.gravity,
                 atmosphere=cls.atmosphere,
                 facing_right=facing_right,
@@ -235,6 +235,16 @@ class Ember(Circle):
             )
             embers.append(ember)
         return embers
+
+    def ember_jiggle(self) -> None:
+        """Adjust particle x for realistic jiggle"""
+        x, y = self.position
+        x_adustment = random.randint(-5, 5)
+        y_adjustment = random.randint(-2, 2)
+        x += x_adustment
+        y += y_adjustment
+        self.position = (x, y)
+        self.colour = random.choice(self.colours)
 
 
 @dataclass
@@ -307,7 +317,6 @@ class Line(Particle):
     ]
 
     def __post_init__(self):
-        # Determine the angle based on the direction
         if self.facing_right:
             self.angle = random.uniform(0, 90) if random.choice([True, False]) else random.uniform(270, 360)
         else:
@@ -326,10 +335,11 @@ class Line(Particle):
         x, y = self.position
         new_x = x + x_component
         new_y = y + y_component
-
+        self.angle = random_angle
         self.vector = (int(new_x), int(new_y))
 
     def render_line(self, screen: pygame.surface.Surface) -> None:
+        """Renders Line particle on the screen"""
         pygame.draw.line(
             screen,
             random.choice(self.colours),
@@ -382,7 +392,7 @@ def main():
                     list = Blood.generate_blood(15, mouse_pos, 6, 2, False)
                     list_square = BlockSquare.generate_block_squares(15, mouse_pos, 15)
                     line_list = Line.generate_lines(15, mouse_pos, True)
-                    embers_list = Ember.generate_embers(15, mouse_pos, 4, 1, True)
+                    embers_list = Ember.generate_embers(5, mouse_pos, 4, 1, True)
                     particles += line_list
                     particles += list
                     particles += list_square
@@ -394,6 +404,8 @@ def main():
             if type(particle) is Circle or type(particle) is Blood or type(particle) is Ember:
                 particle.decrease_size(0.05)
                 particle.update_position()
+                if type(particle) is Ember:
+                    particle.ember_jiggle()
                 if particle.update_existance() is False:
                     particles.remove(particle)
                 else:
