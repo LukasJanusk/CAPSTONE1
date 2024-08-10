@@ -57,12 +57,14 @@ class Level:
         enemies.Imp,
         ]
             ]:
+        """Return enemies wave"""
         wave = []
         for i in range(
             random.randint(
                 (1 * self.current_wave + 1),
                 2 * (self.current_wave + 1))
                 ):
+
             choice = random.choices(
                 available_enemies,
                 weights=available_enemies_weights,
@@ -96,10 +98,10 @@ class Level:
                 self.layer7]
 
 
-level1 = Level("Church",
+level1 = Level("Museum",
                layer0=layer.level0_layer0,
                layer1=layer.level0_layer1)
-level2 = Level("Fields",
+level2 = Level("Hills",
                layer0=layer.level1_layer0,
                layer1=layer.level1_layer1,
                layer2=layer.level1_layer2,

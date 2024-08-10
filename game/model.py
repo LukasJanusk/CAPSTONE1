@@ -18,6 +18,7 @@ from .sound import (
     attack_normal_sound1,
     attack_normal_sound2,
     attack_upper_sound1,
+    player_block_sound
 )
 
 
@@ -476,6 +477,8 @@ class Model:
                 if enemy.attack.hit(enemy.frame, self.character.hitbox):
                     sound = Model.get_attack_sound(enemy)
                     hit_sound = Model.get_hit_sound(self.character)
+                    if self.character.guarding:
+                        attack_sounds.append(player_block_sound)
                     attack_sounds.append(sound)
                     attack_sounds.append(hit_sound)
             if self.character.current_attack is not None:

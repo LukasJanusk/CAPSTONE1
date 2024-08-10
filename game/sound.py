@@ -54,6 +54,10 @@ demon_hit_sound = HitSound(os.path.join(".", "assets", "sounds", "demon_hit_soun
 imp_hit_sound = HitSound(os.path.join(".", "assets", "sounds", "imp_hit_sound.ogg"), 1000)
 # death sounds
 
+# block sounds
+
+player_block_sound = HitSound(os.path.join(".", "assets", "sounds", "block_sound.ogg"), 100)
+
 # Animation sounds
 attack_upper_sound1 = AnimationSound(
     os.path.join(
