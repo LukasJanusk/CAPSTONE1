@@ -34,7 +34,7 @@ class DemonAI(AI):
     @staticmethod
     def seek(demon: enemies.Demon, player: player.Player):
         demon.action_duration = 1000
-        if not demon.dead:
+        if not demon.dead and not demon.spawn:
             if int(demon.x + 250) in range(
                     int(player.x + 62) - 150,
                     int(player.x + 62) + 150
@@ -51,7 +51,7 @@ class DemonAI(AI):
     @staticmethod
     def flee(demon: enemies.Demon, player: player.Player):
         demon.action_duration = 500
-        if not demon.dead and not demon.attacking:
+        if not demon.dead and not demon.attacking and not demon.spawn:
             demon.running = True
             if player.x > demon.x:
                 demon.facing_right = False
@@ -61,7 +61,7 @@ class DemonAI(AI):
     @staticmethod
     def idle(demon: enemies.Demon, player: player.Player):
         demon.action_duration = 500
-        if not demon.dead and not demon.attacking:
+        if not demon.dead and not demon.attacking and not demon.spawn:
             if demon.x in range(player.x - 501, player.x + 600):
                 demon.idle = True
             else:
@@ -92,7 +92,7 @@ class ImpAI(AI):
     @staticmethod
     def seek(imp: enemies.Imp, player: player.Player):
         imp.action_duration = 500
-        if not imp.dead:
+        if not imp.dead and not imp.spawn:
             if imp.x - 50 >= player.x:
                 imp.facing_right = False
                 imp.attacking = True
@@ -107,7 +107,7 @@ class ImpAI(AI):
     @staticmethod
     def flee(imp: enemies.Imp, player: player.Player):
         imp.action_duration = 500
-        if not imp.dead:
+        if not imp.dead and not imp.spawn:
             if imp.x >= player.x:
                 imp.attacking = False
                 imp.running = True
@@ -118,6 +118,7 @@ class ImpAI(AI):
                 imp.facing_right = False
 
     def idle(imp: enemies.Imp, player: player.Player):
-        imp.action_duration = 1500
-        imp.running = False
-        imp.idle = True
+        if not imp.spawn:
+            imp.action_duration = 1500
+            imp.running = False
+            imp.idle = True

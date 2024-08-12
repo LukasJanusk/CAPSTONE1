@@ -46,7 +46,8 @@ class Enemy(BaseEnemy):
     guarding: bool = False
     stunned: bool = False
     hit: bool = False
-    idle: bool = True
+    idle: bool = False
+    spawn: bool = True
     dead: bool = False
     exist: bool = True
     current_animation = None
@@ -84,6 +85,7 @@ class Demon(Enemy):
     death_animation = None
     running_animation = None
     idle_animation = None
+    spawn_animation = None
     hitbox_height = 420
     hitbox_width = 250
     weight = 10
@@ -140,6 +142,14 @@ class Demon(Enemy):
             0,
             (150, 150, 150)
             )
+        self.spawn_animation = animations.Animation(
+            self.sprite_sheet_list[5],
+            self.x,
+            self.y,
+            0,
+            0,
+            (150, 150, 150)
+        )
         self.attack = attacks.Attack(
             demon_attack_hit_sound,
             self.damage,
@@ -194,7 +204,8 @@ class Demon(Enemy):
             self.hit_animation,
             self.death_animation,
             self.attack_animation,
-            self.running_animation
+            self.running_animation,
+            self.spawn_animation,
             ]
         for animation in animations:
             animation.x = self.x
@@ -209,6 +220,7 @@ class Demon(Enemy):
                 self.current_animation = self.death_animation
             elif self.hit:
                 self.idle = False
+                self.spawn = False
                 self.attacking = False
                 self.running = False
                 self.current_animation = self.hit_animation
@@ -217,6 +229,13 @@ class Demon(Enemy):
                     self.hit = False
                     self.frame = 0
                     self.idle = True
+                    self.current_animation = self.idle_animation
+            elif self.spawn:
+                self.current_animation = self.spawn_animation
+                if self.frame == 9:
+                    self.spawn = False
+                    self.idle = True
+                    self.frame = 0
                     self.current_animation = self.idle_animation
             elif self.running:
                 self.idle = False
@@ -256,6 +275,7 @@ class Imp(Enemy):
     death_animation = None
     running_animation = None
     idle_animation = None
+    spawn_animation = None
     hitbox_height = 120
     hitbox_width = 60
     weight = 80
@@ -312,6 +332,14 @@ class Imp(Enemy):
             0,
             (150, 150, 150)
             )
+        self.spawn_animation = animations.Animation(
+            self.sprite_sheet_list[5],
+            self.x,
+            self.y,
+            0,
+            0,
+            (150, 150, 150)
+            )
         self.attack = attacks.Attack(
             imp_attack_hit_sound,
             self.damage,
@@ -334,9 +362,6 @@ class Imp(Enemy):
             if self.dead:
                 if self.frame >= 6:
                     self.exist = False
-            elif self.hit is True:
-                if self.frame > 6:
-                    self.frame = 0
             elif self.attacking is True:
                 if self.frame > 4:
                     self.frame = 0
@@ -355,7 +380,8 @@ class Imp(Enemy):
             self.hit_animation,
             self.death_animation,
             self.attack_animation,
-            self.running_animation
+            self.running_animation,
+            self.spawn_animation,
             ]
         for animation in animations:
             animation.x = self.x
@@ -373,11 +399,25 @@ class Imp(Enemy):
                 self.idle = False
                 self.attacking = False
                 self.running = False
+                self.spawn = False
                 self.current_animation = self.hit_animation
+                self.speed = 0
                 if self.frame == 6:
                     self.hit = False
                     self.frame = 0
                     self.idle = True
+                    self.current_animation = self.idle_animation
+            elif self.spawn:
+                self.current_animation = self.spawn_animation
+                self.speed = 0
+                if self.hit:
+                    self.spawn = False
+                    self.current_animation = self.hit_animation
+                    self.frame = 0
+                if self.frame >= 9:
+                    self.frame = 0
+                    self.idle = True
+                    self.spawn = False
                     self.current_animation = self.idle_animation
                 self.speed = 0
             elif self.attacking:

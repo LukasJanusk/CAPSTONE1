@@ -188,7 +188,7 @@ class Model:
                     if not enemy.dead:
                         if type(enemy) is enemies.Demon:
                             enemy.stun_threshold -= damage
-                            if enemy.stun_threshold == 0 or damage > 200:
+                            if enemy.stun_threshold == 0 or damage > 200 or enemy.spawn:
                                 enemy.hit = True
                                 enemy.frame = 0
                         else:
