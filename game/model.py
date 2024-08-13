@@ -316,6 +316,7 @@ class Model:
             self.current_level.layer3,
             self.current_level.layer4,
             self.current_level.layer5] + (
+            self.current_level.objects +
             self.current_level.current_wave_enemies +
             [self.character] +
             self.particles +

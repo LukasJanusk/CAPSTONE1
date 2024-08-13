@@ -164,7 +164,7 @@ imp_hit_animation_list = imp_hit_sheet.get_animation_list(
 imp_death_image = pygame.image.load(
     os.path.join(".", "assets", "graphics", "sprites", "imp_death.png"))
 imp_death_sheet = SpriteSheets(imp_death_image)
-imp_death_animation_list = imp_death_sheet = imp_death_sheet.get_animation_list(
+imp_death_animation_list = imp_death_sheet.get_animation_list(
     150, 150, 1, (150, 150, 150), 7)
 # guarding
 # spawn
@@ -203,3 +203,20 @@ imp_animations = [
 # stunned
 # death
 # guarding
+
+
+# ==== OBJECTS =====
+
+# === health potion ===
+# idle
+health_potion_image = pygame.image.load(
+    os.path.join(".", "assets", "graphics", "sprites", "health_potion.png"))
+health_potion_sheet = SpriteSheets(health_potion_image)
+health_potion_animation_list = health_potion_sheet.get_animation_list(
+    50, 50, 1, (150, 150, 150), 4)
+# picked
+health_potion_picked_image = pygame.image.load(
+    os.path.join(".", "assets", "graphics", "sprites", "health_potion_picked.png"))
+health_potion_picked_sheet = SpriteSheets(health_potion_picked_image)
+health_potion_picked_animation_list = health_potion_picked_sheet.get_animation_list(
+    50, 50, 1, (150, 150, 150), 4)

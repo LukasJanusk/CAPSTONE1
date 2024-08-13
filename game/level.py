@@ -31,6 +31,7 @@ class Level:
             enemies.Demon,
             enemies.Imp]
             ] = field(default_factory=list)
+    objects: list = field(default_factory=list)
     _score: int = 0
     ambient_sound: pygame.mixer.Sound = None
 
