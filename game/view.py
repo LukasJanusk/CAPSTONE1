@@ -6,9 +6,11 @@ from . import enemies
 from . import player
 from . import animations
 from . import layer
+from . import objects
 from . import menu
 from . import ui
 from .particles import Particle, Circle, Blood, Square, BlockSquare
+from .objects import Health_Potion
 from . import user
 
 
@@ -27,6 +29,7 @@ class View:
             layers: List[
                 Union[
                     animations.Animation,
+                    objects.Health_Potion,
                     enemies.Enemy,
                     enemies.Demon,
                     enemies.Imp,
@@ -72,6 +75,10 @@ class View:
                     x, y = object.position
                     rect = pygame.rect.Rect(x, y, object.width, object.height)
                     pygame.draw.rect(screen, object.colour, rect)
+            elif type(object) is Health_Potion:
+                object.current_animation.animate(screen, object.frame, True)
+                if hitboxes:
+                    pygame.draw.rect(screen, (0, 255, 255), object.hitbox, 2)
             else:
                 print("no object to render")
 

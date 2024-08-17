@@ -49,6 +49,7 @@ def main():
             engine.calculate_attacks()
             engine.generate_particles()
             engine.update_particles()
+            engine.update_objects()
             View.render(
                 screen,
                 str(engine.current_level.score),

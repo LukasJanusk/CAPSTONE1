@@ -33,12 +33,15 @@ class Sound_Controller:
         objects: List[Union[
             HitSound,
             AnimationSound,
-           ]]):
+           ]]) -> None:
+        """Plays sounds by Sound type"""
         if objects is not None or objects != []:
             for object in objects:
                 if type(object) is AnimationSound:
                     object.play(maxtime=object.maximum_duration)
                 elif type(object) is HitSound:
+                    object.play()
+                elif type(object) is pygame.mixer.Sound:
                     object.play()
 
 

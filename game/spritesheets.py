@@ -212,7 +212,7 @@ imp_animations = [
 health_potion_image = pygame.image.load(
     os.path.join(".", "assets", "graphics", "sprites", "health_potion.png"))
 health_potion_sheet = SpriteSheets(health_potion_image)
-health_potion_animation_list = health_potion_sheet.get_animation_list(
+health_potion_idle_animation_list = health_potion_sheet.get_animation_list(
     50, 50, 1, (150, 150, 150), 4)
 # picked
 health_potion_picked_image = pygame.image.load(

@@ -1,8 +1,10 @@
 import pygame
 from dataclasses import dataclass
+import os
 from . import player
 from . import animations
 from . import sound
+from . import spritesheets
 
 
 @dataclass
@@ -31,9 +33,10 @@ class Breakable(Object):
 class Pickable(Object):
     width: int
     height: int
-    hitbox: pygame.rect.Rect
+    hitbox: pygame.rect.Rect = None
     idle: bool = True
     picked: bool = False
+    exist: bool = True
     idle_animation: animations.Animation = None
     picked_animation: animations.Animation = None
     current_animation: animations.Animation = None
@@ -49,7 +52,9 @@ class Pickable(Object):
     @frame.setter
     def frame(self, value):
         if value > (len(self.current_animation.animation_list) - 1):
-            self.frame = 0
+            self._frame = 0
+        else:
+            self._frame = value
 
 
 @dataclass
@@ -59,8 +64,32 @@ class Health_Potion(Pickable):
     height: int = 50
 
     def __post_init__(self):
-        self.rect = pygame.rect.Rect(self.x, self.y, self.width, self.height)
+        self.hitbox = pygame.rect.Rect(self.x, self.y, self.width, self.height)
+        self.idle_animation = animations.Animation(spritesheets.health_potion_idle_animation_list, self.x, self.y, 0, 0, (150, 150, 150))
+        self.picked_animation = animations.Animation(spritesheets.health_potion_picked_animation_list, self.x, self.y, 0, 0, (150, 150, 150))
+        self.current_animation = self.idle_animation
+        self.last_update = pygame.time.get_ticks()
+        self.picked_sound = sound.HitSound(os.path.join(".", "assets", "sounds", "health_potion_picked_sound.ogg"), 334)
 
-    def get_picked(self, player: player.Player):
-        if self.rect.colliderect(player.hitbox):
-            player.health += self.value
+    def update(self):
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_update > self.frame_time:
+            self.frame += 1
+            self.last_update = current_time
+        self.idle_animation.x = self.x
+        self.idle_animation.y = self.y
+        self.picked_animation.x = self.x
+        self.picked_animation.y = self.y
+        self.hitbox = pygame.rect.Rect(self.x, self.y, self.width, self.height)
+        if self.picked:
+            if self.frame == len(self.picked_animation.animation_list) - 1:
+                self.exist = False
+
+    def get_picked(self, player: player.Player) -> bool:
+        if self.hitbox.colliderect(player.hitbox):
+            if not self.picked:
+                player.health += self.value
+                self.picked = True
+                self.current_animation = self.picked_animation
+                return True
+        return False

@@ -80,6 +80,8 @@ class Model:
         if messege == "reset":
             self.current_level.current_wave = 0
             self.current_level.current_wave_enemies = []
+            self.sounds = []
+            self.current_level.objects = []
             self.current_level.score = 0
             self.character.health = self.character.maximum_health
             self.character.x = 100
@@ -89,6 +91,8 @@ class Model:
             self.user.save()
             self.current_level.current_wave = 0
             self.current_level.current_wave_enemies = []
+            self.sounds = []
+            self.current_level.objects = []
             self.current_level.score = 0
             self.character.health = self.character.maximum_health
             self.character.x = 100
@@ -346,7 +350,16 @@ class Model:
         for enemy in self.current_level.current_wave_enemies:
             enemy.update_states()
 
-    def update_enemies_existance(self, print_info=False):
+    def update_objects(self) -> None:
+        """Updates attributes of objects and remove picked or destoryed ones"""
+        for object in self.current_level.objects:
+            object.get_picked(self.character)
+            object.update()
+            if object.exist is False:
+                self.current_level.objects.remove(object)
+
+    def update_enemies_existance(self, print_info=False) -> None:
+        """Checks if enemy exists and runs on enemy death mechanics"""
         for enemy in self.current_level.current_wave_enemies:
             if enemy.health <= 0:
                 enemy.dead = True
@@ -358,8 +371,10 @@ class Model:
                 if enemy.exist is False:
                     if type(enemy) is enemies.Demon:
                         self.current_level.score += 100
+                        self.current_level.generate_dropable_items(5, enemy)
                     if type(enemy) is enemies.Imp:
                         self.current_level.score += 30
+                        self.current_level.generate_dropable_items(20, enemy)
                     self.current_level.current_wave_enemies.remove(enemy)
                     if print_info:
                         print(f"Enemy , {enemy}, removed from the active enemies list")
@@ -390,6 +405,8 @@ class Model:
             x, y = particle.position
             x += self.character.speed
             particle.position = (x, y)
+        for object in self.current_level.objects:
+            object.x += self.character.speed
 
     def update_camera(self):
         layers_list = self.current_level.get_layers_list()
@@ -405,6 +422,8 @@ class Model:
                     x, y = particle.position
                     x -= 0.5
                     particle.position = (x, y)
+                for object in self.current_level.objects:
+                    object.x -= 0.5
         if not self.character.facing_right:
             if self.character.x < 390:
                 self.character.x += 0.5
@@ -417,6 +436,8 @@ class Model:
                     x, y = particle.position
                     x += 0.5
                     particle.position = (x, y)
+                for object in self.current_level.objects:
+                    object.x += 0.5
 
     def update_setting_buttons(self):
         if self.settings.draw_fps is True:
@@ -504,6 +525,17 @@ class Model:
             if self.character.frame == attack_upper_sound1.frame:
                 return attack_upper_sound1
 
+    def get_objects_sounds(self) -> List[sound.HitSound]:
+        """Returns object picked sound or None"""
+        sounds = []
+        current_time = pygame.time.get_ticks()
+        for obj in self.current_level.objects:
+            if obj.picked:
+                if current_time - obj.picked_sound.last_update > obj.picked_sound.DOWNTIME:
+                    sounds.append(obj.picked_sound)
+                obj.picked_sound.last_update = current_time
+        return sounds
+
     def get_sounds(self):
         if len(self.sounds) > 200:
             self.sounds = self.sounds[:-30]
@@ -513,4 +545,5 @@ class Model:
             sounds.append(animation_sound)
         hit_sounds = self.get_attack_sounds()
         sounds += hit_sounds
+        sounds += self.get_objects_sounds()
         return sounds

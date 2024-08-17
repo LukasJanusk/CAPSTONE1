@@ -4,6 +4,8 @@ import os
 from typing import List, Union
 from . import enemies
 from . import layer
+from . import objects
+from .objects import Health_Potion
 import random
 available_enemies = ["demon", "imp"]
 available_enemies_weights = [50, 100]
@@ -31,7 +33,10 @@ class Level:
             enemies.Demon,
             enemies.Imp]
             ] = field(default_factory=list)
-    objects: list = field(default_factory=list)
+    objects: List[
+        Union[
+            Health_Potion]
+            ] = field(default_factory=list)
     _score: int = 0
     ambient_sound: pygame.mixer.Sound = None
 
@@ -51,6 +56,13 @@ class Level:
     def is_colliding(self, new_enemy, wave: list) -> bool:
         return any(
             new_enemy.hitbox.colliderect(enemy_obj.hitbox) for enemy_obj in wave)
+
+    def generate_dropable_items(self, chance: int, enemy: enemies.Enemy) -> None:
+        """Generates pickable items"""
+        number = random.randint(1, chance)
+        if number == 1:
+            potion = objects.Health_Potion(enemy.x, 500)
+            self.objects.append(potion)
 
     def generate_wave(self, player_x: int) -> bool | List[Union[
         enemies.Enemy,
