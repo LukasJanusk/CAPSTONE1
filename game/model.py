@@ -560,7 +560,7 @@ class Model:
                 return attack_upper_sound1
 
     def get_objects_sounds(self) -> List[sound.HitSound]:
-        """Returns object picked sound or None"""
+        """Returns object picked sound or empty list"""
         sounds = []
         current_time = pygame.time.get_ticks()
         for obj in self.current_level.objects:

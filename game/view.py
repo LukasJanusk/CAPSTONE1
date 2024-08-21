@@ -10,7 +10,7 @@ from . import objects
 from . import menu
 from . import ui
 from .particles import Particle, Circle, Blood, Square, BlockSquare
-from .objects import Health_Potion
+from .objects import Health_Potion, Elemental_Orb
 from . import user
 
 
@@ -30,6 +30,7 @@ class View:
                 Union[
                     animations.Animation,
                     objects.Health_Potion,
+                    objects.Elemental_Orb,
                     enemies.Enemy,
                     enemies.Demon,
                     enemies.Imp,
@@ -76,7 +77,7 @@ class View:
                     x, y = object.position
                     rect = pygame.rect.Rect(x, y, object.width, object.height)
                     pygame.draw.rect(screen, object.colour, rect)
-            elif type(object) is Health_Potion:
+            elif type(object) is Health_Potion or type(object) is Elemental_Orb:
                 object.current_animation.animate(screen, object.frame, True)
                 if hitboxes:
                     pygame.draw.rect(screen, (0, 255, 255), object.hitbox, 2)

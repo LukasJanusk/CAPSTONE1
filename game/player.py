@@ -17,6 +17,12 @@ class Player:
     current_time = None
     _health: float = 1000
     maximum_health: int = 1000
+    maximum_fire: int = 1000
+    maximum_cold: int = 1000
+    maximum_lightning: int = 1000
+    fire: int = 0
+    cold: int = 0
+    lightning: int = 0
     speed: float = 1.5
     jump_strength: float = 16
     vertical_position: float = 0
@@ -38,6 +44,7 @@ class Player:
     aerial_movement: bool = False
     floating: bool = False
     falling: bool = False
+    modifiers = ["fire", "cold", "lightning", None]
     fire1: bool = False
     fire2: bool = False
     fire3: bool = False
@@ -47,6 +54,7 @@ class Player:
     ice1: bool = False
     ice2: bool = False
     ice3: bool = False
+    modifier = None
     IDLE_ANIMATION = None
     WALKING_ANIMATION = None
     GUARD_ANIMATION = None

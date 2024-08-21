@@ -2,10 +2,10 @@ import pygame
 from dataclasses import dataclass, field
 import os
 from typing import List, Union
-from . import enemies
+from .enemies import Enemy, Demon, Imp
 from . import layer
-from . import objects
-from .objects import Health_Potion
+from .layer import Layer
+from .objects import Health_Potion, Elemental_Orb
 import random
 available_enemies = ["demon", "imp"]
 available_enemies_weights = [50, 100]
@@ -17,25 +17,26 @@ class Level:
     name: str
     x: int = 0
     y: int = 0
-    layer0: layer.Layer = None
-    layer1: layer.Layer = None
-    layer2: layer.Layer = None
-    layer3: layer.Layer = None
-    layer4: layer.Layer = None
-    layer5: layer.Layer = None
-    layer6: layer.Layer = None
-    layer7: layer.Layer = None
+    layer0: Layer = None
+    layer1: Layer = None
+    layer2: Layer = None
+    layer3: Layer = None
+    layer4: Layer = None
+    layer5: Layer = None
+    layer6: Layer = None
+    layer7: Layer = None
     total_waves: int = 15
     current_wave: int = 0
     current_wave_enemies: List[
         Union[
-            enemies.Enemy,
-            enemies.Demon,
-            enemies.Imp]
+            Enemy,
+            Demon,
+            Imp]
             ] = field(default_factory=list)
     objects: List[
         Union[
-            Health_Potion]
+            Health_Potion,
+            Elemental_Orb]
             ] = field(default_factory=list)
     _score: int = 0
     ambient_sound: pygame.mixer.Sound = None
@@ -57,17 +58,25 @@ class Level:
         return any(
             new_enemy.hitbox.colliderect(enemy_obj.hitbox) for enemy_obj in wave)
 
-    def generate_dropable_items(self, chance: int, enemy: enemies.Enemy) -> None:
-        """Generates pickable items"""
+    def generate_dropable_items(self, chance: int, enemy: Enemy) -> None:
+        """
+        Generates pickable items based on the given drop chance.
+        Args:
+            chance (int): The drop rate, defined as a 1 in `chance` probability for an item to drop. Minimum `chance` should be 5
+            enemy (enemies.Enemy): The enemy instance from which items may drop.
+        """
         number = random.randint(1, chance)
         if number == 1:
-            potion = objects.Health_Potion(enemy.x + enemy.hitbox.width, 500)
+            potion = Health_Potion(enemy.x + enemy.hitbox.width, 500)
             self.objects.append(potion)
+        if number == 2:
+            elemental_Orb = Elemental_Orb(enemy.x + enemy.hitbox.width, 500)
+            self.objects.append(elemental_Orb)
 
     def generate_wave(self, player_x: int) -> bool | List[Union[
-        enemies.Enemy,
-        enemies.Demon,
-        enemies.Imp,
+        Enemy,
+        Demon,
+        Imp,
         ]
             ]:
         """Return enemies wave"""
@@ -84,13 +93,13 @@ class Level:
                 k=1)[0]
             x = random.randint(int(player_x - 150), int(player_x + 1000))
             if choice == "demon":
-                enemy = enemies.Demon(x, 50, name=str(i))
+                enemy = Demon(x, 50, name=str(i))
                 while self.is_colliding(enemy, wave):
                     enemy.x += 50
                     enemy.update_hitbox()
                 wave.append(enemy)
             elif choice == "imp":
-                enemy = enemies.Imp(x, random.randint(320, 360), name=str(i))
+                enemy = Imp(x, random.randint(320, 360), name=str(i))
                 while self.is_colliding(enemy, wave):
                     enemy.x += 30
                     enemy.update_hitbox()
@@ -100,7 +109,7 @@ class Level:
         self.current_wave += 1
         return wave
 
-    def get_layers_list(self) -> List[Union[layer.Layer]]:
+    def get_layers_list(self) -> List[Union[Layer]]:
         """Returns all ordered layers list for current level"""
         return [self.layer0,
                 self.layer1,

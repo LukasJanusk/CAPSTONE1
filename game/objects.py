@@ -100,7 +100,7 @@ class Health_Potion(Pickable):
 
 @dataclass
 class Elemental_Orb(Pickable):
-    value: int = 50
+    value: int = 100
     width: int = 50
     height: int = 50
     elements = ["fire", "cold", "lightning"]
@@ -111,23 +111,31 @@ class Elemental_Orb(Pickable):
         self.element = random.choice(self.elements)
         if self.element == "fire":
             self.picked_sound = sound.HitSound(os.path.join(".", "assets", "sounds", "orb_fire_picked_sound.ogg"), 900)
+            self.element = "fire"
+            self.idle_animation = animations.Animation(spritesheets.fire_orb_idle_annimation_list, self.x, self.y, 0, 0, (150, 150, 150))
         if self.element == "cold":
             self.picked_sound = sound.HitSound(os.path.join(".", "assets", "sounds", "orb_ice_picked_sound.ogg"), 300)
+            self.element = "cold"
+            self.idle_animation = animations.Animation(spritesheets.cold_orb_idle_annimation_list, self.x, self.y, 0, 0, (150, 150, 150))
         if self.element == "lightning":
             self.picked_sound = sound.HitSound(os.path.join(".", "assets", "sounds", "orb_lightning_picked_sound.ogg"), 800)
+            self.element = "lightning"
+            self.idle_animation = animations.Animation(spritesheets.lightning_orb_idle_annimation_list, self.x, self.y, 0, 0, (150, 150, 150))
+        self.picked_animation = self.idle_animation
         self.last_update = pygame.time.get_ticks()
         self.current_animation = self.idle_animation
 
     def get_picked(self, player: player.Player) -> bool:
         """Runs mechanics on collision with the player hitbox"""
-        if not self.picked:
-            if self.element == "fire":
-                pass
-            if self.element == "cold":
-                pass
-            if self.element == "lightning":
-                pass
-            self.picked = True
-            self.current_animation = self.picked_animation
-            return True
+        if self.hitbox.colliderect(player.hitbox):
+            if not self.picked:
+                if self.element == "fire":
+                    player.fire += self.value
+                if self.element == "cold":
+                    player.cold += self.value
+                if self.element == "lightning":
+                    player.lightning += self.value
+                self.picked = True
+                self.current_animation = self.picked_animation
+                return True
         return False

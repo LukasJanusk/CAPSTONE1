@@ -222,3 +222,23 @@ health_potion_picked_image = pygame.image.load(
 health_potion_picked_sheet = SpriteSheets(health_potion_picked_image)
 health_potion_picked_animation_list = health_potion_picked_sheet.get_animation_list(
     50, 50, 1, (150, 150, 150), 4)
+
+# === elemental orb ===
+# fire idle
+fire_orb_image = pygame.image.load(
+    os.path.join(".", "assets", "graphics", "sprites", "fire_orb_idle.png"))
+fire_orb_sheet = SpriteSheets(fire_orb_image)
+fire_orb_idle_annimation_list = fire_orb_sheet.get_animation_list(
+    50, 50, 1, (150, 150, 150), 6)
+# cold idle
+cold_orb_image = pygame.image.load(
+    os.path.join(".", "assets", "graphics", "sprites", "cold_orb_idle.png"))
+cold_orb_sheet = SpriteSheets(cold_orb_image)
+cold_orb_idle_annimation_list = cold_orb_sheet.get_animation_list(
+    50, 50, 1, (150, 150, 150), 6)
+# lightning idle
+lightning_orb_image = pygame.image.load(
+    os.path.join(".", "assets", "graphics", "sprites", "lightning_orb_idle.png"))
+lightning_orb_sheet = SpriteSheets(lightning_orb_image)
+lightning_orb_idle_annimation_list = lightning_orb_sheet.get_animation_list(
+    50, 50, 1, (150, 150, 150), 6)
