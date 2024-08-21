@@ -98,11 +98,13 @@ class Menu:
     def __str__(self):
         return self.name
 
-    def center_text(self, screen: pygame.Surface):
+    def center_text(self, screen: pygame.Surface) -> None:
+        """Centers text"""
         screen_rect = screen.get_rect()
         self.text_x = (screen_rect.width - self.text_rect.width) // 2
 
-    def update_surface(self):
+    def update_surface(self) -> None:
+        """Updates menu name text for rendering"""
         self.text_surface = self.font.render(self.name, True, (0, 0, 0))
         self.text_rect = self.text_surface.get_rect()
 
@@ -163,7 +165,8 @@ class Menu_Controller:
         self.current_menu = main_menu
         self.current_menu.active = True
 
-    def get_active_button(self, event: pygame.event.Event):
+    def get_active_button(self, event: pygame.event.Event) -> None:
+        """Determines active button and changes its effects"""
         first = 0
         last = len(self.current_menu.buttons) - 1
         index = self.current_menu.buttons.index(self.current_menu.selected_button)
@@ -180,7 +183,8 @@ class Menu_Controller:
                 button.hover = False
             button.update_colour()
 
-    def get_index(self, index,  event: pygame.event.Event):
+    def get_index(self, index,  event: pygame.event.Event) -> int:
+        """Returns index of selected button"""
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_w or event.key == pygame.K_UP:
                 index -= 1
@@ -188,7 +192,8 @@ class Menu_Controller:
                 index += 1
         return index
 
-    def set_active_menu(self, event: pygame.event.Event):
+    def set_active_menu(self, event: pygame.event.Event) -> None:
+        """Controls Button presses in all menus"""
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RETURN:
                 if self.current_menu == main_menu:

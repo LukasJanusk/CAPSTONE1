@@ -1,5 +1,6 @@
 import pygame
 from dataclasses import dataclass
+from typing import List
 import os
 
 height = 640
@@ -19,6 +20,7 @@ class SpriteSheets(pygame.sprite.Sprite):
             scale:  int,
             colour: tuple
             ) -> pygame.surface.Surface:
+        """Gets one frame from spritesheet"""
         image = pygame.Surface((width, height)).convert()
         image.blit(self.sheet, (0, 0), ((frame * width), 0, width, height))
         image = pygame.transform.scale(image, (width * scale, height * scale))
@@ -26,7 +28,8 @@ class SpriteSheets(pygame.sprite.Sprite):
         return image
 
     def get_animation_list(
-            self, width: int, height: int, scale: float, colorkey: tuple, frames: int):
+            self, width: int, height: int, scale: float, colorkey: tuple, frames: int) -> List[pygame.Surface]:
+        """Generates list of frames from Spritesheet"""
         temp_list = []
         for i in range(frames):
             temp_list.append(self.get_image(i, width, height, scale, colorkey))
@@ -204,8 +207,7 @@ imp_animations = [
 # death
 # guarding
 
-
-# ==== OBJECTS =====
+""" OBJECTS SPRITESHEETS """
 
 # === health potion ===
 # idle

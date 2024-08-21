@@ -56,6 +56,7 @@ class Settings:
             self._render_particles = True
 
     def save(self) -> bool:
+        """Saves User data to json file"""
         data = self.to_dict()
         try:
             with open(os.path.join(".", "user", "settings.json"), mode="w") as file:
@@ -67,6 +68,7 @@ class Settings:
             return False
 
     def load(self) -> bool:
+        """Loads User data from json file"""
         file_path = os.path.join(".", "user", "settings.json")
         if not os.path.isfile(file_path):
             self.save()
@@ -88,6 +90,7 @@ class Settings:
                 return False
 
     def to_dict(self) -> dict:
+        """Converts User object to dictionary"""
         return {
             "settings": [
                 {"draw_hitboxes": self._draw_hitboxes},

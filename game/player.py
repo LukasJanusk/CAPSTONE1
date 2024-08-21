@@ -122,7 +122,8 @@ class Player:
         else:
             self._frame = value
 
-    def reset_frames(self):
+    def reset_frames(self) -> None:
+        """Resets animation frames of Player"""
         if self.attacking_upper:
             if self.frame > 14:
                 self.frame = 0
@@ -145,7 +146,8 @@ class Player:
             if self.frame > 7:
                 self.frame = 0
 
-    def update_jumping(self):
+    def update_jumping(self) -> None:
+        """Updates Player vertical position while jumping"""
         if self.jumping:
             self.y = self.y - self.jump_strength + self.vertical_position
             self.vertical_position += 0.5
@@ -153,7 +155,8 @@ class Player:
                 self.jumping = False
                 self.vertical_position = 0
 
-    def update_speed(self):
+    def update_speed(self) -> None:
+        """Updates player speed based on Player state"""
         if not self.jumping:
             self.aerial_movement = False
         self.speed = 0
@@ -176,7 +179,8 @@ class Player:
         if self.facing_right:
             self.speed = self.speed * -1
 
-    def get_current_animation(self):
+    def get_current_animation(self) -> None:
+        """Selects current Player animation based on Player state"""
         if self.attacking_normal:
             self.current_animation = self.ATTACK_NORMAL_ANIMATION
         elif self.attacking_upper:
@@ -193,7 +197,8 @@ class Player:
         else:
             self.current_animation = self.IDLE_ANIMATION
 
-    def get_current_attack(self):
+    def get_current_attack(self) -> None:
+        """Selects current Player attack based on Player state"""
         if self.attacking_normal:
             self.current_attack = self.attack_normal
         elif self.attacking_upper:
@@ -202,7 +207,8 @@ class Player:
             self.current_attack = None
         return self.current_attack
 
-    def update_hitbox(self):
+    def update_hitbox(self) -> None:
+        """Updates player hitbox"""
         self.hit = False
         self.hitbox = pygame.Rect(self.x + 35, self.y + 15, 40, 120)
         if self.facing_right:
@@ -222,7 +228,8 @@ class Player:
             else:
                 self.hitbox = pygame.Rect(self.x + 30, self.y + 15, 40, 120)
 
-    def draw_hitbox(self, screen: pygame.Surface):
+    def draw_hitbox(self, screen: pygame.Surface) -> None:
+        """Renders Player hitbox on screen"""
         if self.hit:
             pygame.draw.rect(screen, (255, 0, 0), self.hitbox, 2)
         else:

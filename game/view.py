@@ -43,7 +43,8 @@ class View:
             health_bars: bool = True,
             hitboxes: bool = True,
             particles: bool = True,
-            ):
+            ) -> None:
+        """Master funciton for rendering objects to the screen"""
         for object in layers:
             if object is None:
                 continue
@@ -83,13 +84,15 @@ class View:
                 print("no object to render")
 
     @staticmethod
-    def draw_score(screen: pygame.Surface, object: ui.Score, score: str):
+    def draw_score(screen: pygame.Surface, object: ui.Score, score: str) -> None:
+        """Renders current score to the center of the screen"""
         score_surface = object.get_score_surface(score)
         x = View.center(screen, score_surface)
         screen.blit(score_surface, (x, 10))
 
     @staticmethod
-    def render_layer(screen: pygame.Surface, layer: layer.Layer):
+    def render_layer(screen: pygame.Surface, layer: layer.Layer) -> None:
+        """Renders layer object"""
         screen_width = screen.get_width()
         tiles = math.ceil(screen_width/layer.width) + 1
         for i in range(tiles):
@@ -97,12 +100,14 @@ class View:
             screen.blit(layer._IMAGE, (-i * layer.width + layer.distance, 0))
 
     @staticmethod
-    def render_enemy(screen: pygame.Surface, enemy: enemies.Demon | enemies.Imp):
+    def render_enemy(screen: pygame.Surface, enemy: enemies.Demon | enemies.Imp) -> None:
+        """Renders current animation for enemies"""
         animation: animations.Animation = enemy.current_animation
         animation.animate(screen, enemy.frame, enemy.facing_right)
 
     @staticmethod
-    def render_player(screen: pygame.Surface, player: player.Player):
+    def render_player(screen: pygame.Surface, player: player.Player) -> None:
+        """Renders current animation for player"""
         animation = View.get_fixed_position(player)
         animation.animate(screen, player.frame, player.facing_right)
 
@@ -111,7 +116,8 @@ class View:
             screen: pygame.Surface,
             player: player.Player,
             enemies: List[Union[enemies.Enemy, enemies.Demon, enemies.Imp]]
-            ):
+            ) -> None:
+        """Master function for rendering hitboxes"""
         View.draw_player_hitbox(screen, player)
         for enemy in enemies:
             View.draw_enemy_hitboxes(screen, enemy)
@@ -120,14 +126,16 @@ class View:
             View.draw_enemy_attack_hitboxes(screen, enemy)
 
     @staticmethod
-    def draw_player_hitbox(screen: pygame.Surface, player: player.Player):
+    def draw_player_hitbox(screen: pygame.Surface, player: player.Player) -> None:
+        """Renders player hitbox"""
         if player.hit:
             pygame.draw.rect(screen, (255, 0, 0), player.hitbox, 2)
         else:
             pygame.draw.rect(screen, (0, 255, 0), player.hitbox, 2)
 
     @staticmethod
-    def draw_player_attack_hitbox(screen: pygame.Surface, player: player.Player):
+    def draw_player_attack_hitbox(screen: pygame.Surface, player: player.Player) -> None:
+        """Renders player attack hitbox"""
         if player.current_attack is not None:
             player.current_attack.draw_hitbox(screen, player.frame)
 
@@ -135,19 +143,22 @@ class View:
     def draw_enemy_attack_hitboxes(screen: pygame.Surface, enemy: Union[
                     enemies.Enemy,
                     enemies.Demon,
-                    enemies.Imp]):
+                    enemies.Imp]) -> None:
+        """Renders hitboxes for enemies attacks"""
         if enemy.attacking:
             enemy.attack.draw_hitbox(screen, enemy.frame)
 
     @staticmethod
-    def draw_enemy_hitboxes(screen: pygame.Surface, enemy: enemies.Enemy):
+    def draw_enemy_hitboxes(screen: pygame.Surface, enemy: enemies.Enemy) -> None:
+        """Renders hitboces for enemies"""
         if enemy.hit:
             pygame.draw.rect(screen, (255, 0, 0), enemy.hitbox, 2)
         else:
             pygame.draw.rect(screen, (0, 255, 0), enemy.hitbox, 2)
 
     @staticmethod
-    def draw_enemy_health_bar(screen: pygame.Surface, enemy: enemies.Demon | enemies.Imp):
+    def draw_enemy_health_bar(screen: pygame.Surface, enemy: enemies.Demon | enemies.Imp) -> None:
+        """Renders healthbars on top of enemies"""
         health_bar_bg = pygame.Surface((enemy.hitbox_width, 10))
         health_bar_width = int(enemy.hitbox_width * enemy.health / enemy.max_health)
         if health_bar_width < 0:
@@ -161,13 +172,15 @@ class View:
 
     @staticmethod
     def center(screen: pygame.Surface, object: pygame.Surface) -> int:
+        """Gets x position to render object in the center of the screen"""
         object_rect = object.get_rect()
         screen_rect = screen.get_rect()
         x = (screen_rect.width - object_rect.width) // 2
         return x
 
     @staticmethod
-    def get_fixed_position(player: player.Player):
+    def get_fixed_position(player: player.Player) -> None:
+        """Fixes animations position for the player"""
         if player.current_animation == player.IDLE_ANIMATION:
             player.IDLE_ANIMATION.x = player.x
             player.IDLE_ANIMATION.y = player.y
@@ -199,7 +212,8 @@ class View:
             return player.GUARD_ANIMATION
 
     @staticmethod
-    def draw_menus(screen: pygame.Surface, current_menu: menu.Menu, user: user.User):
+    def draw_menus(screen: pygame.Surface, current_menu: menu.Menu, user: user.User) -> None:
+        """Master function for rendering menus while in menu"""
         screen.fill(current_menu.colour)
         current_menu.center_text(screen)
         screen.blit(current_menu.text_surface, (current_menu.text_x, 30))
@@ -217,7 +231,8 @@ class View:
                 screen.blit(button.surface, (button.x, 150 + index * 50))
 
     @classmethod
-    def draw_fps(cls, screen: pygame.Surface, fps: int):
+    def draw_fps(cls, screen: pygame.Surface, fps: int) -> None:
+        """Renders current fps on the top right corner of the screen"""
         screen_rect = screen.get_rect()
         fps_surface = cls.font_small. render(f"FPS: {fps}", True, (255, 255, 255))
         fps_surface.get_width()
@@ -232,14 +247,16 @@ class View:
             current_wave: int,
             coordinates: tuple = (10, 30),
             scale: float = None
-            ):
+            ) -> None:
+        """Renders current wave number on the screen"""
         text_surface = cls.font_medium.render(f"Wave: {current_wave}/{total_waves}", True, (255, 255, 255))
         if scale:
             text_surface = pygame.transform.smoothscale(text_surface, (scale, scale))
         screen.blit(text_surface, coordinates)
 
     @classmethod
-    def draw_highscores(cls, screen: pygame.Surface, user: user.User):
+    def draw_highscores(cls, screen: pygame.Surface, user: user.User) -> None:
+        """Renders highscores while in highscores menu"""
         bg_rect = pygame.rect.Rect(0, 0, 500, 400)
         bg = pygame.surface.Surface((500, 400))
         bg.fill((28, 73, 98))

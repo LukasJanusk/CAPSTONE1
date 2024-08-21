@@ -61,7 +61,7 @@ class Level:
         """Generates pickable items"""
         number = random.randint(1, chance)
         if number == 1:
-            potion = objects.Health_Potion(enemy.x, 500)
+            potion = objects.Health_Potion(enemy.x + enemy.hitbox.width, 500)
             self.objects.append(potion)
 
     def generate_wave(self, player_x: int) -> bool | List[Union[
@@ -101,6 +101,7 @@ class Level:
         return wave
 
     def get_layers_list(self) -> List[Union[layer.Layer]]:
+        """Returns all ordered layers list for current level"""
         return [self.layer0,
                 self.layer1,
                 self.layer2,
