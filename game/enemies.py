@@ -189,7 +189,6 @@ class Demon(Enemy):
             elif self.attacking is True:
                 if self.frame > 8:
                     self.frame = 0
-                    # self.attacking = False
             elif self.running is True:
                 if self.frame > 4:
                     self.frame = 0
@@ -386,62 +385,59 @@ class Imp(Enemy):
         for animation in animations:
             animation.x = self.x
             animation.y = self.y
-        if self.exist:
-            self.current_animation.x = self.x
-            self.current_animation.y = self.y
-            if self.dead:
-                self.idle = False
-                self.attacking = False
+        if self.dead:
+            self.idle = False
+            self.attacking = False
+            self.hit = False
+            self.current_animation = self.death_animation
+            self.speed = 0
+        elif self.hit:
+            self.idle = False
+            self.attacking = False
+            self.running = False
+            self.spawn = False
+            self.current_animation = self.hit_animation
+            self.speed = 0
+            if self.frame == 6:
                 self.hit = False
-                self.current_animation = self.death_animation
-                self.speed = 0
-            elif self.hit:
-                self.idle = False
-                self.attacking = False
-                self.running = False
+                self.frame = 0
+                self.idle = True
+                self.current_animation = self.idle_animation
+        elif self.spawn:
+            self.current_animation = self.spawn_animation
+            self.speed = 0
+            if self.hit:
                 self.spawn = False
                 self.current_animation = self.hit_animation
-                self.speed = 0
-                if self.frame == 6:
-                    self.hit = False
-                    self.frame = 0
-                    self.idle = True
-                    self.current_animation = self.idle_animation
-            elif self.spawn:
-                self.current_animation = self.spawn_animation
-                self.speed = 0
-                if self.hit:
-                    self.spawn = False
-                    self.current_animation = self.hit_animation
-                    self.frame = 0
-                if self.frame >= 9:
-                    self.frame = 0
-                    self.idle = True
-                    self.spawn = False
-                    self.current_animation = self.idle_animation
-                self.speed = 0
-            elif self.attacking:
-                self.idle = False
-                self.current_animation = self.attack_animation
-                self.speed = 5
-                self.y += 2
-                if self.y > 380:
-                    self.y -= 2
-            elif self.running:
-                self.idle = False
-                if not self.attacking:
-                    self.current_animation = self.running_animation
-                    self.speed = 1
-            elif self.idle:
-                self.hit = False
+                self.frame = 0
+            if self.frame >= 9:
+                self.frame = 0
+                self.idle = True
+                self.spawn = False
                 self.current_animation = self.idle_animation
-                self.speed = 0
-                self.y -= 1
-                if self.y < 100:
-                    self.y += 1
-            if not self.facing_right:
-                self.speed *= -1
-            self.x += self.speed
+            self.speed = 0
+        elif self.attacking:
+            self.idle = False
+            self.current_animation = self.attack_animation
+            self.speed = 5
+            self.y += 2
+            if self.y > 380:
+                self.y -= 2
+        elif self.running:
+            self.idle = False
+            if not self.attacking:
+                self.current_animation = self.running_animation
+                self.speed = 1
+        elif self.idle:
+            self.hit = False
+            self.current_animation = self.idle_animation
+            self.speed = 0
+            self.y -= 1
+            if self.y < 100:
+                self.y += 1
+        if not self.facing_right:
+            self.speed *= -1
+        self.x += self.speed
 
     def update_hitbox(self):
         self.hitbox = pygame.Rect(

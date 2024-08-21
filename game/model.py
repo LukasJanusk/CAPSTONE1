@@ -35,19 +35,22 @@ class Model:
         self.particles: list = []
         self.sounds: list = []
 
-    def save_and_quit(self):
+    def save_and_quit(self) -> None:
+        """Saves highscores and settings then exits the program"""
         self.user.save()
         self.settings.save()
         pygame.quit()
         sys.exit()
 
     def load_user(self) -> bool:
+        """Loads user data and settings data then updates buttons based on settings"""
         if self.user.load():
             self.settings.load()
             self.update_setting_buttons()
             return True
 
-    def pause_game(self, event: pygame.event.Event):
+    def pause_game(self, event: pygame.event.Event) -> None:
+        """Pauses the game on ESCAPE press when in game"""
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 self.in_game = False
@@ -55,7 +58,8 @@ class Model:
                 self.menu_manager.current_menu = menu.pause_menu
                 pygame.event.clear()
 
-    def run_menus(self, event: pygame.event.Event):
+    def run_menus(self, event: pygame.event.Event) -> None:
+        """Runs menus"""
         self.menu_manager.get_active_button(event)
         messege = self.menu_manager.set_active_menu(event)
         if messege == "quit":
@@ -122,7 +126,8 @@ class Model:
             else:
                 menu.draw_hitboxes_button.NAME = "DRAW HITBOXES --------------------- OFF"
 
-    def set_highscore(self):
+    def set_highscore(self) -> None:
+        """Sets highscore once  the current level is finihed"""
         if self.current_level == level.level1:
             self.user.level1_highscore = self.current_level.score
         if self.current_level == level.level2:
@@ -135,6 +140,7 @@ class Model:
         #     self.user.level5_highscore = self.current_level.score
 
     def get_current_level_wave(self, print_info=False) -> bool:
+        """Generates new enemies wave once current one is defeated"""
         if (len(self.current_level.current_wave_enemies) < 1
                 or self.current_level.current_wave_enemies is None):
             self.current_level.current_wave_enemies = self.current_level.generate_wave(self.character.x)
@@ -149,41 +155,49 @@ class Model:
                         f"Wave of {len(self.current_level.current_wave_enemies)} enemies generated")
                 return True
 
-    def run_enemies_ai(self):
+    def run_enemies_ai(self) -> None:
+        """Runs AI of enemies"""
         for enemy in self.current_level.current_wave_enemies:
             if type(enemy) is enemies.Demon:
                 ai.DemonAI.choose_action(enemy, self.character)
             if type(enemy) is enemies.Imp:
                 ai.ImpAI.choose_action(enemy, self.character)
 
-    def update_enemies(self):
+    def update_enemies(self) -> None:
+        """Master function for updates of enemies"""
         self.update_enemies_existance()
         self.update_enemies_states()
         self.update_enemies_frame()
         self.update_enemies_hitboxes()
         self.update_enemies_attacks_hitboxes()
 
-    def update_enemies_attacks_hitboxes(self):
+    def update_enemies_attacks_hitboxes(self) -> None:
+        """Updates hitboxes of enemies attacks"""
         for enemy in self.current_level.current_wave_enemies:
             if enemy.attack is not None:
                 enemy.attack.update_hitbox(enemy.x, enemy.y, enemy.facing_right)
 
-    def update_enemies_hitboxes(self):
+    def update_enemies_hitboxes(self) -> None:
+        """Updates hitboxes of enemies"""
         for enemy in self.current_level.current_wave_enemies:
             enemy.update_hitbox()
 
-    def update_scroll(self):
+    def update_scroll(self) -> None:
+        """Master function for updating objects position on the screen"""
         self.update_layer_scroll()
         self.update_camera()
 
-    def get_player_input(self, event: pygame.event.Event):
+    def get_player_input(self, event: pygame.event.Event) -> None:
+        """Runs player updates based on keyboard input"""
         self.controller.get_player_key_events(event)
 
-    def calculate_attacks(self, print_damage: bool = False):
+    def calculate_attacks(self, print_damage: bool = False) -> None:
+        """Master function for calculating attacks"""
         self.player_attack(print_damage=print_damage)
         self.enemies_attack(print_damage=print_damage)
 
-    def player_attack(self, print_damage=False):
+    def player_attack(self, print_damage=False) -> None:
+        """Checks if player hit enemies and calculates stun threshold and damage"""
         if self.character.current_attack is not None:
             for enemy in self.current_level.current_wave_enemies:
                 damage = self.character.current_attack.hit(self.character.frame, enemy.hitbox)
@@ -202,7 +216,8 @@ class Model:
                         print(f"Player dealt {damage} damage to ", end="")
                         print(enemy)
 
-    def enemies_attack(self, print_damage: bool = False):
+    def enemies_attack(self, print_damage: bool = False) -> None:
+        """Checks if enemies hit player and calculates damage done"""
         for enemy in self.current_level.current_wave_enemies:
             if enemy.attacking:
                 damage = enemy.attack.hit(enemy.frame, self.character.hitbox)
@@ -215,11 +230,13 @@ class Model:
                         print(f"Player received {damage} damage from ", end="")
                         print(enemy)
 
-    def generate_particles(self):
+    def generate_particles(self) -> None:
+        """Master function for particle generation"""
         self.generate_blood_particles()
         self.generate_block_particles()
 
-    def generate_blood_particles(self):
+    def generate_blood_particles(self) -> None:
+        """Generates blood particles on hit and bounce of the ground"""
         particles = []
         if self.character.current_attack is not None:
             for enemy in self.current_level.current_wave_enemies:
@@ -260,7 +277,8 @@ class Model:
                         self.particles.remove(particle)
         self.particles += particles
 
-    def generate_block_particles(self):
+    def generate_block_particles(self) -> None:
+        """Generates block particles for render on player block"""
         particles = []
         if self.character.guarding and len(self.particles) < 450:
             for enemy in self.current_level.current_wave_enemies:
@@ -272,7 +290,8 @@ class Model:
                         particles += block_squares
         self.particles += particles
 
-    def update_particles(self):
+    def update_particles(self) -> None:
+        """Updates particles and removes particles too small to render"""
         for particle in self.particles:
             if type(particle) is Circle or type(particle) is Blood:
                 particle.update_position()
@@ -286,9 +305,11 @@ class Model:
                     self.particles.remove(particle)
 
     def print_particles_n(self):
+        """Prints how many particles are currently active"""
         print(len(self.particles))
 
-    def update_player(self):
+    def update_player(self) -> None:
+        """Runs updates for the player"""
         self.character.reset_frames()
         self.character.update_speed()
         self.character.update_hitbox()
@@ -313,6 +334,7 @@ class Model:
             enemies.Demon,
             enemies.Imp]
             ]:
+        """Generates list of objects to be sent for rendering"""
         layers = [
             self.current_level.layer0,
             self.current_level.layer1,
@@ -331,13 +353,15 @@ class Model:
             )
         return layers
 
-    def update_player_frame(self):
+    def update_player_frame(self) -> None:
+        """Updates frames for player animations"""
         self.character.current_time = pygame.time.get_ticks()
         if self.character.current_time - self.character.last_update >= self.character.frame_rate:
             self.character.frame += 1
             self.character.last_update = self.character.current_time
 
-    def update_enemies_frame(self):
+    def update_enemies_frame(self) -> None:
+        """Updates frames  for animations of all enemies"""
         for enemy in self.current_level.current_wave_enemies:
             if enemy.exist:
                 current_time = pygame.time.get_ticks()
@@ -346,7 +370,8 @@ class Model:
                     enemy.last_update = current_time
                 enemy.reset_frames()
 
-    def update_enemies_states(self):
+    def update_enemies_states(self) -> None:
+        """Updates states of all active enemies"""
         for enemy in self.current_level.current_wave_enemies:
             enemy.update_states()
 
@@ -379,7 +404,8 @@ class Model:
                     if print_info:
                         print(f"Enemy , {enemy}, removed from the active enemies list")
 
-    def check_for_level_end(self):
+    def check_for_level_end(self) -> None:
+        """Checks and controls level end condition"""
         if ((self.current_level.current_wave == self.current_level.total_waves
                 and len(self.current_level.current_wave_enemies) < 1)
                 or self.character.health == 0):
@@ -389,7 +415,8 @@ class Model:
             self.menu_manager.current_menu.name = "SCORE:" + str(self.current_level.score)
             self.menu_manager.current_menu.update_surface()
 
-    def update_layer_scroll(self):
+    def update_layer_scroll(self) -> None:
+        """"Updates world objects position on the screen"""
         layers_list = self.current_level.get_layers_list()
         for layer_item in layers_list:
             if layer_item is not None:
@@ -408,7 +435,8 @@ class Model:
         for object in self.current_level.objects:
             object.x += self.character.speed
 
-    def update_camera(self):
+    def update_camera(self) -> None:
+        """Moves camera based on player facing direction"""
         layers_list = self.current_level.get_layers_list()
         if self.character.facing_right:
             if self.character.x > 220:
@@ -439,7 +467,8 @@ class Model:
                 for object in self.current_level.objects:
                     object.x += 0.5
 
-    def update_setting_buttons(self):
+    def update_setting_buttons(self) -> None:
+        """Controls settings button labels"""
         if self.settings.draw_fps is True:
             menu.draw_fps_button.NAME = "DRAW FPS -------------------------- ON "
         else:
@@ -461,6 +490,7 @@ class Model:
     def get_attack_sound(
             attacker: player.Player | enemies.Enemy | enemies.Demon | enemies.Imp,
             ) -> sound.HitSound:
+        """Returns on Hit sound object"""
         current_time = pygame.time.get_ticks()
         if type(attacker) is player.Player:
             last_update = attacker.current_attack.sound.last_update
@@ -481,7 +511,8 @@ class Model:
                 return attacker.attack.sound
 
     @staticmethod
-    def get_hit_sound(object: player.Player | enemies.Enemy | enemies.Imp | enemies.Demon):
+    def get_hit_sound(object: player.Player | enemies.Enemy | enemies.Imp | enemies.Demon) -> sound.HitSound:
+        """Returns on Hit sound object"""
         current_time = pygame.time.get_ticks()
         downtime_hit = object.hit_sound.DOWNTIME
         last_update_hit = object.hit_sound.last_update
@@ -489,7 +520,8 @@ class Model:
             object.hit_sound.last_update = current_time
             return object.hit_sound
 
-    def get_attack_sounds(self):
+    def get_attack_sounds(self) -> List[sound.HitSound]:
+        """Returns on Hit sound objects"""
         attack_sounds = []
         for enemy in self.current_level.current_wave_enemies:
             if enemy.attacking:
@@ -511,11 +543,13 @@ class Model:
         else:
             return attack_sounds
 
-    def play_level_sounds(self):
+    def play_level_sounds(self) -> None:
+        """Plays current level ambient sounds"""
         if self.current_level is not None:
             self.current_level.ambient_sound.play(loops=-1)
 
-    def get_animation_sound(self):
+    def get_animation_sound(self) -> sound.AnimationSound:
+        """Returns player animation sound object"""
         if self.character.attacking_normal:
             if self.character.frame == attack_normal_sound1.frame:
                 return attack_normal_sound1
@@ -536,7 +570,8 @@ class Model:
                 obj.picked_sound.last_update = current_time
         return sounds
 
-    def get_sounds(self):
+    def get_sounds(self) -> List[Union[sound.HitSound, sound.AnimationSound]]:
+        """Returns list of currently active sound objects"""
         if len(self.sounds) > 200:
             self.sounds = self.sounds[:-30]
         sounds = []
