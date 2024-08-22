@@ -20,9 +20,9 @@ class Player:
     maximum_fire: int = 1000
     maximum_cold: int = 1000
     maximum_lightning: int = 1000
-    fire: int = 0
-    cold: int = 0
-    lightning: int = 0
+    _fire: int = 0
+    _cold: int = 0
+    _lightning: int = 0
     speed: float = 1.5
     jump_strength: float = 16
     vertical_position: float = 0
@@ -123,36 +123,43 @@ class Player:
 
     @frame.setter
     def frame(self, value):
-        if type(value) is not int:
-            raise TypeError("Wrong type for value frame")
-        if value not in range(0, 14):
-            self._frame = 0
+        if value > len(self.current_animation.animation_list) - 1:
+            self.frame = 0
         else:
             self._frame = value
 
-    def reset_frames(self) -> None:
-        """Resets animation frames of Player"""
-        if self.attacking_upper:
-            if self.frame > 14:
-                self.frame = 0
-        if self.attacking_normal:
-            if self.frame > 6:
-                self.frame = 0
-        if self.guarding:
-            if self.frame > 3:
-                self.frame = 0
-        if self.jumping:
-            if self.frame >= 4:
-                self.frame = 0
-        if self.running:
-            if self.frame == 6:
-                self.frame = 0
-        if self.walking:
-            if self.frame > 5:
-                self.frame = 0
-        if self.idle:
-            if self.frame > 7:
-                self.frame = 0
+    @property
+    def fire(self):
+        return self._fire
+
+    @fire.setter
+    def fire(self, value):
+        if value > self.maximum_fire:
+            self._fire = self.maximum_fire
+        else:
+            self._fire = value
+
+    @property
+    def cold(self):
+        return self._cold
+
+    @cold.setter
+    def cold(self, value):
+        if value > self.maximum_cold:
+            self._cold = self.maximum_cold
+        else:
+            self._cold = value
+
+    @property
+    def lightning(self):
+        return self._lightning
+
+    @lightning.setter
+    def lightning(self, value):
+        if value > self.maximum_lightning:
+            self._lightning = self.maximum_lightning
+        else:
+            self._lightning = value
 
     def update_jumping(self) -> None:
         """Updates Player vertical position while jumping"""
@@ -242,6 +249,13 @@ class Player:
             pygame.draw.rect(screen, (255, 0, 0), self.hitbox, 2)
         else:
             pygame.draw.rect(screen, (0, 255, 0), self.hitbox, 2)
+
+    def regenerate(self):
+        """Updates self health and other resources"""
+        self.health += 0.03
+        self.fire += 0.1
+        self.cold += 0.1
+        self.lightning += 0.1
 
 
 char = Player(100, 400, 1)

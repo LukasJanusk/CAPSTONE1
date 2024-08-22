@@ -90,6 +90,10 @@ class Model:
             self.character.health = self.character.maximum_health
             self.character.x = 100
             self.character.y = 400
+            self.character.idle = True
+            self.character.fire = 50
+            self.character.cold = 50
+            self.character.lightning = 50
         if messege == "score":
             self.set_highscore()
             self.user.save()
@@ -100,6 +104,11 @@ class Model:
             self.current_level.score = 0
             self.character.health = self.character.maximum_health
             self.character.x = 100
+            self.character.y = 400
+            self.character.idle = True
+            self.character.fire = 50
+            self.character.cold = 50
+            self.character.lightning = 50
             pygame.event.clear()
         if messege == "fps":
             self.settings.draw_fps = True
@@ -201,7 +210,7 @@ class Model:
         if self.character.current_attack is not None:
             for enemy in self.current_level.current_wave_enemies:
                 damage = self.character.current_attack.hit(self.character.frame, enemy.hitbox)
-                if damage:
+                if damage and not enemy.spawn:
                     enemy.health -= damage
                     if not enemy.dead:
                         if type(enemy) is enemies.Demon:
@@ -310,10 +319,10 @@ class Model:
 
     def update_player(self) -> None:
         """Runs updates for the player"""
-        self.character.reset_frames()
         self.character.update_speed()
         self.character.update_hitbox()
         self.character.update_jumping()
+        self.character.regenerate()
         self.character.get_current_animation()
         self.character.get_current_attack()
         if self.character.current_attack is not None:
@@ -348,8 +357,11 @@ class Model:
             self.particles +
             [self.current_level.layer6,
              self.current_level.layer7] +
-            [ui.health_bar] +
-            [ui.score]
+            [ui.health_bar,
+             ui.fire_bar,
+             ui.cold_bar,
+             ui.lightning_bar,
+             ui.score]
             )
         return layers
 

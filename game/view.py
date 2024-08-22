@@ -40,6 +40,9 @@ class View:
                     Blood,
                     Particle,
                     ui.Healthbar,
+                    ui.Fire,
+                    ui.Cold,
+                    ui.Lightning,
                     ui.Score]] = [],
             health_bars: bool = True,
             hitboxes: bool = True,
@@ -67,6 +70,10 @@ class View:
                     View.draw_player_attack_hitbox(screen, object)
             elif type(object) is ui.Healthbar:
                 screen.blit(object.draw_health_bar(), (5, 5))
+            elif (type(object) is ui.Fire or
+                    type(object) is ui.Cold or
+                    type(object) is ui.Lightning):
+                screen.blit(object.draw_bar(screen), (object.x, object.y))
             elif type(object) is ui.Score:
                 View.draw_score(screen, object, score)
             elif type(object) is Circle or type(object) is Blood:
