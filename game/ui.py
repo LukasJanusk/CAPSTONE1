@@ -128,7 +128,8 @@ class Bar(ABC):
         """Checks if values changed and returns bool as a result"""
         pass
 
-    def draw_bar(self, screen: pygame.surface.Surface):
+    def draw_bar(self, screen: pygame.surface.Surface) -> pygame.surface.Surface:
+        """Returns UI Bar surface for rendering to the screen"""
         if self.get_values():
             return self.bar_bg_surface
         else:
