@@ -63,23 +63,3 @@ cd CAPSTONE1
 ```bash
 pytest
 ```
-
-## Project Structure
-
-CAPSTONE1/
-├── assets/
-│ ├── sounds/
-│ ├── musics/
-│ ├── graphics/
-│ │ ├── levels/
-│ │ └── sprites/
-│ └── fonts/
-├── docs/
-│ ├── game_model.png
-├── game/
-├── tests/
-├── user/
-├── run_game.py
-├── TODO.txt
-├── requirements.txt
-└── README.md
