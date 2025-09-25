@@ -1,4 +1,9 @@
 # Game Project
+Small 2D game project written in python using pygame library. If you want to tryout the game check for keyboard controlls below.
+
+![screenshot](https://github.com/LukasJanusk/Sidescroller-game/blob/main/screenshots/Screenshot%202025-09-25%20171346.jpg?raw=true)
+
+![screenshot](https://github.com/LukasJanusk/Sidescroller-game/blob/main/screenshots/Screenshot%202025-09-25%20171507.jpg?raw=true)
 
 ## Setup and Run Instructions
 
